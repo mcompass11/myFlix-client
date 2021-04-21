@@ -26288,7 +26288,7 @@ try {
   var _react = require('react');
   var _reactDefault = _parcelHelpers.interopDefault(_react);
   var _movieCardMovieCard = require('../movie-card/movie-card');
-  var _movieViewMovieView = require('../movie-view/movie-view');
+  require('../movie-view/movie-view');
   var _jsxFileName = "/Users/monkendrickwilliams/careerfoundry/myFlix-client/src/components/main-view/main-view.jsx";
   class MainView extends _reactDefault.default.Component {
     constructor() {
@@ -26340,7 +26340,7 @@ try {
             lineNumber: 32,
             columnNumber: 13
           }
-        }, selectedMovie ? /*#__PURE__*/_reactDefault.default.createElement(_movieViewMovieView.MovieView, {
+        }, selectedMovie ? /*#__PURE__*/_reactDefault.default.createElement("movieView", {
           movie: selectedMovie,
           onBackClick: newSelectedMovie => {
             this.setSelectedMovie(newSelectedMovie);
@@ -26772,4 +26772,4 @@ try {
 
 },{"react":"3b2NM","@parcel/transformer-js/lib/esmodule-helpers.js":"42LWC","../../../../../.nvm/versions/node/v14.16.0/lib/node_modules/parcel/node_modules/@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"7xn2i"}],"5iJih":[function() {},{}]},["1j6wU","68WUB","1DVjT"], "1DVjT", "parcelRequire279c")
 
-//# sourceMappingURL=index.02675e63.js.map
+//# sourceMappingURL=index.HASH_REF_f9eab60bc3a7a7c3f683683702675e63.js.map
