@@ -7,7 +7,7 @@ export function RegistrationView(props) {
     const [password, setPassword] = useState('');
     const [birthday, setBirthday] = useState('');
 
-    const handleSubmit = () => {
+    const handleSubmit = (e) => {
         e.preventDefault();
         console.log(email, username, password, birthday);
         props.onRegister(username);
@@ -42,6 +42,6 @@ RegistrationView.PropTypes = {
         Username: PropTypes.string.isRequired,
         Password: PropTypes.string.isRequired,
         Birthday: PropTypes.string.isRequired
-    }),
+    }).isRequired,
     onRegister: PropTypes.func.isRequired,
 };
