@@ -52,7 +52,7 @@ export class MainView extends React.Component {
 
         if (!user) return <LoginView onLoggedIn={user => this.onLoggedIn(user)} />;
 
-        if (!register) return <RegistrationView onRegister={user => this.onRegister(user)} />;
+        if (!register) return <RegistrationView onRegister={register => this.onRegister(register)} />;
 
         // if (selectedMovie) return <MovieView movie={selectedMovie} />;
 
