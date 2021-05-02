@@ -1,4 +1,5 @@
 import React from 'react';
+import Button from 'react-bootstrap/Button';
 
 export class MovieView extends React.Component {
 
@@ -40,7 +41,7 @@ export class MovieView extends React.Component {
                         <span className="value">{movie.Director.Name}</span>
                     </div>
                 </div>
-                <button onClick={() => { onBackClick(null); }}>Back</button>
+                <Button variant="outline-dark" onClick={() => { onBackClick(null); }}>Back</Button>
             </>
         );
     }

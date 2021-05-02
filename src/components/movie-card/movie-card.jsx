@@ -1,28 +1,39 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import propTypes from 'prop-types';
+import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
 
 export class MovieCard extends React.Component {
     render() {
         const { movie, onMovieClick } = this.props;
 
-        return <div className="movie-card" onClick={() => { onMovieClick(movie); }}>{movie.Title}</div>;
+        return (
+            <Card>
+                <Card.Img variant="top" src={movie.ImagePath} />
+                <Card.Body>
+                    <Card.Title>{movie.Title}</Card.Title>
+                    <Card.Text>{movie.Description}</Card.Text>
+                    <Button onClick={() => onMovieClick(movie)} variant="outline-dark">Open</Button>
+                </Card.Body>
+            </Card>
+        );
     }
 }
 
-MovieCard.PropTypes = {
-    movie: PropTypes.shape({
-        Title: PropTypes.string.isRequired,
-        Description: PropTypes.string.isRequired,
-        ImagePath: PropTypes.string.isRequired,
-        Genre: PropTypes.shape({
-            Name: PropTypes.string.isRequired,
-            Description: PropTypes.string.isRequired
+MovieCard.propTypes = {
+    movie: propTypes.shape({
+        Title: propTypes.string.isRequired,
+        Description: propTypes.string.isRequired,
+        ImagePath: propTypes.string.isRequired,
+        Genre: propTypes.shape({
+            Name: propTypes.string.isRequired,
+            Description: propTypes.string.isRequired
         }).isRequired,
-        Director: PropTypes.shape({
-            Name: PropTypes.string.isRequired,
-            Bio: PropTypes.string.isRequired,
-            Birth: PropTypes.string.isRequired
+        Director: propTypes.shape({
+            Name: propTypes.string.isRequired,
+            Bio: propTypes.string.isRequired,
+            Birth: propTypes.string.isRequired
         }).isRequired,
     }).isRequired,
-    onMovieClick: PropTypes.func.isRequired
+    onMovieClick: propTypes.func.isRequired
 };
