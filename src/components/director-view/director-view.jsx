@@ -1,34 +1,24 @@
 import React from 'react';
-import propTypes from 'prop-types';
-import { Card } from 'react-bootstrap';
+import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 
 
 export class DirectorView extends React.Component {
-    render() {
-        const { director, onBackClick } = this.props;
+  render() {
+    const { director, onBackClick } = this.props;
 
-        return (
+    return (
 
-            <div className="director-view">
-                <div>
-                    <Card.Title><span>{director.Name}</span></Card.Title>
-                    <Card.Body><span>Bio: {director.Bio}</span></Card.Body>
-                    <Card.Body><span>Born: {director.Birth}</span></Card.Body>
-                    <Card.Body><span>Died: {director.Death}</span></Card.Body>
-                </div>
-                <Button variant="outline-dark" onClick={() => { onBackClick(); }}>Back</Button>
-            </div>
-        )
-    }
+      <Card>
+        <Card.Img variant="top" src={director.Image} />
+        <Card.Body>
+          <Card.Title>{director.Name}</Card.Title>
+          <Card.Text>{director.Bio}</Card.Text>
+          <Card.Text>{director.Birth} - {director.Death}</Card.Text>
+        </Card.Body>
+
+        <Button variant="outline-dark" onClick={() => { onBackClick(); }}>Back</Button>
+      </Card>
+    )
+  }
 }
-
-DirectorView.propTypes = {
-    director: propTypes.shape({
-        Name: propTypes.string.isRequired,
-        Bio: propTypes.string.isRequired,
-        Birth: propTypes.string.isRequired,
-        Death: propTypes
-    }).isRequired,
-    onBackClick: propTypes.func.isRequired
-};

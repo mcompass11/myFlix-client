@@ -1,75 +1,112 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import propTypes from 'prop-types';
+
+import { Link } from "react-router-dom";
+
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 
-import { Link } from "react-router-dom";
-
 export function RegistrationView() {
-    const [email, setEmail] = useState('');
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [birthday, setBirthday] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [birthday, setBirthday] = useState('');
+  const [values, setValues] = useState({
+    usernameErr: '',
+    passwordErr: '',
+    emailErr: ''
+  });
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        axios.post('https://yourfavoritereels.herokuapp.com/users', {
-            Username: username,
-            Password: password,
-            Email: email,
-            Birthday: birthday
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const isReq = validate();
+    if (isReq) {
+      //Send request to the server for authentication
+      axios.post('https://yourfavoritereels.herokuapp.com/users', {
+        Username: username,
+        Password: password,
+        Email: email,
+        Birthday: birthday
+      })
+        .then(response => {
+          const data = response.data;
+          alert('You have successfully registered!');
+          window.open('/', '_self'); //keeps the page to be opened in the same tab
+          console.log(data);
         })
-            .then(response => {
-                const data = response.data;
-                //props.onRegister(data);
-                // console.log(data);
-                window.open('/', '_self'); //_self is necessary so that the page opens in the current tab
-            })
-            .catch(e => {
-                console.log(e);
-                console.log('error registering the user');
-            });
-    };
+        .catch(e => {
+          console.log('error creating profile');
+          alert('Registration unsuccessful')
+        });
+    }
+  };
 
-    return (
-        <Form>
-            <Col md={3}>
-                <Form.Row>
-                    <Form.Group md={3} controlId="formGridEmail">
-                        <Form.Label>Email: </Form.Label>
-                        <Form.Control type="email" placeholder="youremail@email.com" value={email} onChange={e => setEmail(e.target.value)} />
-                    </Form.Group>
-                </Form.Row>
-                <Form.Row>
-                    <Form.Group controlId="formGridUsername">
-                        <Form.Label>Username: </Form.Label>
-                        <Form.Control type="text" value={username} onChange={e => setUsername(e.target.value)} />
-                    </Form.Group>
-                    <Form.Group controlId="formGridPassword">
-                        <Form.Label>Password: </Form.Label>
-                        <Form.Control type="password" value={password} onChange={e => setPassword(e.target.value)} />
-                    </Form.Group>
-                </Form.Row>
-                <Form.Row>
-                    <Form.Group controlId="formGridBirthday">
-                        <Form.Label>Birthday: </Form.Label>
-                        <Form.Control type="date" value={birthday} onChange={e => setBirthday(e.target.value)} />
-                    </Form.Group>
-                </Form.Row>
-                <Button variant="outline-dark" type="submit" onClick={handleSubmit}>Register</Button>
-            </Col>
-        </Form>
-    );
+  const validate = () => {
+    let isReq = true;
+    if (!username) {
+      setUsernameErr('Username Required');
+      isReq = false;
+    } else if (username.length < 2) {
+      setUsernameErr('Username must be 2 characters long');
+      isReq = false;
+    }
+    if (!password) {
+      setPasswordErr('Password Required');
+      isReq = false;
+    } else if (password.length < 6) {
+      setPassword('Passsword must be 6 characters long');
+      isReq = false;
+    }
+    if (!email) {
+      setEmailErr('Email Required');
+      isReq = false;
+    } else if (email.indexOf('@') === -1) {
+      setEmail('Email must have "@" symbol');
+      isReq = false;
+    }
+    return isReq;
+  };
+
+  return (
+    <Form>
+      <Form.Group controlId="formUsername" className="reg-form-inputs">
+        <Form.Label>Username:</Form.Label>
+        <Form.Control type="text" value={username} onChange={e => setUsername(e.target.value)} />
+        {values.usernameErr && <p>{values.usernameErr}</p>}
+      </Form.Group>
+
+      <Form.Group controlId="formPassword" className="reg-form-inputs">
+        <Form.Label>Password:</Form.Label>
+        <Form.Control type="password" value={password} onChange={e => setPassword(e.target.value)} />
+        {values.passwordErr && <p>{values.passwordErr}</p>}
+      </Form.Group>
+
+      <Form.Group controlId="Email" className="reg-form-inputs">
+        <Form.Label>Email:</Form.Label>
+        <Form.Control type="email" value={email} onChange={e => setEmail(e.target.value)} />
+        {values.emailErr && <p>{values.emailErr}</p>}
+      </Form.Group>
+
+      <Form.Group controlId="updateBirthday">
+        <Form.Label>Birthday</Form.Label>
+        <Form.Control type="date" name="birthday" onChange={e => setBirthday(e.target.value)} />
+      </Form.Group>
+
+      <button variant="primary" type="register" onClick={handleSubmit}>Register</button>
+      <p>Account holder already? Click <Link to="/" >ME</Link>!</p>
+
+    </Form>
+  );
 };
 
 RegistrationView.propTypes = {
-    Register: propTypes.shape({
-        Email: propTypes.string.isRequired,
-        Username: propTypes.string.isRequired,
-        Password: propTypes.string.isRequired,
-        Birthday: propTypes.string.isRequired
-    }),
-    onRegister: propTypes.func
+  register: propTypes.shape({
+    email: propTypes.string.isRequired,
+    username: propTypes.string.isRequired,
+    password: propTypes.string.isRequired,
+    birthday: propTypes.string.isRequired
+  }),
+  onRegistration: propTypes.func
 };
