@@ -5,11 +5,14 @@ import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import moviesApp from './reducers/reducers';
 import { devToolsEnhancer } from 'redux-devtools-extension';
+import * as atatus from 'atatus-spa';
 
 import MainView from './components/main-view/main-view';
 
 // Import statement to indicate that you need to bundle `./index.scss`
 import './index.scss';
+
+atatus.config('8260dd4f4e88457eaf98c32d035f837d').install();
 
 const store = createStore(moviesApp, devToolsEnhancer());
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import axios from 'axios';
 import propTypes from 'prop-types';
 import Form from 'react-bootstrap/Form';
@@ -7,14 +7,17 @@ import Col from 'react-bootstrap/Col';
 
 import { Link } from "react-router-dom";
 import { Card } from 'react-bootstrap';
+import { NavView } from '../navbar';
 
-export class ProfileView extends React.Component {
-  _isMounted = false;
-
+export class ProfileView extends Component {
   constructor() {
     super();
     this.state = {
-      users: [],
+      Username: null,
+      Password: null,
+      Email: null,
+      Birthday: null,
+      FavoriteMovies: [],
     }
   }
 
@@ -24,21 +27,21 @@ export class ProfileView extends React.Component {
       this.setState({
         users: localStorage.getItem('users')
       });
-      this.getUsers(accessToken);
+      this.getUser(accessToken);
     }
   }
 
-  getUsers(token) {
+  getUser(token) {
     axios.get('https://yourfavoritereels.herokuapp.com/users', {
       headers: { Authorization: `Bearer ${token}` }
     })
-      .then(response => {
+      .then((response) => {
         this.setState({
-          Username: null,
-          Password: response.data,
-          Email: response.data,
-          Birthday: response.data,
-          FavoriteMovies: []
+          Username: response.data.Username,
+          Password: response.data.Password,
+          Email: response.data.Email,
+          Birthday: response.data.Birthday,
+          FavoriteMovies: response.data.FavoriteMovies,
         });
       })
       .catch(function (error) {
@@ -47,20 +50,22 @@ export class ProfileView extends React.Component {
   }
 
   render() {
-    const { user, onBackClick } = this.props;
-    console.log(this.props);
+    const { movies, onBackClick } = this.props;
+    const { Username, Password, Email, Birthday, FavoriteMovies } = this.state;
+    console.log(Email)
 
     /* Below is where I am having trouble accessing my user info. I would like to 
     access the values for each key in the user object from the api but through my several attempts 
     I have only been able to access the username*/
     return (
       <>
+        <NavView />
         <div className="profile-view">
-          <h1>Hello, {user}</h1>
+          <h1>Hello, { }</h1>
           <h2>Current Info:</h2>
           <p>Username:{ } </p>
           <p>Password: { } </p>
-          <p>Email: { } </p>
+          <p>Email: {Email} </p>
           <p>Birthday: { } </p>
 
           <h2>Favorite Movies:</h2>
@@ -112,13 +117,13 @@ export class ProfileView extends React.Component {
   }
 }
 
-ProfileView.propTypes = {
-  users: propTypes.shape({
-    Username: propTypes.string.isRequired,
-    Email: propTypes.string.isRequired,
-    Password: propTypes.string.isRequired,
-    Birthday: propTypes.string.isRequired,
-    FavoriteMovies: propTypes.array
-  }),
-  onRegister: propTypes.func
-};
+// ProfileView.propTypes = {
+//   users: propTypes.shape({
+//     Username: propTypes.string.isRequired,
+//     Email: propTypes.string.isRequired,
+//     Password: propTypes.string.isRequired,
+//     Birthday: propTypes.string.isRequired,
+//     FavoriteMovies: propTypes.array
+//   }),
+//   onRegister: propTypes.func
+// };

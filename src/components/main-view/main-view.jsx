@@ -15,6 +15,7 @@ import { MovieView } from '../movie-view/movie-view';
 import { GenreView } from '../genre-view/genre-view';
 import { DirectorView } from '../director-view/director-view';
 import { ProfileView } from '../profile-view/profile-view';
+import { NavView } from '../navbar';
 
 export class MainView extends React.Component { //exposes the component, making available for rest of components
 
@@ -22,7 +23,7 @@ export class MainView extends React.Component { //exposes the component, making 
     super();
     this.state = {
       movies: [],
-      user: null
+      user: null,
     };
   }
 
@@ -33,7 +34,6 @@ export class MainView extends React.Component { //exposes the component, making 
         user: localStorage.getItem('user')
       });
       this.getMovies(accessToken);
-      //this.getUsers(accessToken);
     }
   }
 
@@ -75,20 +75,6 @@ export class MainView extends React.Component { //exposes the component, making 
       });
   }
 
-  // getUsers(token) {
-  //   axios.get('https://yourfavoritereels.herokuapp.com/users', {
-  //     headers: { Authorization: `Bearer ${token}` }
-  //   })
-  //     .then(response => {
-  //       this.setState({
-  //         users: response.data
-  //       });
-  //     })
-  //     .catch(function (error) {
-  //       console.log(error);
-  //     });
-  // }
-
   newUser(newData) {
     localStorage.setItem('user', newData.Username);
     this.setState({
@@ -97,29 +83,13 @@ export class MainView extends React.Component { //exposes the component, making 
     });
   }
 
-  onLoggedOut() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    this.setState({
-      user: null
-    });
-  }
-
   render() {
-    const { movies, user, users } = this.state;
+    const { movies, user } = this.state;
+    //console.log(user);
 
     return (
       <Router>
         <Row className="main-view justify-content-md-center">
-          <Col md={9}>
-            <button onClick={() => { this.onLoggedOut() }}>Logout</button>
-          </Col>
-          <Col md={3}>
-            <Link to={`/users/${user}`}>
-              <button variant="link">{user} Profile</button>
-            </Link>
-          </Col>
-
           <Route exact path="/" render={() => {
             if (!user) return <Col>
               <LoginView onLoggedIn={user => this.onLoggedIn(user)} />
@@ -131,8 +101,6 @@ export class MainView extends React.Component { //exposes the component, making 
               </Col>
             ))
           }} />
-
-
           <Route path="/register" render={() => {
             if (user) return <Redirect to="/" />
             return <Col>
@@ -150,7 +118,6 @@ export class MainView extends React.Component { //exposes the component, making 
             </Col>
           }} />
 
-
           <Route path="/directors/:name" render={({ match, history }) => {
             if (!user) return <Col>
               <LoginView onLoggedIn={user => this.onLoggedIn(user)} />
@@ -160,7 +127,6 @@ export class MainView extends React.Component { //exposes the component, making 
               <DirectorView director={movies.find(m => m.Director.Name === match.params.name).Director} onBackClick={() => history.goBack()} />
             </Col>
           }} />
-
 
           <Route path="/genres/:name" render={({ match, history }) => {
             if (!user) return <Col>
@@ -172,11 +138,12 @@ export class MainView extends React.Component { //exposes the component, making 
             </Col>
           }} />
 
-          <Route path="/users" render={({ match, history }) => {
-            if (!user) return <Col >
-              <LoginView onLoggedIn={user => this.onLoggedIn(user)} />
-            </Col>
-            if (movies.length === 0) return <div className="main-view" />;
+          <Route path="/users" render={({ history }) => {
+            if (!user) {
+              return (<Col >
+                <LoginView onLoggedIn={user => this.onLoggedIn(user)} />
+              </Col>)
+            }
             return <Col md={8} >
               <ProfileView onBackClick={() => history.goBack()} />
             </Col>
