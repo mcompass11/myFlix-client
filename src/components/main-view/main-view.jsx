@@ -16,6 +16,7 @@ import { GenreView } from '../genre-view/genre-view';
 import { DirectorView } from '../director-view/director-view';
 import { ProfileView } from '../profile-view/profile-view';
 import { NavView } from '../navbar';
+import { Button } from 'react-bootstrap';
 
 export class MainView extends React.Component { //exposes the component, making available for rest of components
 
@@ -51,11 +52,10 @@ export class MainView extends React.Component { //exposes the component, making 
   onRegister(newData) {
     console.log(newData);
     this.setState({
-      userData: newData,
-      user: newData.Username
+      userData: newData
     });
 
-    localStorage.setItem('user', newData.Username);
+    localStorage.setItem('user', JSON.stringify(newData));
     this.getMovies(newData);
   }
 
@@ -75,13 +75,16 @@ export class MainView extends React.Component { //exposes the component, making 
       });
   }
 
-  newUser(newData) {
-    localStorage.setItem('user', newData.Username);
+  onLoggedOut() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
     this.setState({
-      userData: newData,
-      user: newData.Username
+      user: null
     });
+    window.open('/', '_self');
   }
+
+
 
   render() {
     const { movies, user } = this.state;
@@ -89,6 +92,15 @@ export class MainView extends React.Component { //exposes the component, making 
 
     return (
       <Router>
+
+        <Col >
+          <Button onClick={() => { this.onLoggedOut() }}>Logout</Button>
+          <Link to={`/users/${user}`}>
+            <Button variant='outline-dark'>{user} Profile</Button>
+          </Link>
+
+        </Col>
+
         <Row className="main-view justify-content-md-center">
           <Route exact path="/" render={() => {
             if (!user) return <Col>
@@ -97,7 +109,7 @@ export class MainView extends React.Component { //exposes the component, making 
             if (movies.length === 0) return <div className="main-view" />;
             return movies.map(m => (
               <Col md={3} key={m._id}>
-                <MovieCard movie={m} />
+                <MovieCard movie={m} user={user} />
               </Col>
             ))
           }} />
@@ -138,14 +150,10 @@ export class MainView extends React.Component { //exposes the component, making 
             </Col>
           }} />
 
-          <Route path="/users" render={({ history }) => {
-            if (!user) {
-              return (<Col >
-                <LoginView onLoggedIn={user => this.onLoggedIn(user)} />
-              </Col>)
-            }
+          <Route exact path={`/users/${user}`} render={({ history }) => {
+            if (!user) return <Redirect to="/" />
             return <Col md={8} >
-              <ProfileView onBackClick={() => history.goBack()} />
+              <ProfileView user={user} movies={movies} onBackClick={() => history.goBack()} />
             </Col>
           }} />
 

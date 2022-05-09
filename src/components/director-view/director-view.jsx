@@ -10,7 +10,7 @@ export class DirectorView extends React.Component {
 
     return (
       <>
-        <NavView />
+        {/* <NavView /> */}
         <Card>
           <Card.Img variant="top" src={director.Image} />
           <Card.Body>
