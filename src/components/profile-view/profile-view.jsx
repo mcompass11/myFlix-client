@@ -133,6 +133,7 @@ export class ProfileView extends Component {
         alert('User profile deleted.');
         localStorage.removeItem('user');
         localStorage.removeItem('token');
+        window.open('/', '_self');
       })
       .catch(function (error) {
         console.log(error);
@@ -142,7 +143,7 @@ export class ProfileView extends Component {
 
 
   render() {
-    const { movies, user, users, onBackClick } = this.props;
+    const { movies } = this.props;
     const { Username, Email, Birthday, Password, FavoriteMovies } = this.state;
 
     const favoriteMovies = movies.filter((m) => FavoriteMovies.includes(m._id)) || [];
