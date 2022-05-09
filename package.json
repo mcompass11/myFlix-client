@@ -1,5 +1,4 @@
 {
-  "homepage": "https://mcompass11.github.io/myFlix-client",
   "name": "myflix-client",
   "version": "1.0.0",
   "description": "",
@@ -9,7 +8,7 @@
     "build": "parcel build src/index.html",
     "test": "echo \"Error: no test specified\" && exit 1",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d dist"
   },
   "repository": {
     "type": "git",
@@ -20,6 +19,7 @@
   "bugs": {
     "url": "https://github.com/mcompass11/myFlix-client/issues"
   },
+  "homepage": "https://mcompass11.github.io/myFlix-client",
   "dependencies": {
     "atatus-spa": "^4.4.1",
     "axios": "^0.21.1",
