@@ -38353,8 +38353,8 @@ ProfileView.propTypes = {
   window.$RefreshSig$ = prevRefreshSig;
 }
 },{"react/jsx-dev-runtime":"iTorj","react":"21dqq","axios":"jo6P5","prop-types":"7wKI2","react-bootstrap/Form":"iBZ80","react-bootstrap/Button":"aPzUt","react-bootstrap/Col":"2L2I6","react-router-dom":"cHIiW","react-bootstrap":"3AD9A","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"lJZlQ":[function() {},{}],"dc9eP":[function(require,module,exports) {
-var process = require("process");
 var global = arguments[3];
+var process = require("process");
 /*! AtatusJs - v4.4.1 - 2022-03-15
 * Copyright (c) 2022 Atatus */ !function(a1) {
     function b1(a, b) {
