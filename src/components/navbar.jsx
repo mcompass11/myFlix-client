@@ -6,7 +6,12 @@ import { LoginView } from "./login-view/login-view";
 import { Link } from "react-router-dom";
 
 
-export function NavView({ user, onLoggedOut }) {
+export function NavView({ user }) {
+
+  const onLoggedOut = () => {
+    localStorage.clear();
+    window.open('/', '_self');
+  }
 
   return (
     <Navbar bg="light" expand="lg">
@@ -16,7 +21,7 @@ export function NavView({ user, onLoggedOut }) {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <Nav.Link href={`/users/${user}`}>Profile</Nav.Link>
-            <Nav.Link onClick={() => { onLoggedOut }} href='/'>Logout</Nav.Link>
+            <Nav.Link onClick={() => onLoggedOut()} href='/'>Logout</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>

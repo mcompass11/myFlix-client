@@ -78,14 +78,14 @@ export class MainView extends React.Component { //exposes the component, making 
       });
   }
 
-  onLoggedOut() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    this.setState({
-      user: null
-    });
-    window.open('/', '_self');
-  }
+  // onLoggedOut() {
+  //   localStorage.removeItem('token');
+  //   localStorage.removeItem('user');
+  //   this.setState({
+  //     user: null
+  //   });
+  //   window.open('/', '_self');
+  // }
 
 
 
@@ -96,22 +96,16 @@ export class MainView extends React.Component { //exposes the component, making 
     return (
       <Router>
 
-        <Col >
-          <Button onClick={() => { this.onLoggedOut() }}>Logout</Button>
-          <Link to={`/users/${user}`}>
-            <Button variant='outline-dark'>{user} Profile</Button>
-          </Link>
-
-        </Col>
-        <NavView />
-
         <Row className="main-view justify-content-md-center">
           <Route exact path="/" render={() => {
             if (!user) return <Col>
               <LoginView onLoggedIn={user => this.onLoggedIn(user)} />
             </Col>
             if (movies.length === 0) return <div className="main-view" />;
-            return <MovieList movies={movies} />;
+            return <>
+              <NavView user={user} />
+              <MovieList movies={movies} />
+            </>;
           }} />
           <Route path="/register" render={() => {
             if (user) return <Redirect to="/" />

@@ -8,6 +8,7 @@ import { Row } from 'react-bootstrap';
 
 import { Link } from "react-router-dom";
 import { Card } from 'react-bootstrap';
+import { NavView } from '../navbar';
 
 export class ProfileView extends Component {
 
@@ -154,7 +155,7 @@ export class ProfileView extends Component {
 
     return (
       <>
-
+        <NavView />
         <div className="profile-view">
           <h1>Hello, {Username}</h1>
           <h2>Current Info:</h2>

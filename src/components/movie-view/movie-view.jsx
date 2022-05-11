@@ -38,7 +38,7 @@ export class MovieView extends React.Component {
 
     return (
       <>
-        {/* <NavView /> */}
+        <NavView />
         <Card>
           <Card.Img variant="top" src={movie.ImagePath} />
 
