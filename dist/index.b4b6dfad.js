@@ -171,26 +171,26 @@ module.exports = require('./cjs/react-refresh-runtime.development.js');
     // Please consider also adding to 'react-devtools-shared/src/backend/ReactSymbols'
     // The Symbol used to tag the ReactElement-like types. If there is no native Symbol
     // nor polyfill, then a plain number is used for performance.
-    var REACT_ELEMENT_TYPE = 60103;
-    var REACT_PORTAL_TYPE = 60106;
-    var REACT_FRAGMENT_TYPE = 60107;
-    var REACT_STRICT_MODE_TYPE = 60108;
-    var REACT_PROFILER_TYPE = 60114;
-    var REACT_PROVIDER_TYPE = 60109;
-    var REACT_CONTEXT_TYPE = 60110;
-    var REACT_FORWARD_REF_TYPE = 60112;
-    var REACT_SUSPENSE_TYPE = 60113;
-    var REACT_SUSPENSE_LIST_TYPE = 60120;
-    var REACT_MEMO_TYPE = 60115;
-    var REACT_LAZY_TYPE = 60116;
-    var REACT_BLOCK_TYPE = 60121;
-    var REACT_SERVER_BLOCK_TYPE = 60122;
-    var REACT_FUNDAMENTAL_TYPE = 60117;
-    var REACT_SCOPE_TYPE = 60119;
-    var REACT_OPAQUE_ID_TYPE = 60128;
-    var REACT_DEBUG_TRACING_MODE_TYPE = 60129;
-    var REACT_OFFSCREEN_TYPE = 60130;
-    var REACT_LEGACY_HIDDEN_TYPE = 60131;
+    var REACT_ELEMENT_TYPE = 0xeac7;
+    var REACT_PORTAL_TYPE = 0xeaca;
+    var REACT_FRAGMENT_TYPE = 0xeacb;
+    var REACT_STRICT_MODE_TYPE = 0xeacc;
+    var REACT_PROFILER_TYPE = 0xead2;
+    var REACT_PROVIDER_TYPE = 0xeacd;
+    var REACT_CONTEXT_TYPE = 0xeace;
+    var REACT_FORWARD_REF_TYPE = 0xead0;
+    var REACT_SUSPENSE_TYPE = 0xead1;
+    var REACT_SUSPENSE_LIST_TYPE = 0xead8;
+    var REACT_MEMO_TYPE = 0xead3;
+    var REACT_LAZY_TYPE = 0xead4;
+    var REACT_BLOCK_TYPE = 0xead9;
+    var REACT_SERVER_BLOCK_TYPE = 0xeada;
+    var REACT_FUNDAMENTAL_TYPE = 0xead5;
+    var REACT_SCOPE_TYPE = 0xead7;
+    var REACT_OPAQUE_ID_TYPE = 0xeae0;
+    var REACT_DEBUG_TRACING_MODE_TYPE = 0xeae1;
+    var REACT_OFFSCREEN_TYPE = 0xeae2;
+    var REACT_LEGACY_HIDDEN_TYPE = 0xeae3;
     if (typeof Symbol === 'function' && Symbol.for) {
         var symbolFor = Symbol.for;
         REACT_ELEMENT_TYPE = symbolFor('react.element');
@@ -615,7 +615,7 @@ module.exports = require('./cjs/react-refresh-runtime.development.js');
     exports.setSignature = setSignature;
 })();
 
-},{}],"1SYPb":[function(require,module,exports) {
+},{}],"1wDOc":[function(require,module,exports) {
 "use strict";
 var HMR_HOST = null;
 var HMR_PORT = null;
@@ -696,7 +696,7 @@ function _arrayLikeToArray(arr, len) {
     for(var i = 0, arr2 = new Array(len); i < len; i++)arr2[i] = arr[i];
     return arr2;
 }
-/* global HMR_HOST, HMR_PORT, HMR_ENV_HASH, HMR_SECURE */ /*::
+/* global HMR_HOST, HMR_PORT, HMR_ENV_HASH, HMR_SECURE, chrome, browser */ /*::
 import type {
   HMRAsset,
   HMRMessage,
@@ -723,11 +723,18 @@ interface ParcelModule {
     _disposeCallbacks: Array<(mixed) => void>,
   |};
 }
+interface ExtensionContext {
+  runtime: {|
+    reload(): void,
+  |};
+}
 declare var module: {bundle: ParcelRequire, ...};
 declare var HMR_HOST: string;
 declare var HMR_PORT: string;
 declare var HMR_ENV_HASH: string;
 declare var HMR_SECURE: boolean;
+declare var chrome: ExtensionContext;
+declare var browser: ExtensionContext;
 */ var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
 function Module(moduleName) {
@@ -782,7 +789,12 @@ if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
                     var id = assetsToAccept[i][1];
                     if (!acceptedAssets[id]) hmrAcceptRun(assetsToAccept[i][0], id);
                 }
-            } else window.location.reload();
+            } else if ('reload' in location) location.reload();
+            else {
+                // Web extension context
+                var ext = typeof chrome === 'undefined' ? typeof browser === 'undefined' ? null : browser : chrome;
+                if (ext && ext.runtime && ext.runtime.reload) ext.runtime.reload();
+            }
         }
         if (data.type === 'error') {
             // Log parcel errors to console
@@ -876,7 +888,7 @@ function reloadCSS() {
             var href = links[i].getAttribute('href');
             var hostname = getHostname();
             var servedFromHMRServer = hostname === 'localhost' ? new RegExp('^(https?:\\/\\/(0.0.0.0|127.0.0.1)|localhost):' + getPort()).test(href) : href.indexOf(hostname + ':' + getPort());
-            var absolute = /^https?:\/\//i.test(href) && href.indexOf(window.location.origin) !== 0 && !servedFromHMRServer;
+            var absolute = /^https?:\/\//i.test(href) && href.indexOf(location.origin) !== 0 && !servedFromHMRServer;
             if (!absolute) updateLink(links[i]);
         }
         cssTimeout = null;
@@ -1046,7 +1058,7 @@ _reactDomDefault.default.render(/*#__PURE__*/ _reactDefault.default.createElemen
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","react-dom":"j6uA9","react-bootstrap/Container":"hEdsw","redux":"cDNB3","react-redux":"bdVon","./reducers/reducers":"dgblV","redux-devtools-extension":"fOPxo","./components/main-view/main-view":"4gflv","./index.scss":"lJZlQ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","atatus-spa":"dc9eP"}],"iTorj":[function(require,module,exports) {
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","react-dom":"j6uA9","react-bootstrap/Container":"hEdsw","redux":"cDNB3","react-redux":"bdVon","./reducers/reducers":"dgblV","redux-devtools-extension":"fOPxo","atatus-spa":"dc9eP","./components/main-view/main-view":"4gflv","./index.scss":"lJZlQ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"iTorj":[function(require,module,exports) {
 'use strict';
 module.exports = require('./cjs/react-jsx-dev-runtime.development.js');
 
@@ -1067,26 +1079,26 @@ module.exports = require('./cjs/react-jsx-dev-runtime.development.js');
     // Please consider also adding to 'react-devtools-shared/src/backend/ReactSymbols'
     // The Symbol used to tag the ReactElement-like types. If there is no native Symbol
     // nor polyfill, then a plain number is used for performance.
-    var REACT_ELEMENT_TYPE = 60103;
-    var REACT_PORTAL_TYPE = 60106;
-    exports.Fragment = 60107;
-    var REACT_STRICT_MODE_TYPE = 60108;
-    var REACT_PROFILER_TYPE = 60114;
-    var REACT_PROVIDER_TYPE = 60109;
-    var REACT_CONTEXT_TYPE = 60110;
-    var REACT_FORWARD_REF_TYPE = 60112;
-    var REACT_SUSPENSE_TYPE = 60113;
-    var REACT_SUSPENSE_LIST_TYPE = 60120;
-    var REACT_MEMO_TYPE = 60115;
-    var REACT_LAZY_TYPE = 60116;
-    var REACT_BLOCK_TYPE = 60121;
-    var REACT_SERVER_BLOCK_TYPE = 60122;
-    var REACT_FUNDAMENTAL_TYPE = 60117;
-    var REACT_SCOPE_TYPE = 60119;
-    var REACT_OPAQUE_ID_TYPE = 60128;
-    var REACT_DEBUG_TRACING_MODE_TYPE = 60129;
-    var REACT_OFFSCREEN_TYPE = 60130;
-    var REACT_LEGACY_HIDDEN_TYPE = 60131;
+    var REACT_ELEMENT_TYPE = 0xeac7;
+    var REACT_PORTAL_TYPE = 0xeaca;
+    exports.Fragment = 0xeacb;
+    var REACT_STRICT_MODE_TYPE = 0xeacc;
+    var REACT_PROFILER_TYPE = 0xead2;
+    var REACT_PROVIDER_TYPE = 0xeacd;
+    var REACT_CONTEXT_TYPE = 0xeace;
+    var REACT_FORWARD_REF_TYPE = 0xead0;
+    var REACT_SUSPENSE_TYPE = 0xead1;
+    var REACT_SUSPENSE_LIST_TYPE = 0xead8;
+    var REACT_MEMO_TYPE = 0xead3;
+    var REACT_LAZY_TYPE = 0xead4;
+    var REACT_BLOCK_TYPE = 0xead9;
+    var REACT_SERVER_BLOCK_TYPE = 0xeada;
+    var REACT_FUNDAMENTAL_TYPE = 0xead5;
+    var REACT_SCOPE_TYPE = 0xead7;
+    var REACT_OPAQUE_ID_TYPE = 0xeae0;
+    var REACT_DEBUG_TRACING_MODE_TYPE = 0xeae1;
+    var REACT_OFFSCREEN_TYPE = 0xeae2;
+    var REACT_LEGACY_HIDDEN_TYPE = 0xeae3;
     if (typeof Symbol === 'function' && Symbol.for) {
         var symbolFor = Symbol.for;
         REACT_ELEMENT_TYPE = symbolFor('react.element');
@@ -1849,26 +1861,26 @@ module.exports = require('./cjs/react.development.js');
     // Please consider also adding to 'react-devtools-shared/src/backend/ReactSymbols'
     // The Symbol used to tag the ReactElement-like types. If there is no native Symbol
     // nor polyfill, then a plain number is used for performance.
-    var REACT_ELEMENT_TYPE = 60103;
-    var REACT_PORTAL_TYPE = 60106;
-    exports.Fragment = 60107;
-    exports.StrictMode = 60108;
-    exports.Profiler = 60114;
-    var REACT_PROVIDER_TYPE = 60109;
-    var REACT_CONTEXT_TYPE = 60110;
-    var REACT_FORWARD_REF_TYPE = 60112;
-    exports.Suspense = 60113;
-    var REACT_SUSPENSE_LIST_TYPE = 60120;
-    var REACT_MEMO_TYPE = 60115;
-    var REACT_LAZY_TYPE = 60116;
-    var REACT_BLOCK_TYPE = 60121;
-    var REACT_SERVER_BLOCK_TYPE = 60122;
-    var REACT_FUNDAMENTAL_TYPE = 60117;
-    var REACT_SCOPE_TYPE = 60119;
-    var REACT_OPAQUE_ID_TYPE = 60128;
-    var REACT_DEBUG_TRACING_MODE_TYPE = 60129;
-    var REACT_OFFSCREEN_TYPE = 60130;
-    var REACT_LEGACY_HIDDEN_TYPE = 60131;
+    var REACT_ELEMENT_TYPE = 0xeac7;
+    var REACT_PORTAL_TYPE = 0xeaca;
+    exports.Fragment = 0xeacb;
+    exports.StrictMode = 0xeacc;
+    exports.Profiler = 0xead2;
+    var REACT_PROVIDER_TYPE = 0xeacd;
+    var REACT_CONTEXT_TYPE = 0xeace;
+    var REACT_FORWARD_REF_TYPE = 0xead0;
+    exports.Suspense = 0xead1;
+    var REACT_SUSPENSE_LIST_TYPE = 0xead8;
+    var REACT_MEMO_TYPE = 0xead3;
+    var REACT_LAZY_TYPE = 0xead4;
+    var REACT_BLOCK_TYPE = 0xead9;
+    var REACT_SERVER_BLOCK_TYPE = 0xeada;
+    var REACT_FUNDAMENTAL_TYPE = 0xead5;
+    var REACT_SCOPE_TYPE = 0xead7;
+    var REACT_OPAQUE_ID_TYPE = 0xeae0;
+    var REACT_DEBUG_TRACING_MODE_TYPE = 0xeae1;
+    var REACT_OFFSCREEN_TYPE = 0xeae2;
+    var REACT_LEGACY_HIDDEN_TYPE = 0xeae3;
     if (typeof Symbol === 'function' && Symbol.for) {
         var symbolFor = Symbol.for;
         REACT_ELEMENT_TYPE = symbolFor('react.element');
@@ -4034,26 +4046,26 @@ module.exports = require('./cjs/react-dom.development.js');
     // Please consider also adding to 'react-devtools-shared/src/backend/ReactSymbols'
     // The Symbol used to tag the ReactElement-like types. If there is no native Symbol
     // nor polyfill, then a plain number is used for performance.
-    var REACT_ELEMENT_TYPE = 60103;
-    var REACT_PORTAL_TYPE = 60106;
-    var REACT_FRAGMENT_TYPE = 60107;
-    var REACT_STRICT_MODE_TYPE = 60108;
-    var REACT_PROFILER_TYPE = 60114;
-    var REACT_PROVIDER_TYPE = 60109;
-    var REACT_CONTEXT_TYPE = 60110;
-    var REACT_FORWARD_REF_TYPE = 60112;
-    var REACT_SUSPENSE_TYPE = 60113;
-    var REACT_SUSPENSE_LIST_TYPE = 60120;
-    var REACT_MEMO_TYPE = 60115;
-    var REACT_LAZY_TYPE = 60116;
-    var REACT_BLOCK_TYPE = 60121;
-    var REACT_SERVER_BLOCK_TYPE = 60122;
-    var REACT_FUNDAMENTAL_TYPE = 60117;
-    var REACT_SCOPE_TYPE = 60119;
-    var REACT_OPAQUE_ID_TYPE = 60128;
-    var REACT_DEBUG_TRACING_MODE_TYPE = 60129;
-    var REACT_OFFSCREEN_TYPE = 60130;
-    var REACT_LEGACY_HIDDEN_TYPE = 60131;
+    var REACT_ELEMENT_TYPE = 0xeac7;
+    var REACT_PORTAL_TYPE = 0xeaca;
+    var REACT_FRAGMENT_TYPE = 0xeacb;
+    var REACT_STRICT_MODE_TYPE = 0xeacc;
+    var REACT_PROFILER_TYPE = 0xead2;
+    var REACT_PROVIDER_TYPE = 0xeacd;
+    var REACT_CONTEXT_TYPE = 0xeace;
+    var REACT_FORWARD_REF_TYPE = 0xead0;
+    var REACT_SUSPENSE_TYPE = 0xead1;
+    var REACT_SUSPENSE_LIST_TYPE = 0xead8;
+    var REACT_MEMO_TYPE = 0xead3;
+    var REACT_LAZY_TYPE = 0xead4;
+    var REACT_BLOCK_TYPE = 0xead9;
+    var REACT_SERVER_BLOCK_TYPE = 0xeada;
+    var REACT_FUNDAMENTAL_TYPE = 0xead5;
+    var REACT_SCOPE_TYPE = 0xead7;
+    var REACT_OPAQUE_ID_TYPE = 0xeae0;
+    var REACT_DEBUG_TRACING_MODE_TYPE = 0xeae1;
+    var REACT_OFFSCREEN_TYPE = 0xeae2;
+    var REACT_LEGACY_HIDDEN_TYPE = 0xeae3;
     if (typeof Symbol === 'function' && Symbol.for) {
         var symbolFor = Symbol.for;
         REACT_ELEMENT_TYPE = symbolFor('react.element');
@@ -22851,6 +22863,8 @@ parcelHelpers.export(exports, "compose", ()=>compose
 );
 parcelHelpers.export(exports, "createStore", ()=>createStore
 );
+parcelHelpers.export(exports, "legacy_createStore", ()=>legacy_createStore
+);
 var _objectSpread2 = require("@babel/runtime/helpers/esm/objectSpread2");
 var _objectSpread2Default = parcelHelpers.interopDefault(_objectSpread2);
 /**
@@ -22934,29 +22948,29 @@ function kindOf(val) {
     return typeOfVal;
 }
 /**
- * Creates a Redux store that holds the state tree.
- * The only way to change the data in the store is to call `dispatch()` on it.
+ * @deprecated
  *
- * There should only be a single store in your app. To specify how different
- * parts of the state tree respond to actions, you may combine several reducers
- * into a single reducer function by using `combineReducers`.
+ * **We recommend using the `configureStore` method
+ * of the `@reduxjs/toolkit` package**, which replaces `createStore`.
  *
- * @param {Function} reducer A function that returns the next state tree, given
- * the current state tree and the action to handle.
+ * Redux Toolkit is our recommended approach for writing Redux logic today,
+ * including store setup, reducers, data fetching, and more.
  *
- * @param {any} [preloadedState] The initial state. You may optionally specify it
- * to hydrate the state from the server in universal apps, or to restore a
- * previously serialized user session.
- * If you use `combineReducers` to produce the root reducer function, this must be
- * an object with the same shape as `combineReducers` keys.
+ * **For more details, please read this Redux docs page:**
+ * **https://redux.js.org/introduction/why-rtk-is-redux-today**
  *
- * @param {Function} [enhancer] The store enhancer. You may optionally specify it
- * to enhance the store with third-party capabilities such as middleware,
- * time travel, persistence, etc. The only store enhancer that ships with Redux
- * is `applyMiddleware()`.
+ * `configureStore` from Redux Toolkit is an improved version of `createStore` that
+ * simplifies setup and helps avoid common bugs.
  *
- * @returns {Store} A Redux store that lets you read the state, dispatch actions
- * and subscribe to changes.
+ * You should not be using the `redux` core package by itself today, except for learning purposes.
+ * The `createStore` method from the core `redux` package will not be removed, but we encourage
+ * all users to migrate to using Redux Toolkit for all Redux code.
+ *
+ * If you want to use `createStore` without this visual deprecation warning, use
+ * the `legacy_createStore` import instead:
+ *
+ * `import { legacy_createStore as createStore} from 'redux'`
+ *
  */ function createStore(reducer, preloadedState, enhancer) {
     var _ref2;
     if (typeof preloadedState === 'function' && typeof enhancer === 'function' || typeof enhancer === 'function' && typeof arguments[3] === 'function') throw new Error("It looks like you are passing several store enhancers to createStore(). This is not supported. Instead, compose them together to a single function. See https://redux.js.org/tutorials/fundamentals/part-4-store#creating-a-store-with-enhancers for an example.");
@@ -23132,6 +23146,36 @@ function kindOf(val) {
         replaceReducer: replaceReducer
     }, _ref2[$$observable] = observable, _ref2;
 }
+/**
+ * Creates a Redux store that holds the state tree.
+ *
+ * **We recommend using `configureStore` from the
+ * `@reduxjs/toolkit` package**, which replaces `createStore`:
+ * **https://redux.js.org/introduction/why-rtk-is-redux-today**
+ *
+ * The only way to change the data in the store is to call `dispatch()` on it.
+ *
+ * There should only be a single store in your app. To specify how different
+ * parts of the state tree respond to actions, you may combine several reducers
+ * into a single reducer function by using `combineReducers`.
+ *
+ * @param {Function} reducer A function that returns the next state tree, given
+ * the current state tree and the action to handle.
+ *
+ * @param {any} [preloadedState] The initial state. You may optionally specify it
+ * to hydrate the state from the server in universal apps, or to restore a
+ * previously serialized user session.
+ * If you use `combineReducers` to produce the root reducer function, this must be
+ * an object with the same shape as `combineReducers` keys.
+ *
+ * @param {Function} [enhancer] The store enhancer. You may optionally specify it
+ * to enhance the store with third-party capabilities such as middleware,
+ * time travel, persistence, etc. The only store enhancer that ships with Redux
+ * is `applyMiddleware()`.
+ *
+ * @returns {Store} A Redux store that lets you read the state, dispatch actions
+ * and subscribe to changes.
+ */ var legacy_createStore = createStore;
 /**
  * Prints a warning in the console if it exists.
  *
@@ -23462,7 +23506,6 @@ function Provider(_ref) {
     var store = _ref.store, context = _ref.context, children = _ref.children;
     var contextValue = _react.useMemo(function() {
         var subscription = _subscription.createSubscription(store);
-        subscription.onStateChange = subscription.notifyNestedSubs;
         return {
             store: store,
             subscription: subscription
@@ -23477,6 +23520,7 @@ function Provider(_ref) {
     ]);
     _useIsomorphicLayoutEffect.useIsomorphicLayoutEffect(function() {
         var subscription = contextValue.subscription;
+        subscription.onStateChange = subscription.notifyNestedSubs;
         subscription.trySubscribe();
         if (previousState !== store.getState()) subscription.notifyNestedSubs();
         return function() {
@@ -23527,25 +23571,25 @@ module.exports = require('./cjs/react-is.development.js');
     // The Symbol used to tag the ReactElement-like types. If there is no native Symbol
     // nor polyfill, then a plain number is used for performance.
     var hasSymbol = typeof Symbol === 'function' && Symbol.for;
-    var REACT_ELEMENT_TYPE = hasSymbol ? Symbol.for('react.element') : 60103;
-    var REACT_PORTAL_TYPE = hasSymbol ? Symbol.for('react.portal') : 60106;
-    var REACT_FRAGMENT_TYPE = hasSymbol ? Symbol.for('react.fragment') : 60107;
-    var REACT_STRICT_MODE_TYPE = hasSymbol ? Symbol.for('react.strict_mode') : 60108;
-    var REACT_PROFILER_TYPE = hasSymbol ? Symbol.for('react.profiler') : 60114;
-    var REACT_PROVIDER_TYPE = hasSymbol ? Symbol.for('react.provider') : 60109;
-    var REACT_CONTEXT_TYPE = hasSymbol ? Symbol.for('react.context') : 60110; // TODO: We don't use AsyncMode or ConcurrentMode anymore. They were temporary
+    var REACT_ELEMENT_TYPE = hasSymbol ? Symbol.for('react.element') : 0xeac7;
+    var REACT_PORTAL_TYPE = hasSymbol ? Symbol.for('react.portal') : 0xeaca;
+    var REACT_FRAGMENT_TYPE = hasSymbol ? Symbol.for('react.fragment') : 0xeacb;
+    var REACT_STRICT_MODE_TYPE = hasSymbol ? Symbol.for('react.strict_mode') : 0xeacc;
+    var REACT_PROFILER_TYPE = hasSymbol ? Symbol.for('react.profiler') : 0xead2;
+    var REACT_PROVIDER_TYPE = hasSymbol ? Symbol.for('react.provider') : 0xeacd;
+    var REACT_CONTEXT_TYPE = hasSymbol ? Symbol.for('react.context') : 0xeace; // TODO: We don't use AsyncMode or ConcurrentMode anymore. They were temporary
     // (unstable) APIs that have been removed. Can we remove the symbols?
-    var REACT_ASYNC_MODE_TYPE = hasSymbol ? Symbol.for('react.async_mode') : 60111;
-    var REACT_CONCURRENT_MODE_TYPE = hasSymbol ? Symbol.for('react.concurrent_mode') : 60111;
-    var REACT_FORWARD_REF_TYPE = hasSymbol ? Symbol.for('react.forward_ref') : 60112;
-    var REACT_SUSPENSE_TYPE = hasSymbol ? Symbol.for('react.suspense') : 60113;
-    var REACT_SUSPENSE_LIST_TYPE = hasSymbol ? Symbol.for('react.suspense_list') : 60120;
-    var REACT_MEMO_TYPE = hasSymbol ? Symbol.for('react.memo') : 60115;
-    var REACT_LAZY_TYPE = hasSymbol ? Symbol.for('react.lazy') : 60116;
-    var REACT_BLOCK_TYPE = hasSymbol ? Symbol.for('react.block') : 60121;
-    var REACT_FUNDAMENTAL_TYPE = hasSymbol ? Symbol.for('react.fundamental') : 60117;
-    var REACT_RESPONDER_TYPE = hasSymbol ? Symbol.for('react.responder') : 60118;
-    var REACT_SCOPE_TYPE = hasSymbol ? Symbol.for('react.scope') : 60119;
+    var REACT_ASYNC_MODE_TYPE = hasSymbol ? Symbol.for('react.async_mode') : 0xeacf;
+    var REACT_CONCURRENT_MODE_TYPE = hasSymbol ? Symbol.for('react.concurrent_mode') : 0xeacf;
+    var REACT_FORWARD_REF_TYPE = hasSymbol ? Symbol.for('react.forward_ref') : 0xead0;
+    var REACT_SUSPENSE_TYPE = hasSymbol ? Symbol.for('react.suspense') : 0xead1;
+    var REACT_SUSPENSE_LIST_TYPE = hasSymbol ? Symbol.for('react.suspense_list') : 0xead8;
+    var REACT_MEMO_TYPE = hasSymbol ? Symbol.for('react.memo') : 0xead3;
+    var REACT_LAZY_TYPE = hasSymbol ? Symbol.for('react.lazy') : 0xead4;
+    var REACT_BLOCK_TYPE = hasSymbol ? Symbol.for('react.block') : 0xead9;
+    var REACT_FUNDAMENTAL_TYPE = hasSymbol ? Symbol.for('react.fundamental') : 0xead5;
+    var REACT_RESPONDER_TYPE = hasSymbol ? Symbol.for('react.responder') : 0xead6;
+    var REACT_SCOPE_TYPE = hasSymbol ? Symbol.for('react.scope') : 0xead7;
     function isValidElementType(type) {
         return typeof type === 'string' || typeof type === 'function' || type === REACT_FRAGMENT_TYPE || type === REACT_CONCURRENT_MODE_TYPE || type === REACT_PROFILER_TYPE || type === REACT_STRICT_MODE_TYPE || type === REACT_SUSPENSE_TYPE || type === REACT_SUSPENSE_LIST_TYPE || typeof type === 'object' && type !== null && (type.$$typeof === REACT_LAZY_TYPE || type.$$typeof === REACT_MEMO_TYPE || type.$$typeof === REACT_PROVIDER_TYPE || type.$$typeof === REACT_CONTEXT_TYPE || type.$$typeof === REACT_FORWARD_REF_TYPE || type.$$typeof === REACT_FUNDAMENTAL_TYPE || type.$$typeof === REACT_RESPONDER_TYPE || type.$$typeof === REACT_SCOPE_TYPE || type.$$typeof === REACT_BLOCK_TYPE);
     }
@@ -24438,14 +24482,14 @@ var initStateUpdates = function initStateUpdates() {
 function connectAdvanced(/*
   selectorFactory is a func that is responsible for returning the selector function used to
   compute new props from state, props, and dispatch. For example:
-     export default connectAdvanced((dispatch, options) => (state, props) => ({
+      export default connectAdvanced((dispatch, options) => (state, props) => ({
       thing: state.things[props.thingId],
       saveThing: fields => dispatch(actionCreators.saveThing(props.thingId, fields)),
     }))(YourComponent)
-   Access to dispatch is provided to the factory so selectorFactories can bind actionCreators
+    Access to dispatch is provided to the factory so selectorFactories can bind actionCreators
   outside of their selector as an optimization. Options passed to connectAdvanced are passed to
   the selectorFactory, along with displayName and WrappedComponent, as the second argument.
-   Note that selectorFactory is responsible for all caching/memoization of inbound and outbound
+    Note that selectorFactory is responsible for all caching/memoization of inbound and outbound
   props. Do not use connectAdvanced directly without memoizing results between calls to your
   selector, otherwise the Connect component will re-render on every state or props change.
 */ selectorFactory, _ref) {
@@ -24757,26 +24801,26 @@ module.exports = require('./cjs/react-is.development.js');
     // Please consider also adding to 'react-devtools-shared/src/backend/ReactSymbols'
     // The Symbol used to tag the ReactElement-like types. If there is no native Symbol
     // nor polyfill, then a plain number is used for performance.
-    var REACT_ELEMENT_TYPE = 60103;
-    var REACT_PORTAL_TYPE = 60106;
-    var REACT_FRAGMENT_TYPE = 60107;
-    var REACT_STRICT_MODE_TYPE = 60108;
-    var REACT_PROFILER_TYPE = 60114;
-    var REACT_PROVIDER_TYPE = 60109;
-    var REACT_CONTEXT_TYPE = 60110;
-    var REACT_FORWARD_REF_TYPE = 60112;
-    var REACT_SUSPENSE_TYPE = 60113;
-    var REACT_SUSPENSE_LIST_TYPE = 60120;
-    var REACT_MEMO_TYPE = 60115;
-    var REACT_LAZY_TYPE = 60116;
-    var REACT_BLOCK_TYPE = 60121;
-    var REACT_SERVER_BLOCK_TYPE = 60122;
-    var REACT_FUNDAMENTAL_TYPE = 60117;
-    var REACT_SCOPE_TYPE = 60119;
-    var REACT_OPAQUE_ID_TYPE = 60128;
-    var REACT_DEBUG_TRACING_MODE_TYPE = 60129;
-    var REACT_OFFSCREEN_TYPE = 60130;
-    var REACT_LEGACY_HIDDEN_TYPE = 60131;
+    var REACT_ELEMENT_TYPE = 0xeac7;
+    var REACT_PORTAL_TYPE = 0xeaca;
+    var REACT_FRAGMENT_TYPE = 0xeacb;
+    var REACT_STRICT_MODE_TYPE = 0xeacc;
+    var REACT_PROFILER_TYPE = 0xead2;
+    var REACT_PROVIDER_TYPE = 0xeacd;
+    var REACT_CONTEXT_TYPE = 0xeace;
+    var REACT_FORWARD_REF_TYPE = 0xead0;
+    var REACT_SUSPENSE_TYPE = 0xead1;
+    var REACT_SUSPENSE_LIST_TYPE = 0xead8;
+    var REACT_MEMO_TYPE = 0xead3;
+    var REACT_LAZY_TYPE = 0xead4;
+    var REACT_BLOCK_TYPE = 0xead9;
+    var REACT_SERVER_BLOCK_TYPE = 0xeada;
+    var REACT_FUNDAMENTAL_TYPE = 0xead5;
+    var REACT_SCOPE_TYPE = 0xead7;
+    var REACT_OPAQUE_ID_TYPE = 0xeae0;
+    var REACT_DEBUG_TRACING_MODE_TYPE = 0xeae1;
+    var REACT_OFFSCREEN_TYPE = 0xeae2;
+    var REACT_LEGACY_HIDDEN_TYPE = 0xeae3;
     if (typeof Symbol === 'function' && Symbol.for) {
         var symbolFor = Symbol.for;
         REACT_ELEMENT_TYPE = symbolFor('react.element');
@@ -25610,7 +25654,3851 @@ exports.devToolsEnhancer = typeof window !== 'undefined' && window.__REDUX_DEVTO
     };
 };
 
-},{"redux":"cDNB3"}],"4gflv":[function(require,module,exports) {
+},{"redux":"cDNB3"}],"dc9eP":[function(require,module,exports) {
+var global = arguments[3];
+var process = require("process");
+/*! AtatusJs - v4.4.1 - 2022-03-15
+* Copyright (c) 2022 Atatus */ !function(a1) {
+    function b1(a, b) {
+        return Object.prototype.hasOwnProperty.call(a, b);
+    }
+    function c1(a) {
+        return "undefined" == typeof a;
+    }
+    if (a1) {
+        var d1 = {}, e1 = a1.TraceKit, f1 = [].slice, g1 = "?";
+        d1.noConflict = function() {
+            return a1.TraceKit = e1, d1;
+        }, d1.wrap = function(a) {
+            function b2() {
+                try {
+                    return a.apply(this, arguments);
+                } catch (b) {
+                    throw d1.report(b), b;
+                }
+            }
+            return b2;
+        }, d1.report = function() {
+            function c2(a) {
+                h1(), m.push(a);
+            }
+            function e3(a) {
+                for(var b = m.length - 1; b >= 0; --b)m[b] === a && m.splice(b, 1);
+            }
+            function f3(a, c, e) {
+                var f = null;
+                if (!c || d1.collectWindowErrors) {
+                    for(var g in m)if (b1(m, g)) try {
+                        m[g](a, c, e);
+                    } catch (h) {
+                        f = h;
+                    }
+                    if (f) throw f;
+                }
+            }
+            function g3(a, b, c, e, g) {
+                var h = null;
+                if (o) d1.computeStackTrace.augmentStackTraceWithInitialElement(o, b, c, a), i();
+                else if (g) h = d1.computeStackTrace(g), f3(h, !0, g);
+                else {
+                    var j = {
+                        url: b,
+                        line: c,
+                        column: e
+                    };
+                    j.func = d1.computeStackTrace.guessFunctionName(j.url, j.line), j.context = d1.computeStackTrace.gatherContext(j.url, j.line), h = {
+                        mode: "onerror",
+                        message: a,
+                        stack: [
+                            j
+                        ]
+                    }, f3(h, !0, null);
+                }
+                return k ? k.apply(this, arguments) : !1;
+            }
+            function h1() {
+                l !== !0 && (k = a1.onerror, a1.onerror = g3, l = !0);
+            }
+            function i() {
+                var a = o, b = n;
+                o = null, n = null, f3(a, !1, b);
+            }
+            function j1(b) {
+                if (o) {
+                    if (n === b) return;
+                    i();
+                }
+                var c = d1.computeStackTrace(b);
+                throw o = c, n = b, a1.setTimeout(function() {
+                    n === b && i();
+                }, c.incomplete ? 2e3 : 0), b;
+            }
+            var k, l, m = [], n = null, o = null;
+            return j1.subscribe = c2, j1.unsubscribe = e3, j1;
+        }(), d1.computeStackTrace = function() {
+            function e4(a) {
+                return "string" != typeof a ? [] : "";
+            }
+            function f4(c) {
+                if ("string" != typeof c) return [];
+                if (!b1(w1, c)) {
+                    var d = "", f = "";
+                    try {
+                        f = a1.document.domain;
+                    } catch (g) {}
+                    var h = /(.*)\:\/\/([^:\/]+)([:\d]*)\/{0,1}([\s\S]*)/.exec(c);
+                    h && h[2] === f && (d = e4(c)), w1[c] = d ? d.split("\n") : [];
+                }
+                return w1[c];
+            }
+            function h2(a, b) {
+                var d, e = /function ([^(]*)\(([^)]*)\)/, h = /['"]?([0-9A-Za-z$_]+)['"]?\s*[:=]\s*(function|eval|new Function)/, i = "", j = 10, k = f4(a);
+                if (!k.length) return g1;
+                for(var l = 0; j > l; ++l)if (i = k[b - l] + i, !c1(i)) {
+                    if (d = h.exec(i)) return d[1];
+                    if (d = e.exec(i)) return d[1];
+                }
+                return g1;
+            }
+            function i1(a, b) {
+                var e = f4(a);
+                if (!e.length) return null;
+                var g = [], h = Math.floor(d1.linesOfContext / 2), i = h + d1.linesOfContext % 2, j = Math.max(0, b - h - 1), k = Math.min(e.length, b + i - 1);
+                b -= 1;
+                for(var l = j; k > l; ++l)c1(e[l]) || g.push(e[l]);
+                return g.length > 0 ? g : null;
+            }
+            function j2(a) {
+                return a.replace(/[\-\[\]{}()*+?.,\\\^$|#]/g, "\\$&");
+            }
+            function k1(a) {
+                return j2(a).replace("<", "(?:<|&lt;)").replace(">", "(?:>|&gt;)").replace("&", "(?:&|&amp;)").replace('"', '(?:"|&quot;)').replace(/\s+/g, "\\s+");
+            }
+            function l1(a, b) {
+                for(var c, d, e = 0, g = b.length; g > e; ++e)if ((c = f4(b[e])).length && (c = c.join("\n"), d = a.exec(c))) return {
+                    url: b[e],
+                    line: c.substring(0, d.index).split("\n").length,
+                    column: d.index - c.lastIndexOf("\n", d.index) - 1
+                };
+                return null;
+            }
+            function m1(a, b, c) {
+                var d, e = f4(b), g = new RegExp("\\b" + j2(a) + "\\b");
+                return c -= 1, e && e.length > c && (d = g.exec(e[c])) ? d.index : null;
+            }
+            function n1(b) {
+                if (!c1(a1 && a1.document)) {
+                    for(var d, e, f, g, h = [
+                        a1.location.href
+                    ], i = a1.document.getElementsByTagName("script"), m = "" + b, n = /^function(?:\s+([\w$]+))?\s*\(([\w\s,]*)\)\s*\{\s*(\S[\s\S]*\S)\s*\}\s*$/, o = /^function on([\w$]+)\s*\(event\)\s*\{\s*(\S[\s\S]*\S)\s*\}\s*$/, p = 0; p < i.length; ++p){
+                        var q = i[p];
+                        q.src && h.push(q.src);
+                    }
+                    if (f = n.exec(m)) {
+                        var r = f[1] ? "\\s+" + f[1] : "", s = f[2].split(",").join("\\s*,\\s*");
+                        d = j2(f[3]).replace(/;$/, ";?"), e = new RegExp("function" + r + "\\s*\\(\\s*" + s + "\\s*\\)\\s*{\\s*" + d + "\\s*}");
+                    } else e = new RegExp(j2(m).replace(/\s+/g, "\\s+"));
+                    if (g = l1(e, h)) return g;
+                    if (f = o.exec(m)) {
+                        var t = f[1];
+                        if (d = k1(f[2]), e = new RegExp("on" + t + "=[\\'\"]\\s*" + d + "\\s*[\\'\"]", "i"), g = l1(e, h[0])) return g;
+                        if (e = new RegExp(d), g = l1(e, h)) return g;
+                    }
+                    return null;
+                }
+            }
+            function o1(a) {
+                if (!a.stack) return null;
+                for(var b, d, e = /^\s*at (.*?) ?\(((?:file|https?|blob|chrome-extension|native|webpack|eval).*?)(?::(\d+))?(?::(\d+))?\)?\s*$/i, f = /^\s*(.*?)(?:\((.*?)\))?(?:^|@)((?:file|https?|blob|chrome|webpack|\[native).*?)(?::(\d+))?(?::(\d+))?\s*$/i, j = /^\s*at (?:((?:\[object object\])?.+) )?\(?((?:ms-appx|https?|webpack|blob):.*?):(\d+)(?::(\d+))?\)?\s*$/i, k = a.stack.split("\n"), l = [], n = /^(.*) is undefined$/.exec(a.message), o = 0, p = k.length; p > o; ++o){
+                    if (b = e.exec(k[o])) {
+                        var q = b[2] && -1 !== b[2].indexOf("native");
+                        d = {
+                            url: q ? null : b[2],
+                            func: b[1] || g1,
+                            args: q ? [
+                                b[2]
+                            ] : [],
+                            line: b[3] ? +b[3] : null,
+                            column: b[4] ? +b[4] : null
+                        };
+                    } else if (b = j.exec(k[o])) d = {
+                        url: b[2],
+                        func: b[1] || g1,
+                        args: [],
+                        line: +b[3],
+                        column: b[4] ? +b[4] : null
+                    };
+                    else {
+                        if (!(b = f.exec(k[o]))) continue;
+                        d = {
+                            url: b[3],
+                            func: b[1] || g1,
+                            args: b[2] ? b[2].split(",") : [],
+                            line: b[4] ? +b[4] : null,
+                            column: b[5] ? +b[5] : null
+                        };
+                    }
+                    !d.func && d.line && (d.func = h2(d.url, d.line)), d.line && (d.context = i1(d.url, d.line)), l.push(d);
+                }
+                return l.length ? (l[0] && l[0].line && !l[0].column && n ? l[0].column = m1(n[1], l[0].url, l[0].line) : l[0].column || c1(a.columnNumber) || (l[0].column = a.columnNumber + 1), {
+                    mode: "stack",
+                    name: a.name,
+                    message: a.message,
+                    stack: l
+                }) : null;
+            }
+            function p1(a) {
+                var b = a.stacktrace;
+                if (b) {
+                    for(var c, d = / line (\d+).*script (?:in )?(\S+)(?:: in function (\S+))?$/i, e = / line (\d+), column (\d+)\s*(?:in (?:<anonymous function: ([^>]+)>|([^\)]+))\((.*)\))? in (.*):\s*$/i, f = b.split("\n"), g = [], j = 0; j < f.length; j += 2){
+                        var k = null;
+                        if ((c = d.exec(f[j])) ? k = {
+                            url: c[2],
+                            line: +c[1],
+                            column: null,
+                            func: c[3],
+                            args: []
+                        } : (c = e.exec(f[j])) && (k = {
+                            url: c[6],
+                            line: +c[1],
+                            column: +c[2],
+                            func: c[3] || c[4],
+                            args: c[5] ? c[5].split(",") : []
+                        }), k) {
+                            if (!k.func && k.line && (k.func = h2(k.url, k.line)), k.line) try {
+                                k.context = i1(k.url, k.line);
+                            } catch (l) {}
+                            k.context || (k.context = [
+                                f[j + 1]
+                            ]), g.push(k);
+                        }
+                    }
+                    return g.length ? {
+                        mode: "stacktrace",
+                        name: a.name,
+                        message: a.message,
+                        stack: g
+                    } : null;
+                }
+            }
+            function q1(c) {
+                var d = c.message.split("\n");
+                if (d.length < 4) return null;
+                var e, g = /^\s*Line (\d+) of linked script ((?:file|https?|blob)\S+)(?:: in function (\S+))?\s*$/i, j = /^\s*Line (\d+) of inline#(\d+) script in ((?:file|https?|blob)\S+)(?:: in function (\S+))?\s*$/i, m = /^\s*Line (\d+) of function script\s*$/i, n = [], o = a1 && a1.document && a1.document.getElementsByTagName("script"), p = [];
+                for(var q in o)b1(o, q) && !o[q].src && p.push(o[q]);
+                for(var r = 2; r < d.length; r += 2){
+                    var s = null;
+                    if (e = g.exec(d[r])) s = {
+                        url: e[2],
+                        func: e[3],
+                        args: [],
+                        line: +e[1],
+                        column: null
+                    };
+                    else if (e = j.exec(d[r])) {
+                        s = {
+                            url: e[3],
+                            func: e[4],
+                            args: [],
+                            line: +e[1],
+                            column: null
+                        };
+                        var t = +e[1], u = p[e[2] - 1];
+                        if (u) {
+                            var v = f4(s.url);
+                            if (v) {
+                                v = v.join("\n");
+                                var w = v.indexOf(u.innerText);
+                                w >= 0 && (s.line = t + v.substring(0, w).split("\n").length);
+                            }
+                        }
+                    } else if (e = m.exec(d[r])) {
+                        var x = a1.location.href.replace(/#.*$/, ""), y = new RegExp(k1(d[r + 1])), z = l1(y, [
+                            x
+                        ]);
+                        s = {
+                            url: x,
+                            func: "",
+                            args: [],
+                            line: z ? z.line : e[1],
+                            column: null
+                        };
+                    }
+                    if (s) {
+                        s.func || (s.func = h2(s.url, s.line));
+                        var A = i1(s.url, s.line), B = A ? A[Math.floor(A.length / 2)] : null;
+                        s.context = A && B.replace(/^\s*/, "") === d[r + 1].replace(/^\s*/, "") ? A : [
+                            d[r + 1]
+                        ], n.push(s);
+                    }
+                }
+                return n.length ? {
+                    mode: "multiline",
+                    name: c.name,
+                    message: d[0],
+                    stack: n
+                } : null;
+            }
+            function r1(a, b, c, d) {
+                var e = {
+                    url: b,
+                    line: c
+                };
+                if (e.url && e.line) {
+                    a.incomplete = !1, e.func || (e.func = h2(e.url, e.line)), e.context || (e.context = i1(e.url, e.line));
+                    var f = / '([^']+)' /.exec(d);
+                    if (f && (e.column = m1(f[1], e.url, e.line)), a.stack.length > 0 && a.stack[0].url === e.url) {
+                        if (a.stack[0].line === e.line) return !1;
+                        if (!a.stack[0].line && a.stack[0].func === e.func) return a.stack[0].line = e.line, a.stack[0].context = e.context, !1;
+                    }
+                    return a.stack.unshift(e), a.partial = !0, !0;
+                }
+                return a.incomplete = !0, !1;
+            }
+            function s1(a, b) {
+                for(var c, e, f, i = /function\s+([_$a-zA-Z\xA0-\uFFFF][_$a-zA-Z0-9\xA0-\uFFFF]*)?\s*\(/i, j = [], k = {}, l = !1, o = s1.caller; o && !l; o = o.caller)if (o !== t1 && o !== d1.report) {
+                    if (e = {
+                        url: null,
+                        func: g1,
+                        args: [],
+                        line: null,
+                        column: null
+                    }, o.name ? e.func = o.name : (c = i.exec(o.toString())) && (e.func = c[1]), "undefined" == typeof e.func) try {
+                        e.func = c.input.substring(0, c.input.indexOf("{"));
+                    } catch (p) {}
+                    if (f = n1(o)) {
+                        e.url = f.url, e.line = f.line, e.func === g1 && (e.func = h2(e.url, e.line));
+                        var q = / '([^']+)' /.exec(a.message || a.description);
+                        q && (e.column = m1(q[1], f.url, f.line));
+                    }
+                    k["" + o] ? l = !0 : k["" + o] = !0, j.push(e);
+                }
+                b && j.splice(0, b);
+                var u = {
+                    mode: "callers",
+                    name: a.name,
+                    message: a.message,
+                    stack: j
+                };
+                return r1(u, a.sourceURL || a.fileName, a.line || a.lineNumber, a.message || a.description), u;
+            }
+            function t1(a, b) {
+                var c = null;
+                b = null == b ? 0 : +b;
+                try {
+                    if (c = p1(a)) return c;
+                } catch (d) {
+                    if (v1) throw d;
+                }
+                try {
+                    if (c = o1(a)) return c;
+                } catch (d3) {
+                    if (v1) throw d3;
+                }
+                try {
+                    if (c = q1(a)) return c;
+                } catch (d4) {
+                    if (v1) throw d4;
+                }
+                try {
+                    if (c = s1(a, b + 1)) return c;
+                } catch (d5) {
+                    if (v1) throw d5;
+                }
+                return {
+                    mode: "failed"
+                };
+            }
+            function u1(a) {
+                a = (null == a ? 0 : +a) + 1;
+                try {
+                    throw new Error;
+                } catch (b) {
+                    return t1(b, a + 1);
+                }
+            }
+            var v1 = !1, w1 = {};
+            return t1.augmentStackTraceWithInitialElement = r1, t1.guessFunctionName = h2, t1.gatherContext = i1, t1.ofCaller = u1, t1.getSource = f4, t1;
+        }(), d1.extendToAsynchronousCallbacks = function() {
+            var b3 = function(b4) {
+                var c = a1[b4];
+                a1[b4] = function() {
+                    var a = f1.call(arguments), b = a[0];
+                    return "function" == typeof b && (a[0] = d1.wrap(b)), c.apply ? c.apply(this, a) : c(a[0], a[1]);
+                };
+            };
+            b3("setTimeout"), b3("setInterval");
+        }, d1.remoteFetching || (d1.remoteFetching = !0), d1.collectWindowErrors || (d1.collectWindowErrors = !0), (!d1.linesOfContext || d1.linesOfContext < 1) && (d1.linesOfContext = 11), a1.TraceKit = d1;
+    }
+}("undefined" != typeof window ? window : global), function(a2, b) {
+    "use strict";
+    if (a2 && a2.event && a2.event.add) {
+        var c3 = a2.event.add;
+        a2.event.add = function(d, e, f, g, h) {
+            if ("function" != typeof f && "function" != typeof f.handler) return c3.call(this, d, e, f, g, h);
+            var i;
+            return f.handler ? (i = f.handler, f.handler = b.wrap(f.handler)) : (i = f, f = b.wrap(f)), f.guid = i.guid ? i.guid : i.guid = a2.guid++, c3.call(this, d, e, f, g, h);
+        };
+        var d6 = a2.fn.ready;
+        a2.fn.ready = function(a) {
+            return d6.call(this, b.wrap(a));
+        };
+        var e5 = a2.ajax;
+        a2.ajax = function(c, d) {
+            "object" == typeof c && (d = c, c = void 0), d = d || {};
+            for(var f, g = [
+                "complete",
+                "error",
+                "success"
+            ]; f = g.pop();)a2.isFunction(d[f]) && (d[f] = b.wrap(d[f]));
+            try {
+                return c ? e5.call(this, c, d) : e5.call(this, d);
+            } catch (h) {
+                throw b.report(h), h;
+            }
+        };
+    }
+}(window.jQuery, window.TraceKit), window.webVitals = function(a3) {
+    "use strict";
+    var b5, c5, d8, e7, f = function(a, b) {
+        return {
+            name: a,
+            value: void 0 === b ? -1 : b,
+            delta: 0,
+            entries: [],
+            id: "v2-".concat(Date.now(), "-").concat(Math.floor(8999999999999 * Math.random()) + 1e12)
+        };
+    }, g4 = function(a4, b) {
+        try {
+            if (PerformanceObserver.supportedEntryTypes.includes(a4)) {
+                if ("first-input" === a4 && !("PerformanceEventTiming" in self)) return;
+                var c = new PerformanceObserver(function(a) {
+                    return a.getEntries().map(b);
+                });
+                return c.observe({
+                    type: a4,
+                    buffered: !0
+                }), c;
+            }
+        } catch (a) {}
+    }, h3 = function(a, b) {
+        var c6 = function d(c) {
+            "pagehide" !== c.type && "hidden" !== document.visibilityState || (a(c), b && (removeEventListener("visibilitychange", d, !0), removeEventListener("pagehide", d, !0)));
+        };
+        addEventListener("visibilitychange", c6, !0), addEventListener("pagehide", c6, !0);
+    }, i = function(a) {
+        addEventListener("pageshow", function(b) {
+            b.persisted && a(b);
+        }, !0);
+    }, j = function(a, b, c) {
+        var d;
+        return function(e) {
+            b.value >= 0 && (e || c) && (b.delta = b.value - (d || 0), (b.delta || void 0 === d) && (d = b.value, a(b)));
+        };
+    }, k2 = -1, l2 = function() {
+        return "hidden" === document.visibilityState ? 0 : 1 / 0;
+    }, m2 = function() {
+        h3(function(a) {
+            var b = a.timeStamp;
+            k2 = b;
+        }, !0);
+    }, n2 = function() {
+        return 0 > k2 && (k2 = l2(), m2(), i(function() {
+            setTimeout(function() {
+                k2 = l2(), m2();
+            }, 0);
+        })), {
+            get firstHiddenTime () {
+                return k2;
+            }
+        };
+    }, o2 = function(a5, b) {
+        var c, d9 = n2(), e = f("FCP"), h = function(a) {
+            "first-contentful-paint" === a.name && (l && l.disconnect(), a.startTime < d9.firstHiddenTime && (e.value = a.startTime, e.entries.push(a), c(!0)));
+        }, k = window.performance && performance.getEntriesByName && performance.getEntriesByName("first-contentful-paint")[0], l = k ? null : g4("paint", h);
+        (k || l) && (c = j(a5, e, b), k && h(k), i(function(d) {
+            e = f("FCP"), c = j(a5, e, b), requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    e.value = performance.now() - d.timeStamp, c(!0);
+                });
+            });
+        }));
+    }, p2 = !1, q = -1, r = {
+        passive: !0,
+        capture: !0
+    }, s = new Date, t = function(a, e) {
+        b5 || (b5 = e, c5 = a, d8 = new Date, w(removeEventListener), u());
+    }, u = function() {
+        if (c5 >= 0 && d8 - s > c5) {
+            var a = {
+                entryType: "first-input",
+                name: b5.type,
+                target: b5.target,
+                cancelable: b5.cancelable,
+                startTime: b5.timeStamp,
+                processingStart: b5.timeStamp + c5
+            };
+            e7.forEach(function(b) {
+                b(a);
+            }), e7 = [];
+        }
+    }, v = function(a6) {
+        if (a6.cancelable) {
+            var b6 = (a6.timeStamp > 1e12 ? new Date : performance.now()) - a6.timeStamp;
+            "pointerdown" == a6.type ? function(a, b) {
+                var c = function() {
+                    t(a, b), e();
+                }, d = function() {
+                    e();
+                }, e = function() {
+                    removeEventListener("pointerup", c, r), removeEventListener("pointercancel", d, r);
+                };
+                addEventListener("pointerup", c, r), addEventListener("pointercancel", d, r);
+            }(b6, a6) : t(b6, a6);
+        }
+    }, w = function(a) {
+        [
+            "mousedown",
+            "keydown",
+            "touchstart",
+            "pointerdown"
+        ].forEach(function(b) {
+            return a(b, v, r);
+        });
+    }, x = {};
+    return a3.getCLS = function(a7, b8) {
+        p2 || (o2(function(a) {
+            q = a.value;
+        }), p2 = !0);
+        var c, d10 = function(b) {
+            q > -1 && a7(b);
+        }, e = f("CLS", 0), k = 0, l = [], m = function(a) {
+            if (!a.hadRecentInput) {
+                var b = l[0], d = l[l.length - 1];
+                k && a.startTime - d.startTime < 1e3 && a.startTime - b.startTime < 5e3 ? (k += a.value, l.push(a)) : (k = a.value, l = [
+                    a
+                ]), k > e.value && (e.value = k, e.entries = l, c());
+            }
+        }, n = g4("layout-shift", m);
+        n && (c = j(d10, e, b8), h3(function() {
+            n.takeRecords().map(m), c(!0);
+        }), i(function() {
+            k = 0, q = -1, e = f("CLS", 0), c = j(d10, e, b8);
+        }));
+    }, a3.getFCP = o2, a3.getFID = function(a8, d) {
+        var k, l = n2(), m = f("FID"), o = function(a) {
+            a.startTime < l.firstHiddenTime && (m.value = a.processingStart - a.startTime, m.entries.push(a), k(!0));
+        }, p = g4("first-input", o);
+        k = j(a8, m, d), p && h3(function() {
+            p.takeRecords().map(o), p.disconnect();
+        }, !0), p && i(function() {
+            var g;
+            m = f("FID"), k = j(a8, m, d), e7 = [], c5 = -1, b5 = null, w(addEventListener), g = o, e7.push(g), u();
+        });
+    }, a3.getLCP = function(a9, b9) {
+        var c, d11 = n2(), e = f("LCP"), k = function(a) {
+            var b = a.startTime;
+            b < d11.firstHiddenTime && (e.value = b, e.entries.push(a)), c();
+        }, l = g4("largest-contentful-paint", k);
+        if (l) {
+            c = j(a9, e, b9);
+            var m = function() {
+                x[e.id] || (l.takeRecords().map(k), l.disconnect(), x[e.id] = !0, c(!0));
+            };
+            [
+                "keydown",
+                "click"
+            ].forEach(function(a) {
+                addEventListener(a, m, {
+                    once: !0,
+                    capture: !0
+                });
+            }), h3(m, !0), i(function(d) {
+                e = f("LCP"), c = j(a9, e, b9), requestAnimationFrame(function() {
+                    requestAnimationFrame(function() {
+                        e.value = performance.now() - d.timeStamp, x[e.id] = !0, c(!0);
+                    });
+                });
+            });
+        }
+    }, a3.getTTFB = function() {
+        var a10, b10 = f("TTFB");
+        a10 = function() {
+            try {
+                var a11 = performance.getEntriesByType("navigation")[0] || function() {
+                    var a = performance.timing, b = {
+                        entryType: "navigation",
+                        startTime: 0
+                    };
+                    for(var c in a)"navigationStart" !== c && "toJSON" !== c && (b[c] = Math.max(a[c] - a.navigationStart, 0));
+                    return b;
+                }();
+                if (b10.value = b10.delta = a11.responseStart, b10.value < 0 || b10.value > performance.now()) return;
+                b10.entries = [
+                    a11
+                ], c5(b10);
+            } catch (c) {}
+        }, "complete" === document.readyState ? setTimeout(a10, 0) : addEventListener("pageshow", a10);
+    }, Object.defineProperty(a3, "__esModule", {
+        value: !0
+    }), a3;
+}({}), function(a13, b11, c7, d12) {
+    function e8() {
+        try {
+            C = null, o3() && localStorage.removeItem(ha), D = null, Ea.createCookie(ia, "", -1);
+        } catch (a) {
+            Ea.log("Atatus Reset User", a);
+        }
+    }
+    function f5(a, b, c, d) {
+        if (a) {
+            C = {}, a && (C.id = "" + a), b && (C.email = "" + b), c && (C.name = "" + c), d && (C.anonymous = d);
+            try {
+                o3() && localStorage.setItem(ha, JSON.stringify(C)), D = null, Ea.createCookie(ia, "", -1);
+            } catch (e) {
+                Ea.log("Atatus Set User: Invalid JSON object in LocalStorage", e);
+            }
+        }
+    }
+    function g5() {
+        try {
+            var a;
+            if (o3() && (a = localStorage.getItem(ha)), a) C = JSON.parse(a), D = null;
+            else {
+                var b, c = Ea.readCookie(ia);
+                c && (b = Ea.readCookieElement(c, "id")), b && "undefined" !== b ? D = b : (D = Ea.uuid4(), Ea.createCookie(ia, D));
+            }
+        } catch (d) {
+            Ea.log("Atatus Get User: Invalid JSON object in LocalStorage", d);
+        }
+    }
+    function h4(a) {
+        var b = a, c = a.split("//")[1];
+        if (c) {
+            var d = c.indexOf("?"), e = c.toString().substring(0, d), f = e.split("/").slice(0, 4).join("/"), g = e.substring(0, 48);
+            b = f.length < g.length ? f : g, b !== e && (b += "..");
+        }
+        return b;
+    }
+    function i2(a, b, c, e) {
+        if (0 !== b.status && b.getAllResponseHeaders()) {
+            var f = "AJAX Error: " + (b.statusText || "unknown") + " " + (c.type || "unknown") + " " + (h4(c.url) || "unknown");
+            Ia.send(e || a.type, {
+                status: b.status,
+                statusText: b.statusText,
+                type: c.type,
+                url: c.url,
+                ajaxErrorMessage: f,
+                contentType: c.contentType,
+                requestData: c.data && c.data.slice ? c.data.slice(0, 10240) : d12,
+                responseData: b.responseText && b.responseText.slice ? b.responseText.slice(0, 10240) : d12,
+                activeTarget: a.target && a.target.activeElement && a.target.activeElement.outerHTML && a.target.activeElement.outerHTML.slice ? a.target.activeElement.outerHTML.slice(0, 10240) : d12
+            });
+        }
+    }
+    function j3(a) {
+        if (Ea.log("Atatus: Caught unhandled promise rejection:", a), a) {
+            var b = a.reason;
+            Ia.notify(b && (b instanceof Error || b.message) ? b : new Error("UnhandledRejection: " + b));
+        }
+    }
+    function k3() {
+        "addEventListener" in a13 && a13.addEventListener("unhandledrejection", j3);
+    }
+    function l3() {
+        "removeEventListener" in a13 && a13.removeEventListener("unhandledrejection", j3);
+    }
+    function m3() {
+        return A && "" !== A ? !0 : (Ea.log("Atatus API key has not been configured, make sure you call atatus.config(yourApiKey)"), !1);
+    }
+    function n3() {
+        var c = b11.documentElement, d = b11.getElementsByTagName("body")[0], e = a13.innerWidth || c.clientWidth || d.clientWidth, f = a13.innerHeight || c.clientHeight || d.clientHeight;
+        return {
+            width: e,
+            height: f
+        };
+    }
+    function o3() {
+        try {
+            return "localStorage" in a13 && null !== a13.localStorage;
+        } catch (b) {
+            return !1;
+        }
+    }
+    function p(a) {
+        try {
+            if (o3() && localStorage.length < 50) {
+                var b = (new Date).toJSON(), c = "atatusjs=" + b + "=" + Ea.getRandomInt();
+                "undefined" == typeof localStorage[c] && (localStorage[c] = a);
+            } else Ea.log("Atatus: Reached local storage limit.");
+        } catch (d) {
+            Ea.log("Atatus: LocalStorage full, cannot save exception");
+        }
+    }
+    function q() {
+        try {
+            if (o3() && localStorage.length > 0) {
+                for(var a in localStorage)if ("atatusjs=" === a.substring(0, 9)) {
+                    try {
+                        var b = JSON.parse(localStorage[a]);
+                        "apikey" in b && t(ka, b);
+                    } catch (c) {
+                        Ea.log("Atatus: Invalid JSON object in LocalStorage");
+                    }
+                    localStorage.removeItem(a);
+                }
+            }
+        } catch (c) {
+            Ea.log("Atatus sendSavedErrors: LocalStorage read failed!", c);
+        }
+    }
+    function r(a, c) {
+        if (c = Ea.isObject(c) ? c : {}, !a.stack || !a.stack.length) return void Ea.log("Atatus: Canceling send due to no stacktrace.");
+        Ea.isObject(c.customData) || (c.customData = d12), Ea.isArray(c.tags) || (c.tags = d12);
+        var e = c.customData && c.customData.ajaxErrorMessage || a.message;
+        if (e && 0 === e.indexOf("Uncaught ") && (e = a.message.substring(9)), e = e || c.status || "Script error.", N && N.test(e)) return void Ea.log("Atatus: canceling send due to Script error or ignored errors.");
+        e = e.substr(0, ua);
+        var f = [];
+        a.stack && a.stack.length && Ea.forEach(a.stack, function(a, b) {
+            Ea.endsWith(b.url, "/atatus.js") || Ea.endsWith(b.url, "/atatus-spa.js") || Ea.endsWith(b.url, "/atatus-spa.min.js") || Ea.endsWith(b.url, "/atatus.min.js") || f.push({
+                ln: parseInt(b.line || 0),
+                cn: parseInt(b.column || 0),
+                f: b.url || "anonymous",
+                m: b.func || "[anonymous]"
+            });
+        });
+        var g = [
+            a.name,
+            e,
+            JSON.stringify(f)
+        ].join("|");
+        if (g === O) return void Ea.log("Atatus: canceling send due to duplicate errors");
+        O = g;
+        var h = c.customData;
+        try {
+            JSON.stringify(h);
+        } catch (i) {
+            var j = "Cannot add custom data; may contain circular reference";
+            h = {
+                error: j
+            }, Ea.log("Atatus: " + j);
+        }
+        var k = Ha.getAllEvents();
+        Fa.clear();
+        var l = {
+            "class": a.name,
+            url: b11.location.href,
+            message: e,
+            name: e,
+            backTraces: f,
+            breadCrumbs: k,
+            customData: h || null,
+            tags: c.tags,
+            ts: (new Date).getTime()
+        };
+        if ("function" == typeof Q && (l.groupingKey = Q(l)), "function" == typeof S) {
+            var m = S(l);
+            m && (delete l.name, s(l));
+        } else delete l.name, s(l);
+    }
+    function s(a) {
+        return G ? void Ea.log("Error Tracking is disabled.") : void t(ka, {
+            customData: B || null,
+            errors: [
+                a
+            ]
+        });
+    }
+    function t(c, d) {
+        if (m3()) {
+            if (!Ia._isAllowedUrl(location.href)) return void Ea.log("Atatus: canceling send due to not an allowed domain/url.");
+            if (!d.ts) {
+                var e = a13.screen || n3();
+                d.ts = (new Date).getTime(), d.apikey = A, d.request = {
+                    url: b11.location.href,
+                    ua: navigator.userAgent,
+                    w: e.width,
+                    h: e.height
+                }, d.connection = Ca, d.tags = d.tags || Z, d.user = C && C.id ? C : null, d.aid = D || null, d.sid = Ia.sessionId || "", d.v = E || "", d._v = Ia.VERSION || W || "";
+            }
+            if (R) {
+                var f = R(d);
+                if (!f) return void Ea.log("Atatus: canceling send due to false from beforeSend callback.");
+            }
+            if (P && P(d), Ea.log("Sending data to Atatus Receiver:", d), c === la) w(c, d);
+            else if (c === na) {
+                if (!d.sid) return void Ea.log("Atatus: canceling session send due to empty session id.");
+                if (Ba.session >= xa) return void Ea.log("Atatus: Canceling session send. Reached maximum number of requests!");
+                Ba.session += 1, y(c, d);
+            } else if (c === oa) {
+                if (Ba.spa >= za) return void Ea.log("Atatus: Canceling SPA send. Reached maximum number of requests!");
+                Ba.spa += 1, Ba.ajax = 0, y(c, d);
+            } else if (c === qa) {
+                if (Ba.webvitals >= Aa) return void Ea.log("Atatus: Canceling web vitals send. Reached maximum number of requests!");
+                Ba.webvitals += 1, z(c, d);
+            } else {
+                if (c === ka) {
+                    if (Ba.error >= va) return void Ea.log("Atatus: Canceling error send. Reached maximum number of requests!");
+                    Ba.error += 1;
+                } else if (c === ma) {
+                    if (Ba.ajax >= wa) return void Ea.log("Atatus: Canceling AJAX send. Reached maximum number of requests!");
+                    Ba.ajax += 1;
+                } else if (c === pa) {
+                    if (Ba.txn >= ya) return void Ea.log("Atatus: Canceling transaction send. Reached maximum number of requests!");
+                    Ba.txn += 1;
+                }
+                v(c, d);
+            }
+        }
+    }
+    function u(a) {
+        return "apikey=" + a.apikey + "&v=" + a._v;
+    }
+    function v(a, b) {
+        var c = ja + a + "?data=" + encodeURIComponent(JSON.stringify(b)) + "&" + u(b);
+        if (c.length > ra) return void Ea.log("Atatus: Canceling request send due to large payload size.");
+        var d = new Image;
+        d.crossOrigin = "anonymous", d.onload = function() {
+            q();
+        }, d.onerror = d.onabort = function() {
+            da && a === ka && p(JSON.stringify(b));
+        }, d.src = c;
+    }
+    function w(a, c) {
+        var d = b11.createElement("script"), e = ja + a + "?data=" + encodeURIComponent(JSON.stringify(c)) + "&callback=atatus._setFeatures&" + u(c);
+        d.type = "text/javascript", d.src = e;
+        var f = b11.getElementsByTagName("script")[0];
+        f.parentNode.insertBefore(d, f);
+    }
+    function x(b, c) {
+        var d;
+        return d = new a13.XMLHttpRequest, "withCredentials" in d ? d.open(b, c, !0) : a13.XDomainRequest && (c = Ea.getTargetUrl(c), d = new a13.XDomainRequest, d.open(b, c)), d.timeout = 1e4, d;
+    }
+    function y(b, c) {
+        var d = ja + b + "?" + u(c), e = x("POST", d);
+        return e ? ("function" == typeof e.setRequestHeader && e.setRequestHeader("Content-Type", "application/json;charset=UTF-8"), "withCredentials" in e ? (e.onreadystatechange = function() {
+            e.readyState;
+        }, e.onload = function() {
+            Ea.log("Sent data to Atatus. Status - " + e.status);
+        }) : a13.XDomainRequest && (e.ontimeout = function() {}, e.onload = function() {
+            Ea.log("Sent data to Atatus. Status - " + e.status);
+        }), e.onerror = function() {
+            Ea.log("Failed to send to Atatus. Status - " + e.status);
+        }, void e.send(JSON.stringify(c))) : void Ea.log("XHR is not supported!");
+    }
+    function z(b, c) {
+        var d = "[object Navigator]" === Object.prototype.toString.call(a13 && a13.navigator), e = d && "function" == typeof a13.navigator.sendBeacon;
+        if (e) {
+            var f = a13.navigator.sendBeacon.bind(a13.navigator), g = ja + b;
+            return f(g, JSON.stringify(c));
+        }
+        v(b, c);
+    }
+    var A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W = "4.4.1", X = a13.TraceKit.noConflict(), Y = a13.atatus, Z = [], $ = !1, _ = [], aa = [], ba = [], ca = !1, da = !1, ea = !1, fa = !1, ga = !1, ha = "atatus-user", ia = "atatus-aid", ja = "https://bm-rx.atatus.com", ka = "/track/browser/errors", la = "/track/browser/perf/pageload", ma = "/track/browser/perf/ajax", na = "/track/browser/perf/session", oa = "/track/browser/perf/spa", pa = "/track/browser/perf/txn", qa = "/track/browser/perf/webvitals", ra = 4e4, sa = 10, ta = 500, ua = 1e3, va = 20, wa = 5, xa = 10, ya = 100, za = 100, Aa = 3, Ba = {
+        error: 0,
+        ajax: 0,
+        session: 0,
+        txn: 0,
+        spa: 0,
+        webvitals: 0
+    }, Ca = null, Da = [
+        "google-analytics.com",
+        "mixpanel.com",
+        "bam.nr-data.net",
+        "br-rx.atatus.com",
+        "bm-rx.atatus.com",
+        "segment.io",
+        "hotjar.io",
+        "hotjar.com",
+        "amplitude.com",
+        "fullstory.com",
+        "autopilothq.com",
+        "smartlook.com",
+        "charmerly.com",
+        "googleapis.com",
+        "logrocket.io",
+        "taboola.com",
+        "sentry.io",
+        "doubleclick.net",
+        "logentries.com",
+        "rb-collector.com",
+        "js.hs-banner.com",
+        "clarity.ms",
+        "lr-ingest.io"
+    ];
+    c7 && (V = c7(b11));
+    var Ea = {
+        isBoolean: function(a) {
+            return "undefined" != typeof a && "boolean" == typeof a;
+        },
+        isString: function(a) {
+            return "string" == typeof a;
+        },
+        isNumber: function(a) {
+            return "number" == typeof a;
+        },
+        isFunction: function(a) {
+            return "function" == typeof a;
+        },
+        isArray: function(a) {
+            return "[object Array]" === Object.prototype.toString.call(a);
+        },
+        isObject: function(a) {
+            return "[object Object]" === Object.prototype.toString.call(a);
+        },
+        serialize: function(a) {
+            if (!a) return "";
+            if (Ea.isString(a) || Ea.isNumber(a) || Ea.isBoolean(a) || Ea.isFunction(a)) return "" + a;
+            if ("object" == typeof a) try {
+                return JSON.stringify(a);
+            } catch (b) {
+                return "Unserializable Object";
+            }
+            return "";
+        },
+        endsWith: function(a, b) {
+            return a && b ? -1 !== a.indexOf(b, a.length - b.length) : !1;
+        },
+        joinRegExp: function(a) {
+            if (0 === a.length) return null;
+            for(var b, c = [], d = 0, e = a.length; e > d; d++)b = a[d], Ea.isString(b) ? c.push(b.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1")) : b && b.source && c.push(b.source);
+            return new RegExp(c.join("|"), "i");
+        },
+        getTargetUrl: function(b) {
+            return a13.XDomainRequest && ca && (b = b.slice(6)), b;
+        },
+        now: function() {
+            return (new Date).getTime();
+        },
+        pad: function(a) {
+            return a = String(a), 1 === a.length && (a = "0" + a), a;
+        },
+        merge: function(a, b) {
+            var c, d = {};
+            for(c in a)d[c] = a[c];
+            for(c in b)d[c] = b[c];
+            return d;
+        },
+        mergeArray: function(a, b) {
+            return null != b ? a.concat(b) : a;
+        },
+        forEach: function(a, b) {
+            for(var c = 0; c < a.length; c++)b.call(null, c, a[c]);
+        },
+        isEmpty: function(a) {
+            for(var b in a)if (a.hasOwnProperty(b)) return !1;
+            return !0;
+        },
+        getRandomInt: function() {
+            return Math.floor(9007199254740992 * Math.random());
+        },
+        log: function(b, c) {
+            $ && a13.console && a13.console.log && (a13.console.log(b), c && a13.console.log(c));
+        },
+        bind: function(a, b) {
+            return function() {
+                return a.apply(b, Array.prototype.slice.call(arguments));
+            };
+        },
+        canAllowInsecureSubmissions: function() {
+            var b = a13.navigator.userAgent, c = b.match(/Trident\/([\d.]+)/), d = c && "7.0" === c[1] ? 11 : (b = b.match(/MSIE ([\d.]+)/)) ? parseInt(b[1], 10) : !1;
+            return d && 9 >= d;
+        },
+        uuid4: function() {
+            return "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx".replace(/[xy]/g, function(a) {
+                var b = 16 * Math.random() | 0, c = "x" === a ? b : 3 & b | 8;
+                return c.toString(16);
+            });
+        },
+        addEventListener: function(b, c, d) {
+            return "undefined" != typeof a13.attachEvent ? a13.attachEvent("on" + b, c) : a13.addEventListener ? a13.addEventListener(b, c, d) : void 0;
+        },
+        arrayFromObject: function(a) {
+            var b = [];
+            for(var c in a)a.hasOwnProperty(c) && b.push(a[c]);
+            return b;
+        },
+        createCookie: function(a, c, d, e, f) {
+            try {
+                var g, h;
+                if (d) {
+                    var i = new Date;
+                    i.setTime(i.getTime() + 60 * d * 60000), g = "; expires=" + i.toGMTString();
+                } else g = "";
+                var j = e ? "; SameSite=Lax; secure" : "; SameSite=Lax", k = /[a-z0-9][a-z0-9-]+\.[a-z.]{2,6}$/i, l = "";
+                if (f) {
+                    var m = b11.location.hostname.match(k), n = m ? m[0] : "";
+                    l = n ? "; domain=." + n : "";
+                }
+                return h = (new Date).toISOString(), b11.cookie = a + "=id|" + c + "&timestamp|" + h + g + "; path=/" + l + j, h;
+            } catch (o) {
+                Ea.log("Creating cookie failed.", o);
+            }
+        },
+        clearCookie: function(a) {
+            this.createCookie(a, "", -1);
+        },
+        readCookieElement: function(a, b) {
+            var c = a.split(/[|&]/);
+            return "id" === b ? c[1] : "timestamp" === b ? c[3] : void 0;
+        },
+        readCookie: function(a) {
+            try {
+                for(var c = a + "=", d = b11.cookie.split(";"), e = 0; e < d.length; e++){
+                    for(var f = d[e]; " " === f.charAt(0);)f = f.substring(1, f.length);
+                    if (0 === f.indexOf(c)) return f.substring(c.length, f.length);
+                }
+                return null;
+            } catch (g) {
+                Ea.log("Reading cookie failed.", g);
+            }
+        }
+    }, Fa = {
+        eventObject: {},
+        all: function(a) {
+            for(var b = this.getEventObject(a), c = [], d = 0; d < b.length; d++)c.push(b[d].value);
+            return c;
+        },
+        clear: function() {
+            for(var a in this.eventObject)this.eventObject.hasOwnProperty(a) && (this.eventObject[a].length = 0);
+        },
+        add: function(a, b) {
+            var c = this.getEventObject(a), d = Ea.uuid4();
+            return b.m ? b.m = b.m.length <= ta ? b.m : b.m.substr(0, ta) : b.e && (b.e = b.e.length <= ta ? b.e : b.e.substr(0, ta)), c.push({
+                key: d,
+                value: b
+            }), this.truncateEventObject(a, sa), d;
+        },
+        get: function(a, b) {
+            for(var c = this.getEventObject(a), d = 0; d < c.length; d++)if (c[d].key === b) return c[d].value;
+            return !1;
+        },
+        getEventObject: function(a) {
+            return this.eventObject[a] || (this.eventObject[a] = []), this.eventObject[a];
+        },
+        truncateEventObject: function(a, b) {
+            var c = this.getEventObject(a);
+            c.length > b && (this.eventObject[a] = c.slice(c.length - b));
+        }
+    }, Ga = {
+        attach: function(b12, c, d13, e, f) {
+            b12 = b12 || a13.console || {};
+            for(var g = f || [
+                "log",
+                "debug",
+                "info",
+                "warn",
+                "error"
+            ], h = g.pop(), i = function(a, b, d) {
+                c && Fa.add("timeline", {
+                    ts: Ea.now(),
+                    c: "console",
+                    l: a,
+                    m: Ea.serialize(b)
+                }), "error" === a && e && Ia.notify(new Error(b), d);
+            }; h;)this.wrapConsoleMethod(b12, h, d13, i), h = g.pop();
+        },
+        wrapConsoleMethod: function(a14, b, c, d) {
+            var e = a14[b], f = a14;
+            b in a14 && (a14[b] = function() {
+                var a = [].slice.call(arguments), g = "" + a.join(" "), h = {
+                    level: b,
+                    logger: "console"
+                };
+                d && d(b, g, h), e && c && Function.prototype.apply.call(e, f, a);
+            });
+        }
+    }, Ha = {
+        attach: function() {
+            var a = Ea.bind(this.onDocumentClicked, this), c = Ea.bind(this.onInputChanged, this);
+            b11.addEventListener ? (b11.addEventListener("click", a, !0), b11.addEventListener("blur", c, !0)) : b11.attachEvent && (b11.attachEvent("onclick", a), b11.attachEvent("onfocusout", c));
+        },
+        writeUserEvent: function(a, b, c, d) {
+            "password" === this.getElementType(a) && (c = void 0), Fa.add("timeline", {
+                ts: Ea.now(),
+                a: b,
+                e: this.getOuterHTML(a),
+                v: this.getValueKind(c, d)
+            });
+        },
+        onDocumentClicked: function(a) {
+            var b = this.getElementFromEvent(a);
+            b && b.tagName && (this.isTarget(b, "a") || this.isTarget(b, "button") || this.isTarget(b, "input", [
+                "button",
+                "submit"
+            ]) ? this.writeUserEvent(b, "click") : this.isTarget(b, "input", [
+                "checkbox",
+                "radio"
+            ]) && this.writeUserEvent(b, "check", b.value, b.checked));
+        },
+        onInputChanged: function(a) {
+            var b = this.getElementFromEvent(a);
+            b && b.tagName && (this.isTarget(b, "textarea") ? this.writeUserEvent(b, "input", b.value) : this.isTarget(b, "select") && b.options && b.options.length ? this.onSelectInputChanged(b) : this.isTarget(b, "input") && !this.isTarget(b, "input", [
+                "button",
+                "submit",
+                "hidden",
+                "checkbox",
+                "radio"
+            ]) && this.writeUserEvent(b, "input", b.value));
+        },
+        onSelectInputChanged: function(a) {
+            if (a.multiple) {
+                for(var b = 0; b < a.options.length; b++)if (a.options[b].selected) {
+                    this.writeUserEvent(a, "select", a.options[b].value);
+                    break;
+                }
+            } else 0 <= a.selectedIndex && a.options[a.selectedIndex] && this.writeUserEvent(a, "select", a.options[a.selectedIndex].value);
+        },
+        getElementFromEvent: function(a) {
+            return a.target || b11.elementFromPoint(a.clientX, a.clientY);
+        },
+        isTarget: function(a, b, c) {
+            if (a.tagName.toLowerCase() !== b.toLowerCase()) return !1;
+            if (!c) return !0;
+            for(var d = this.getElementType(a), e = 0; e < c.length; e++)if (c[e] === d) return !0;
+            return !1;
+        },
+        getElementType: function(a) {
+            return (a.getAttribute("type") || "").toLowerCase();
+        },
+        getOuterHTML: function(a) {
+            for(var b = "<" + a.tagName.toLowerCase(), c = a.attributes, d = 0, e = c.length; e > d; d++){
+                var f = c[d].name;
+                "value" !== f.toLowerCase() && (b += " " + f + '="' + c[d].value + '"');
+            }
+            return b += " >";
+        },
+        getValueKind: function(a, b) {
+            return null == a ? null : {
+                length: a.length,
+                checked: b,
+                pattern: this.matchInputPattern(a)
+            };
+        },
+        matchInputPattern: function(a) {
+            return "" === a ? "empty" : /^[a-z0-9!#$%&'*+=?\^_`{|}~\-]+(?:\.[a-z0-9!#$%&'*+=?\^_`{|}~\-]+)*@(?:[a-z0-9](?:[a-z0-9\-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9\-]*[a-z0-9])?$/.test(a) ? "email" : /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/.test(a) || /^(\d{4}[\/\-](0?[1-9]|1[012])[\/\-]0?[1-9]|[12][0-9]|3[01])$/.test(a) ? "date" : /^(?:(?:\+?1\s*(?:[.\-]\s*)?)?(?:\(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\s*\)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.\-]\s*)?)?([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.\-]\s*)?([0-9]{4})(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+))?$/.test(a) ? "phone" : /^\s*$/.test(a) ? "whitespace" : /^\d*$/.test(a) ? "numeric" : "character";
+        },
+        getAllEvents: function() {
+            return Fa.all("timeline");
+        }
+    }, Ia = {
+        VERSION: W,
+        paintPerformance: {},
+        noConflict: function() {
+            return a13.atatus = Y, Ia;
+        },
+        isConfigured: function() {
+            return !!A;
+        },
+        config: function(b, c) {
+            c = c || {}, A = b, X.remoteFetching = !1, N = [], Ia.setCustomData(c.customData), Ia.setTags(c.tags), $ = !!c.debugMode, ea = !!c.reportAjaxErrors, fa = !!c.reportUnhandledRejections, ga = !!c.allowChromeExtension, F = !!c.disableBreadcrumbs, G = !!c.disableErrorTracking, L = !!c.disableRUM, I = !!c.disableAjaxMonitoring, J = c.disableSession === d12 ? !1 : c.disableSession, K = c.disableSPA === d12 ? !1 : c.disableSPA, U = c.urlMaxLength, ca = Ea.canAllowInsecureSubmissions(), Ia.setIgnoreUrls(c.ignoreUrls), Ia.setWhitelistUrls(c.whitelistUrls), Ia.setAllowedDomains(c.allowedDomains), Ia.setVersion(c.version), Ia.enableOffline(c.enableOffline || c.offline), Ia.onBeforeSend(c.beforeSend), Ia.onBeforeErrorSend(c.beforeErrorSend), Ia.setGroupingKeyCallback(c.groupingKeyCallback), c.ignoreErrors && Ea.isArray(c.ignoreErrors) && (N = c.ignoreErrors), N.push(/^Script error\.?$/), N.push(/^Javascript error: Script error\.? on line 0$/), N = Ea.joinRegExp(N), q(), M = {
+                enabled: !1,
+                timeline: !0,
+                display: !0,
+                error: !0,
+                levels: null
+            }, Ea.isBoolean(c.console) && (M.enabled = c.console), Ea.isBoolean(c.consoleTimeline) && (M.timeline = c.consoleTimeline), Ea.isBoolean(c.consoleDisplay) && (M.display = c.consoleDisplay), Ea.isBoolean(c.consoleErrorNotify) && (M.error = c.consoleErrorNotify), Ea.isArray(c.consoleTimelineLevels) && (M.levels = c.consoleTimelineLevels), M.enabled && "console" in a13 && a13.console.log && Ga.attach(a13.console, M.timeline, M.display, M.error, M.levels), Ia.setHashRoutes(c.hashRoutes);
+            var e = a13.navigator.connection || a13.navigator.mozConnection || a13.navigator.webkitConnection;
+            return e && (Ca = {}, Ca.dlk = e.downlink, Ca.eft = e.effectiveType, Ca.rtt = e.rtt, Ca.type = e.type), Ia;
+        },
+        install: function() {
+            if (!m3()) return Ia;
+            if (!ga && -1 !== b11.location.href.indexOf("chrome-extension://")) return Ia;
+            if (g5(), F || Ha.attach(), G || (X.report.subscribe(r), X.extendToAsynchronousCallbacks(), V && ea && V.ajaxError(i2), fa && k3()), I || L || Ia.__attachAjaxHooks(), !J && !L && Ia.SessionTracking) {
+                var c = function() {
+                    T = new Ia.SessionTracking, T.attach();
+                };
+                a13.addEventListener ? a13.addEventListener("load", c) : a13.attachEvent("onload", c);
+            }
+            return K || L || !Ia.spa || Ia.spa.init({
+                logLevel: $ ? "debug" : "warn",
+                urlMaxLength: U
+            }), Ia;
+        },
+        uninstall: function() {
+            return A = null, G || (X.report.unsubscribe(r), V && ea && V.unbind("ajaxError", i2), fa && l3()), Ia;
+        },
+        setCustomData: function(a) {
+            return a ? Ea.isObject(a) ? B = a : Ea.log("Custom data must be an object.") : B = null, Ia;
+        },
+        setTags: function(a) {
+            return a ? Ea.isArray(a) ? Z = a : Ea.log("Tags must be an array of string.") : Z = [], Ia;
+        },
+        setHashRoutes: function(a15) {
+            return a15 ? (P = function(a) {
+                if (a && a.request && a.request.url && (a.request.url = a.request.url.replace("/#/", "/").replace("#/", "/")), a && a.data && a.data[0] && a.data[0].spans) for(var b = 0; b < a.data.length; b++)a.data[b].n = (a.data[b].n || "").replace("/#/", "/").replace("#", "");
+                if (a && a.slowestRoutes && a.slowestRoutes[0]) for(var c = 0; c < a.slowestRoutes.length; c++)a.slowestRoutes[c].n = (a.slowestRoutes[c].n || "").replace("/#/", "/").replace("#", "");
+            }, Ia) : (P = null, Ia);
+        },
+        setIgnoreUrls: function(a) {
+            return a && Ea.isArray(a) ? Array.prototype.push.apply(a, Da) : a = Da, aa = Ea.joinRegExp(a), Ia;
+        },
+        getIgnoreUrls: function() {
+            return aa;
+        },
+        setWhitelistUrls: function(a) {
+            return a && Ea.isArray(a) && (ba = Ea.joinRegExp(a)), Ia;
+        },
+        getWhitelistUrls: function() {
+            return ba;
+        },
+        setAllowedDomains: function(a) {
+            return a && Ea.isArray(a) && (_ = Ea.joinRegExp(a)), Ia;
+        },
+        getAllowedDomains: function() {
+            return _;
+        },
+        setUser: function(a, b, c, d) {
+            return f5(a, b, c, d), Ia;
+        },
+        resetUser: function() {
+            return e8(), Ia;
+        },
+        setVersion: function(a) {
+            return a && (E = "" + a), Ia;
+        },
+        enableOffline: function(a) {
+            return Ea.isBoolean(a) && (da = a), Ia;
+        },
+        onBeforeSend: function(a) {
+            return Ea.isFunction(a) && (R = a), Ia;
+        },
+        onBeforeErrorSend: function(a) {
+            return Ea.isFunction(a) && (S = a), Ia;
+        },
+        setGroupingKeyCallback: function(a) {
+            return Ea.isFunction(a) && (Q = a), Ia;
+        },
+        setAPIEndpoint: function(a) {
+            return ja = a, Ia;
+        },
+        getAPIEndpoint: function() {
+            return ja;
+        },
+        init: function(a, b, c) {
+            return c && (b = b || {}, b.customData = c), Ia.config(a, b);
+        },
+        withCustomData: function(a) {
+            return Ia.setCustomData(a);
+        },
+        withTags: function(a) {
+            return Ia.setTags(a);
+        },
+        attach: function() {
+            return Ia.install();
+        },
+        detach: function() {
+            return Ia.uninstall();
+        },
+        endSession: function() {
+            return T && T.endSession(), Ia;
+        },
+        _setFeatures: function(a) {
+            Ea.isObject(a) && (I = !!a.daj, J = !!a.dss, K = !!a.dspa, L = !!a.drum, G = !!a.derror, H = !!a.dtxn, a.error && Ea.log("Error in sending data to Atatus", a.error));
+        },
+        measureRoute: function(a) {
+            return T && a && T.virtualPageLoaded(a), Ia;
+        },
+        leaveBreadcrumb: function(a, b) {
+            return a ? (Fa.add("timeline", {
+                ts: Ea.now(),
+                c: "breadcrumb",
+                l: b || "info",
+                m: Ea.serialize(a)
+            }), Ia) : void 0;
+        },
+        notify: function(a, b, c) {
+            return "string" == typeof a ? void Ea.log("atatus.notify() was called with a string. Expected instance of Error.") : Ia.send(a, b, c);
+        },
+        sendPerf: function(a) {
+            return L ? void Ea.log("RUM is disabled.") : t(la, a);
+        },
+        sendAjaxPerf: function(a) {
+            return L || I ? void Ea.log("AJAX monitoring is disabled.") : t(ma, a);
+        },
+        sendSessionPerf: function(a) {
+            return L || J ? void Ea.log("Session Tracking is disabled.") : t(na, a);
+        },
+        sendSPAPerf: function(a) {
+            return L || K ? void Ea.log("SPA Tracking is disabled.") : t(oa, a);
+        },
+        sendTxnPerf: function(a) {
+            return L || H ? void Ea.log("Transaction monitoring is disabled.") : t(pa, a);
+        },
+        sendWebVitals: function(a) {
+            return L ? void Ea.log("Web vitals is disabled.") : t(qa, a);
+        },
+        send: function(a, b, c) {
+            try {
+                r(X.computeStackTrace(a), {
+                    customData: b,
+                    tags: c
+                });
+            } catch (d) {
+                if (a !== d) throw d;
+            }
+            return Ia;
+        },
+        _isAllowedUrl: function(a) {
+            return a = a || "", aa && aa.test && aa.test(a) ? !1 : ba && ba.test ? ba.test(a) ? !0 : !1 : _ && _.test ? _.test(a) ? !0 : !1 : !0;
+        },
+        _helper: Ea
+    };
+    a13.atatus = Ia, module.exports = Ia, "undefined" != typeof global && (global.atatus = Ia);
+}(window, document, window.jQuery), function(a16, b13, c8, d14) {
+    function e9(a) {
+        a.pl <= 0 || (a.nt = a.nt > 0 ? a.nt : 0, a.dp = a.dp > 0 ? a.dp : 0, a.pr = a.pr > 0 ? a.pr : 0, c8.sendPerf(a));
+    }
+    function f6(b, c) {
+        return "object" == typeof a16.performance && (!b || b && typeof a16.performance[b] === c);
+    }
+    function g6(b) {
+        if (!f6("getEntriesByName", "function")) return b;
+        var d = a16.performance.getEntriesByName("first-paint");
+        d.length > 0 && d[0].startTime > 0 ? b.fp = +d[0].startTime.toFixed(0) : a16.performance.timing && a16.performance.timing.msFirstPaint && (b.fp = +(a16.performance.timing.msFirstPaint - a16.performance.timing.fetchStart).toFixed(0));
+        var e = a16.performance.getEntriesByName("first-contentful-paint");
+        return e.length > 0 && e[0].startTime > 0 && (b.fcp = +e[0].startTime.toFixed(0)), c8.paintPerformance = {
+            fp: b.fp,
+            fcp: b.fcp
+        }, b;
+    }
+    function h5() {
+        var b = a16.performance || a16.mozPerformance || a16.msPerformance || a16.webkitPerformance, c = b.timing;
+        if (0 === c.loadEventEnd) return !1;
+        clearInterval(l), l = null;
+        var d = c.navigationStart;
+        0 >= d && (d = c.fetchStart);
+        var f = {};
+        for(var h in m)f[m[h]] = -1, h in c && (c[h] <= 0 || (f[m[h]] = c[h] - d));
+        var i = {
+            nt: f.rps - f.ns,
+            dp: f.dce - f.rps,
+            pr: f.le - f.dce,
+            pl: f.le - f.ns,
+            timing: f
+        };
+        try {
+            g6(i);
+        } catch (j) {}
+        e9(i);
+    }
+    function i3() {
+        if (!k || !k.bDone) return !1;
+        clearInterval(l), l = !1;
+        var a = k.getMeasures();
+        if (null != a && null != a.backend && null != a.frontend && null != a["page load time"] && null != a["total load time"]) {
+            var b = a.backend, c = a.backend + a.frontend, d = {
+                nt: b,
+                dp: c - b,
+                pr: a["total load time"] - c,
+                fe: a["total load time"] - b,
+                pl: a["total load time"]
+            };
+            e9(d);
+        }
+    }
+    var j4 = (new Date).getTime(), k = k || {};
+    k.q = k.q || [], k.version = "0.3", k.targetOrigin = b13.location.protocol + "//" + b13.location.hostname, k.bPostMessage = !1, k.beaconUrl = k.beaconUrl || "/images/beacon.gif", k.autorun = !1, k.init = function() {
+        if (k.bDone = !1, k.bUnloaded = !1, k.marks = {}, k.measures = {}, k.starts = {}, k.findStartTime(), k.addEventListener("beforeunload", k.beforeUnload, !1), k.addEventListener("pagehide", k.beforeUnload, !1), k.addEventListener("unload", k.beforeUnload, !1), k.processQ(), "complete" === b13.readyState) {
+            var c = a16.performance || a16.mozPerformance || a16.msPerformance || a16.webkitPerformance;
+            c && "undefined" != typeof c.timing && "undefined" != typeof c.timing.loadEventEnd && (k.mark("firstbyte", c.timing.responseStart), k.mark("onload", c.timing.loadEventEnd)), k.done();
+        } else k.addEventListener("load", k.onload, !1);
+    }, k.processQ = function() {
+        for(var a = k.q.length, b = 0; a > b; b++){
+            var c = k.q[b], d = c[0];
+            "mark" === d ? k.mark(c[1], c[2]) : "measure" === d ? k.measure(c[1], c[2], c[3]) : "done" === d && k.done(c[1]);
+        }
+    }, k.mark = function(b, c) {
+        return k.dprint("RUM_EPISODES.mark: " + b + ", " + c), b ? (k.marks[b] = parseInt(c || (new Date).getTime()), k.bPostMessage && a16.postMessage("RUM_EPISODES:mark:" + b + ":" + c, k.targetOrigin), void ("firstbyte" === b ? k.measure("backend", "starttime", "firstbyte") : "onload" === b ? (k.measure("frontend", "firstbyte", "onload"), k.measure("page load time", "starttime", "onload")) : "done" === b && k.measure("total load time", "starttime", "done"))) : void k.dprint("Error: markName is undefined in RUM_EPISODES.mark.");
+    }, k.measure = function(b, c, d) {
+        if (k.dprint("RUM_EPISODES.measure: " + b + ", " + c + ", " + d), !b) return void k.dprint("Error: episodeName is undefined in RUM_EPISODES.measure.");
+        var e;
+        if ("undefined" == typeof c) e = "number" == typeof k.marks[b] ? k.marks[b] : (new Date).getTime();
+        else if ("number" == typeof k.marks[c]) e = k.marks[c];
+        else {
+            if ("number" != typeof c) return void k.dprint("Error: unexpected startNameOrTime in RUM_EPISODES.measure: " + c);
+            e = c;
+        }
+        var f;
+        if ("undefined" == typeof d) f = (new Date).getTime();
+        else if ("number" == typeof k.marks[d]) f = k.marks[d];
+        else {
+            if ("number" != typeof d) return void k.dprint("Error: unexpected endNameOrTime in RUM_EPISODES.measure: " + d);
+            f = d;
+        }
+        k.starts[b] = parseInt(e), k.measures[b] = parseInt(f - e), k.bPostMessage && a16.postMessage("RUM_EPISODES:measure:" + b + ":" + e + ":" + f, k.targetOrigin);
+    }, k.done = function(b) {
+        k.bDone = !0, k.mark("done"), k.bPostMessage && a16.postMessage("RUM_EPISODES:done", k.targetOrigin), "function" == typeof b && b();
+    }, k.getMarks = function() {
+        return k.marks;
+    }, k.getMeasures = function() {
+        return k.measures;
+    }, k.getStarts = function() {
+        return k.starts;
+    }, k.findStartTime = function() {
+        var a = k.findStartWebTiming() || k.findStartCookie();
+        a && k.mark("starttime", a);
+    }, k.findStartWebTiming = function() {
+        var b, c = a16.performance || a16.mozPerformance || a16.msPerformance || a16.webkitPerformance;
+        return c && "undefined" != typeof c.timing && "undefined" != typeof c.timing.navigationStart && (b = c.timing.navigationStart, k.dprint("RUM_EPISODES.findStartWebTiming: startTime = " + b)), b;
+    }, k.findStartCookie = function() {
+        try {
+            for(var c = b13.cookie.split(" "), e = 0; e < c.length; e++)if (0 === c[e].indexOf("RUM_EPISODES=")) {
+                for(var f, g, h = c[e].substring(13).split("&"), i = 0; i < h.length; i++)if (0 === h[i].indexOf("s=")) f = h[i].substring(2);
+                else if (0 === h[i].indexOf("r=")) {
+                    var j = h[i].substring(2);
+                    j = j.replace(/;$/, ""), g = a16.escape(b13.referrer) === j;
+                }
+                if (g && f) return k.dprint("RUM_EPISODES.findStartCookie: startTime = " + f), f;
+            }
+        } catch (l) {}
+        return d14;
+    }, k.beforeUnload = function() {
+        try {
+            if (k.bUnloaded) return;
+            b13.cookie = "RUM_EPISODES=s=" + Number(new Date) + "&r=" + a16.escape(b13.location) + "; path=/", k.bUnloaded = !0;
+        } catch (c) {}
+    }, k.onload = function() {
+        k.mark("onload"), k.done();
+    }, k.addEventListener = function(b, c, d) {
+        return "undefined" != typeof a16.attachEvent ? a16.attachEvent("on" + b, c) : a16.addEventListener ? a16.addEventListener(b, c, d) : void 0;
+    }, k.dprint = function() {}, k.init();
+    var l = null, m = {
+        navigationStart: "ns",
+        redirectStart: "rds",
+        redirectEnd: "rde",
+        unloadEventStart: "us",
+        unloadEventEnd: "ue",
+        fetchStart: "fs",
+        domainLookupStart: "dls",
+        domainLookupEnd: "dle",
+        connectStart: "cs",
+        secureConnectionStart: "scs",
+        connectEnd: "ce",
+        handshakeStart: "hs",
+        requestStart: "rqs",
+        responseStart: "rps",
+        responseEnd: "rpe",
+        domLoading: "dl",
+        domInteractive: "di",
+        domContentLoadedEventStart: "dcs",
+        domContentLoadedEventEnd: "dce",
+        domComplete: "dc",
+        loadEventStart: "ls",
+        loadEventEnd: "le"
+    }, n = a16.performance || a16.mozPerformance || a16.msPerformance || a16.webkitPerformance;
+    n && "undefined" != typeof n.timing && "undefined" != typeof n.navigation ? l = setInterval(h5, 100) : (k.mark("firstbyte", j4), l = setInterval(i3, 100));
+}(window, document, window.atatus), function(a17, b14, c9) {
+    b14.SessionTracking = function() {
+        function d15(a) {
+            b14.sessionId = p.uuid4(), q.existingTimestamp = p.createCookie(q.cookieName, b14.sessionId), a(!0);
+        }
+        function e10() {
+            var a;
+            if (q.existingTimestamp) {
+                var b = new Date(new Date - s);
+                a = q.existingTimestamp < b;
+            }
+            a && (q.stopSession = !0);
+        }
+        function f7(a) {
+            return Math.min(a, 3e5);
+        }
+        function g7(a) {
+            for(var b in a)isNaN(a[b]) && "string" != typeof a[b] ? a[b] = 0 : a[b] < 0 && (a[b] = 0);
+            return a;
+        }
+        function h6(b, c) {
+            var d;
+            return d = "object" == typeof a17.performance && "function" == typeof a17.performance.now ? a17.performance.now() : 0, {
+                du: Math.min(q.maxVirtualPageDuration, d - (b || c)),
+                o: Math.min(q.maxVirtualPageDuration, d - c)
+            };
+        }
+        function i(a) {
+            var c = {
+                du: a.loadEventEnd - a.navigationStart,
+                s: a.fetchStart
+            };
+            return a.domainLookupStart && a.domainLookupStart > 0 && (c.dls = a.domainLookupStart - a.fetchStart), a.domainLookupEnd && a.domainLookupEnd > 0 && (c.dle = a.domainLookupEnd - a.fetchStart), a.connectStart && a.connectStart > 0 && (c.cs = a.connectStart - a.fetchStart), a.connectEnd && a.connectEnd > 0 && (c.ce = a.connectEnd - a.fetchStart), a.responseStart && a.responseStart > 0 && (c.rps = a.responseStart - a.fetchStart), a.responseEnd && a.responseEnd > 0 && (c.rpe = a.responseEnd - a.fetchStart), a.domLoading && a.domLoading > 0 && (c.dl = a.domLoading - a.fetchStart), a.domInteractive && a.domInteractive > 0 && (c.di = a.domInteractive - a.fetchStart), a.domContentLoadedEventEnd && a.domContentLoadedEventEnd > 0 && (c.dce = a.domContentLoadedEventEnd - a.fetchStart), a.domComplete && a.domComplete > 0 && (c.dc = f7(a.domComplete - a.fetchStart)), a.loadEventStart && a.loadEventStart > 0 && (c.ls = a.loadEventStart - a.fetchStart), a.loadEventEnd && a.loadEventEnd > 0 && (c.le = a.loadEventEnd - a.fetchStart), a.secureConnectionStart && a.secureConnectionStart > 0 && (c.scs = a.secureConnectionStart - a.connectStart - a.fetchStart, c.scs = c.scs > 0 ? c.scs : 0), c = g7(c), b14.paintPerformance && b14.paintPerformance.fp && (c.fp = b14.paintPerformance.fp, c.fcp = b14.paintPerformance.fcp), c;
+        }
+        function j(a, b) {
+            var c = {
+                du: f7(a.duration),
+                s: b + a.fetchStart
+            };
+            return a.domainLookupStart && a.domainLookupStart > 0 && (c.dls = a.domainLookupStart - a.fetchStart), a.domainLookupEnd && a.domainLookupEnd > 0 && (c.dle = a.domainLookupEnd - a.fetchStart), a.connectStart && a.connectStart > 0 && (c.cs = a.connectStart - a.fetchStart), a.connectEnd && a.connectEnd > 0 && (c.ce = a.connectEnd - a.fetchStart), a.responseStart && a.responseStart > 0 && (c.rps = a.responseStart - a.fetchStart), a.responseEnd && a.responseEnd > 0 && (c.rpe = a.responseEnd - a.fetchStart), a.secureConnectionStart && a.secureConnectionStart > 0 && (c.scs = a.secureConnectionStart - a.connectStart - a.fetchStart, c.scs = c.scs > 0 ? c.scs : 0), c = g7(c);
+        }
+        function k() {
+            var b = a17.location.pathname, c = a17.location.protocol + "//" + a17.location.host + b;
+            return c.length > 800 && (c = c.substring(0, 800)), {
+                u: c,
+                t: i(a17.performance.timing),
+                g: "p"
+            };
+        }
+        function l(b, c, d) {
+            var e = a17.location.protocol + "//" + a17.location.host + b;
+            return e.length > 800 && (e = e.substring(0, 800)), {
+                u: e,
+                t: h6(c, d),
+                g: "r"
+            };
+        }
+        function m(b, c) {
+            var d = b.name.split("?")[0];
+            return d.length > 800 && (d = d.substring(0, 800)), {
+                u: d,
+                t: j(b, c ? 0 : a17.performance.timing.navigationStart),
+                g: "xmlhttprequest" === b.initiatorType || "fetch" === b.initiatorType ? "x" : "s",
+                z: b.decodedBodySize || b.transferSize || 0
+            };
+        }
+        function n(b, d) {
+            if (a17.performance !== c9 && a17.performance.getEntriesByType) try {
+                for(var e = a17.performance.getEntriesByType("resource"), f = q.offset; f < e.length; f++){
+                    var g = e[f].name.split("?")[0];
+                    0 !== g.indexOf(q.atatusHost) && (g.indexOf("favicon.ico") > 0 || 0 !== g.indexOf("about:blank") && ("j" !== g[0] || 1 !== g.indexOf("avascript:")) && 0 !== g.indexOf("chrome-extension://") && 0 !== g.indexOf("res://") && 0 !== g.indexOf("file://") && e[f].name && b.push(m(e[f], d)));
+                }
+                q.offset = e.length;
+            } catch (h) {}
+        }
+        function o(b, d, e, f) {
+            if (a17.performance === c9 || a17.performance.timing === c9 || a17.performance.timing.fetchStart === c9 || isNaN(a17.performance.timing.fetchStart)) return null;
+            var g = [
+                {
+                    rs: []
+                }
+            ];
+            if (d && (e && (f ? g[0].p = k() : g[0].rs.push(k())), n(g[0].rs)), b) {
+                q.pendingVirtualPage && (g[0].r = q.pendingVirtualPage);
+                var h = null == q.pendingVirtualPage;
+                if (q.pendingVirtualPage = l(b, q.previousVirtualPageLoadTimestamp, q.initalStaticPageLoadTimestamp), !h && g.length > 0) return g;
+            }
+            return g;
+        }
+        var p = b14._helper, q = this, r = {};
+        b14.sessionId = null, this.cookieName = "atatus-sid", this.virtualPage = null, this.heartBeatInterval = null, this.offset = 0, this.atatusHost = b14.getAPIEndpoint(), this.maxVirtualPageDuration = 18e5;
+        var s = 3e5;
+        this.existingTimestamp = null, this.stopSession = !1, this.sendSessionPayload = function(a) {
+            q.stopSession || b14.sendSessionPerf(a);
+        }, this.sendSPAPayload = function() {}, this.attach = function() {
+            d15(function(a) {
+                setTimeout(function() {
+                    q.pageLoaded(a);
+                }, 5e3);
+            });
+            var b15 = function() {
+                var a = [
+                    {
+                        rs: []
+                    }
+                ];
+                if (n(a[0].rs), a[0].rs.length > 0) {
+                    var b = {
+                        data: a
+                    };
+                    q.sendSessionPayload(b);
+                }
+            }, c = (function() {
+                this.watchCookieTimestamp();
+            }).bind(r), e = (function() {
+                "visible" === document.visibilityState && this.watchCookieTimestamp();
+            }).bind(r);
+            a17.addEventListener ? (a17.addEventListener("click", c), document.addEventListener("visibilitychange", e), a17.addEventListener("beforeunload", b15)) : a17.attachEvent && document.attachEvent("onclick", c);
+        }, this.pageLoaded = function(b) {
+            q.sendPerformance(!0, !0, b), q.heartBeat(), q.initalStaticPageLoadTimestamp = "object" == typeof a17.performance && "function" == typeof a17.performance.now ? a17.performance.now() : 0;
+        }, this.endSession = function() {
+            q.stopSession = !0, p.createCookie(q.cookieName, b14.sessionId, -1);
+        }, this.heartBeat = function() {
+            q.heartBeatInterval = setInterval(function() {
+                var a = [
+                    {
+                        rs: []
+                    }
+                ];
+                if (n(a[0].rs, q.virtualPage), a[0].rs.length > 0) {
+                    var b = {
+                        data: a
+                    };
+                    q.sendSessionPayload(b);
+                }
+            }, 3e4);
+        }, this.virtualPageLoaded = function(b) {
+            var c = null == this.virtualPage;
+            "string" == typeof b && (b.length > 0 && "/" !== b[0] && (b += "/"), b.length > 800 && (b = b.substring(0, 800)), this.virtualPage = b), c ? this.sendPerformance(!0, !1, !1) : this.sendPerformance(!1, !1, !1), "string" == typeof b && (this.previousVirtualPageLoadTimestamp = "object" == typeof a17.performance && "function" == typeof a17.performance.now ? a17.performance.now() : 0);
+        }, this.sendPerformance = function(a, b, c) {
+            var d = o(this.virtualPage, a, b, c);
+            if (d) {
+                var e = {
+                    data: d
+                };
+                d[0].r ? q.sendSPAPayload(e) : d[0].rs.length > 0 && q.sendSessionPayload(e);
+            }
+        }, r.watchCookieTimestamp = e10;
+    };
+}(window, window.atatus), function(a18, b16, c10) {
+    c10.__attachAjaxHooks = function() {
+        var d16 = c10._helper, e11 = {
+            queue: [],
+            batchSize: 25,
+            processing: !1,
+            bUnloaded: !1,
+            push: function(a) {
+                "string" == typeof a.url && (a.url.indexOf(".html") > 0 || -1 === a.url.indexOf("://") || !c10._isAllowedUrl(a.url) || (this.queue.push(a), this.queue.length >= this.batchSize && this._processQueue()));
+            },
+            _processQueue: function() {
+                if (!this.processing && this.queue.length) {
+                    this.processing = !0;
+                    try {
+                        for(var a = {}, b = {}, e = 0; e < this.queue.length; e++){
+                            var f, g = this.queue[e], h = g.status;
+                            if (400 > h) {
+                                f = g.method + g.url;
+                                var i = g.respAvailTime - g.sendTime, j = g.respProcTime - g.respAvailTime, k = g.receivedSize ? +g.receivedSize : 0, l = g.sendSize ? +g.sendSize : 0;
+                                0 > i && (i = 0), 0 > j && (j = 0), isNaN(k) && (k = 0), isNaN(l) && (l = 0);
+                                var m = a[f];
+                                m ? (m.rt.push(i), m.ct.push(j), m.rz.push(k), m.sz.push(l)) : a[f] = {
+                                    m: g.method,
+                                    u: g.url,
+                                    rt: [
+                                        i
+                                    ],
+                                    ct: [
+                                        j
+                                    ],
+                                    rz: [
+                                        k
+                                    ],
+                                    sz: [
+                                        l
+                                    ]
+                                };
+                            } else {
+                                f = g.method + h + g.url;
+                                var n = b[f];
+                                n && n.sc ? n.sc[h] ? n.sc[h]++ : n.sc[h] = 1 : (b[f] = {
+                                    m: g.method,
+                                    u: g.url,
+                                    sc: {}
+                                }, b[f].sc[h] = 1);
+                            }
+                        }
+                        var o = {
+                            xhr: d16.arrayFromObject(a),
+                            xhrError: d16.arrayFromObject(b)
+                        };
+                        c10.sendAjaxPerf(o);
+                    } catch (p) {
+                        d16.log("Error while processing queue: ", p);
+                    } finally{
+                        this.queue = [], this.processing = !1;
+                    }
+                }
+            },
+            beforeUnload: function() {
+                e11.bUnloaded || (e11._processQueue(), e11.bUnloaded = !0);
+            }
+        };
+        d16.addEventListener("beforeunload", e11.beforeUnload, !1);
+        var f8 = {
+            support: function(a) {
+                return !a || "apply" in a;
+            },
+            around: function(a, b, c, e) {
+                return a = a || function() {}, function() {
+                    var f, g = Array.prototype.slice.call(arguments);
+                    try {
+                        b && (f = b.apply(this, g));
+                    } catch (h) {
+                        d16.log(e, h);
+                    }
+                    var i;
+                    try {
+                        i = a.apply(this, f || g);
+                    } finally{
+                        try {
+                            c && c.apply(this, g);
+                        } catch (h) {
+                            d16.log(e, h);
+                        }
+                    }
+                    return i;
+                };
+            },
+            before: function(a, b) {
+                return f8.around(a, b);
+            },
+            after: function(a, b) {
+                return f8.around(a, null, b);
+            },
+            timeout: function(a) {
+                setTimeout(a, 0);
+            },
+            wrapAddEventListener: function() {
+                return function(a, b) {
+                    if (("load" === a || "error" === a) && b && this._atrumXhrData) {
+                        var c;
+                        b.__atrumInterceptor ? c = b.__atrumInterceptor : f8.support(b) ? (c = h7.wrapXHR(b, this, "XHR.invokeEventListener"), b.__atrumInterceptor = c) : c = null;
+                        var d;
+                        return c && (d = Array.prototype.slice.call(arguments), d[1] = c), d;
+                    }
+                };
+            },
+            wrapRemoveEventListener: function() {
+                return function(a, b) {
+                    if (this._atrumXhrData) {
+                        var c = Array.prototype.slice.call(arguments);
+                        return b.__atrumInterceptor && (c[1] = b.__atrumInterceptor), c;
+                    }
+                };
+            },
+            aroundWithHandleEvent: function(a, b, c, d) {
+                var e = a;
+                return a && "object" == typeof a && "toString" in a && "[xpconnect wrapped nsIDOMEventListener]" === a.toString() && "handleEvent" in a && (e = function() {
+                    a.handleEvent.apply(this, Array.prototype.slice.call(arguments));
+                }), f8.around(e, b, c, d);
+            },
+            getFullyQualifiedUrl: function(a) {
+                var c = b16.createElement("a");
+                return c.href = a, c.href;
+            }
+        };
+        if (a18.XMLHttpRequest && a18.XMLHttpRequest.prototype) {
+            var g8 = a18.XMLHttpRequest.prototype;
+            if (!("open" in g8 && "send" in g8)) return;
+            if (!f8.support(g8.open) || !f8.support(g8.send)) return;
+            var h7 = {};
+            h7.captureAjaxTimings = function(a) {
+                var b = a._atrumXhrData;
+                if (b) {
+                    var c = (new Date).getTime();
+                    2 === a.readyState ? b.firstByteTime = b.firstByteTime || c : 4 === a.readyState && (b.respAvailTime = b.respAvailTime || c, b.firstByteTime = b.firstByteTime || c);
+                }
+            }, h7.sendPayload = function(a, b) {
+                b.receivedSize = 0, a.responseType && "text" !== a.responseType || "string" == typeof a.responseText && (b.receivedSize = a.responseText.length), b.status = a.status, e11.push(b);
+            }, h7.wrapXHR = function(a19, b, c11) {
+                return f8.aroundWithHandleEvent(a19, function() {
+                    h7.captureAjaxTimings(this);
+                }, function() {
+                    var a = b._atrumXhrData;
+                    if (a && 4 === b.readyState) {
+                        var c = (new Date).getTime();
+                        a.respProcTime = a.respProcTime || c, h7.sendPayload(b, a), delete b._atrumXhrData;
+                    }
+                }, c11);
+            }, h7.ajaxDone = function(a) {
+                if (a._atrumXhrData) {
+                    var b = (new Date).getTime() + 15e4, c = function() {
+                        h7.captureAjaxTimings(a);
+                        var d = a._atrumXhrData;
+                        if (d) {
+                            var e = (new Date).getTime();
+                            4 === a.readyState ? (d.respProcTime = d.respProcTime || e, h7.sendPayload(a, d), delete a._atrumXhrData) : b > e ? setTimeout(c, 50) : delete a._atrumXhrData;
+                        }
+                    };
+                    c();
+                }
+            }, g8.open = f8.around(g8.open, function() {
+                var a = 1 <= arguments.length ? String(arguments[0]) : "", b = 2 <= arguments.length ? String(arguments[1]) : "";
+                b = f8.getFullyQualifiedUrl(b);
+                var d = c10._isAllowedUrl(b);
+                d && (b = b && b.split("?")[0], this._atrumXhrData = {
+                    method: a,
+                    url: b,
+                    sendTime: null,
+                    sendSize: null,
+                    firstByteTime: null,
+                    respAvailTime: null,
+                    respProcTime: null,
+                    receivedSize: null,
+                    parentPhase: null
+                });
+            }, null, "XHR.open"), g8.send = f8.around(g8.send, function() {
+                var a = this, b17 = a._atrumXhrData;
+                if (b17) {
+                    var c = (new Date).getTime();
+                    if (b17.sendTime = b17.sendTime || c, b17.sendSize = 1 <= arguments.length && arguments[0] ? arguments[0].length || 0 : 0, a.onreadystatechange && "function" == typeof a.onreadystatechange) {
+                        var d = 0, e = function() {
+                            if (4 === a.readyState) h7.ajaxDone(a);
+                            else {
+                                var b = null;
+                                try {
+                                    b = a.onreadystatechange;
+                                } catch (c) {
+                                    return void h7.ajaxDone(a);
+                                }
+                                d++, b ? f8.support(b) ? a.onreadystatechange = h7.wrapXHR(b, a, "XHR.onReadyStateChange") : h7.ajaxDone(a) : 5 > d ? f8.timeout(e) : h7.ajaxDone(a);
+                            }
+                        };
+                        e();
+                    } else a.addEventListener("readystatechange", function() {
+                        4 === a.readyState && h7.ajaxDone(a);
+                    });
+                }
+            }, null, "XHR.send"), "addEventListener" in g8 && "removeEventListener" in g8 && f8.support(g8.addEventListener) && f8.support(g8.removeEventListener) && (g8.addEventListener = f8.around(g8.addEventListener, f8.wrapAddEventListener(), null, "XHR.addEventListener"), g8.removeEventListener = f8.around(g8.removeEventListener, f8.wrapRemoveEventListener(), null, "XHR.removeEventListener"));
+        }
+        if ("fetch" in a18 && !a18.fetch.polyfill) {
+            var i4 = a18.fetch;
+            a18.fetch = function(a20) {
+                return function() {
+                    for(var b = new Array(arguments.length), d = 0; d < b.length; ++d)b[d] = arguments[d];
+                    var f = "GET", g = 0;
+                    b[1] && (b[1].method && (f = b[1].method), "string" == typeof b[1].body && (g = b[1].body.length));
+                    var h = {
+                        url: b[0],
+                        method: f,
+                        sendSize: g,
+                        receivedSize: 0,
+                        sendTime: (new Date).getTime(),
+                        respAvailTime: 0,
+                        respProcTime: 0
+                    };
+                    return a20.apply(this, b).then(function(a) {
+                        return h.respAvailTime = (new Date).getTime(), c10._isAllowedUrl(h.url) && (h.respProcTime = h.respAvailTime, h.status = a.status, a.headers && a.headers.get && (h.receivedSize = a.headers.get("Content-Length")), e11.push(h)), a;
+                    });
+                };
+            }(i4);
+        }
+    };
+}(window, document, window.atatus), function(a21, b18) {
+    function c12(a, c, d) {
+        if (!(0 >= c)) {
+            var e = {
+                data: [
+                    {
+                        t: {
+                            n: a,
+                            s: d,
+                            t: {
+                                du: c
+                            }
+                        }
+                    }
+                ]
+            };
+            b18.sendTxnPerf(e);
+        }
+    }
+    function d17(a) {
+        return i + " " + a;
+    }
+    function e12() {
+        try {
+            return "localStorage" in a21 && null !== a21.localStorage;
+        } catch (b) {
+            return !1;
+        }
+    }
+    function f9(a) {
+        var b = j.now();
+        try {
+            localStorage.setItem(d17(a), b);
+        } catch (c) {}
+    }
+    function g(a) {
+        var b = null, c = d17(a);
+        try {
+            b = localStorage.getItem(c), localStorage.removeItem(c);
+        } catch (e) {}
+        var f = 0;
+        return b && (f = j.now() - b), f;
+    }
+    function h(a) {
+        try {
+            var b = d17(a);
+            localStorage.removeItem(b);
+        } catch (c) {}
+    }
+    var i = "atatus.com/", j = b18._helper, k = 1, l = 0;
+    b18.beginTransaction = function(a) {
+        e12() && f9(a);
+    }, b18.endTransaction = function(a) {
+        if (e12()) {
+            var b = g(a);
+            c12(a, b, k);
+        }
+    }, b18.failTransaction = function(a) {
+        if (e12()) {
+            var b = g(a);
+            c12(a, b, l);
+        }
+    }, b18.cancelTransaction = function(a) {
+        e12() && h(a);
+    }, b18.recordTransaction = function(a, b, d) {
+        e12() && a && b && c12(a, b, d === !1 ? l : k);
+    };
+}(window, window.atatus), function(a22, b19) {
+    function c(a) {
+        a = a || {};
+        var b = a.name && a.name.toLowerCase();
+        b && a.value && (e[b] || f++, e[b] = a.value);
+    }
+    function d() {
+        if (a22.webVitals) {
+            a22.webVitals.getFID(c), a22.webVitals.getFCP(c), a22.webVitals.getTTFB(c), a22.webVitals.getCLS(c, !0), a22.webVitals.getLCP(c, !0);
+            var b = a22.performance && a22.performance.timing;
+            !e.ttfb && b && (e.ttfb = b.responseStart - b.navigationStart, e.ttfb && f++);
+        }
+    }
+    var e = {}, f = 0, g = !1, h = function() {
+        !g && f > 0 && (g = !0, b19.sendWebVitals(e));
+    };
+    "loading" !== document.readyState ? d() : document.addEventListener("DOMContentLoaded", function() {
+        d();
+    }), a22.addEventListener("beforeunload", function() {
+        h();
+    });
+}(window, window.atatus), function(a, b) {
+    a._atatusConfig && a._atatusConfig.apikey && b.config(a._atatusConfig.apikey, a._atatusConfig).install();
+}(window, window.atatus);
+!function(n4) {
+    var r2 = {};
+    function i(t) {
+        if (r2[t]) return r2[t].exports;
+        var e = r2[t] = {
+            i: t,
+            l: !1,
+            exports: {}
+        };
+        return n4[t].call(e.exports, e, e.exports, i), e.l = !0, e.exports;
+    }
+    i.m = n4, i.c = r2, i.d = function(t, e, n) {
+        i.o(t, e) || Object.defineProperty(t, e, {
+            enumerable: !0,
+            get: n
+        });
+    }, i.r = function(t) {
+        "undefined" != typeof Symbol && Symbol.toStringTag && Object.defineProperty(t, Symbol.toStringTag, {
+            value: "Module"
+        }), Object.defineProperty(t, "__esModule", {
+            value: !0
+        });
+    }, i.t = function(e, t2) {
+        if (1 & t2 && (e = i(e)), 8 & t2) return e;
+        if (4 & t2 && "object" == typeof e && e && e.__esModule) return e;
+        var n = Object.create(null);
+        if (i.r(n), Object.defineProperty(n, "default", {
+            enumerable: !0,
+            value: e
+        }), 2 & t2 && "string" != typeof e) for(var r in e)i.d(n, r, (function(t) {
+            return e[t];
+        }).bind(null, r));
+        return n;
+    }, i.n = function(t) {
+        var e = t && t.__esModule ? function() {
+            return t.default;
+        } : function() {
+            return t;
+        };
+        return i.d(e, "a", e), e;
+    }, i.o = function(t, e) {
+        return Object.prototype.hasOwnProperty.call(t, e);
+    }, i.p = "", i(i.s = 2);
+}([
+    function(t3, e13, n5) {
+        t3.exports = function() {
+            function c(t) {
+                return "function" == typeof t;
+            }
+            var n6 = Array.isArray ? Array.isArray : function(t) {
+                return "[object Array]" === Object.prototype.toString.call(t);
+            }, r3 = 0, e14 = void 0, i5 = void 0, a23 = function(t, e) {
+                h[r3] = t, h[r3 + 1] = e, 2 === (r3 += 2) && (i5 ? i5(v) : y());
+            }, t4 = "undefined" != typeof window ? window : void 0, o4 = t4 || {}, s2 = o4.MutationObserver || o4.WebKitMutationObserver, u = "undefined" == typeof self && "undefined" != typeof process && "[object process]" === ({}).toString.call(process), d = "undefined" != typeof Uint8ClampedArray && "undefined" != typeof importScripts && "undefined" != typeof MessageChannel;
+            function f() {
+                var t = setTimeout;
+                return function() {
+                    return t(v, 1);
+                };
+            }
+            var h = new Array(1e3);
+            function v() {
+                for(var t = 0; t < r3; t += 2){
+                    var e = h[t], n = h[t + 1];
+                    e(n), h[t] = void 0, h[t + 1] = void 0;
+                }
+                r3 = 0;
+            }
+            var l, p, g, m, y = void 0;
+            function _(t, e) {
+                var n = this, r = new this.constructor(T);
+                void 0 === r[w] && j(r);
+                var i = n._state;
+                if (i) {
+                    var o = arguments[i - 1];
+                    a23(function() {
+                        return F(i, r, o, n._result);
+                    });
+                } else A(n, r, t, e);
+                return r;
+            }
+            function S(t) {
+                if (t && "object" == typeof t && t.constructor === this) return t;
+                var e = new this(T);
+                return I(e, t), e;
+            }
+            y = u ? function() {
+                return process.nextTick(v);
+            } : s2 ? (p = 0, g = new s2(v), m = document.createTextNode(""), g.observe(m, {
+                characterData: !0
+            }), function() {
+                m.data = p = ++p % 2;
+            }) : d ? ((l = new MessageChannel).port1.onmessage = v, function() {
+                return l.port2.postMessage(0);
+            }) : void 0 === t4 ? function() {
+                try {
+                    var t = Function("return this")().require("vertx");
+                    return void 0 === (e14 = t.runOnLoop || t.runOnContext) ? f() : function() {
+                        e14(v);
+                    };
+                } catch (t) {
+                    return f();
+                }
+            }() : f();
+            var w = Math.random().toString(36).substring(2);
+            function T() {}
+            var b = void 0, x = 1, L = 2;
+            function C(t, e, n, r) {
+                try {
+                    t.call(e, n, r);
+                } catch (t5) {
+                    return t5;
+                }
+            }
+            function E(t6, e15, n7) {
+                var r, i, o, s;
+                e15.constructor === t6.constructor && n7 === _ && e15.constructor.resolve === S ? (o = t6, (s = e15)._state === x ? O(o, s._result) : s._state === L ? R(o, s._result) : A(s, void 0, function(t) {
+                    return I(o, t);
+                }, function(t) {
+                    return R(o, t);
+                })) : void 0 === n7 ? O(t6, e15) : c(n7) ? (r = e15, i = n7, a23(function(e) {
+                    var n = !1, t7 = C(i, r, function(t) {
+                        n || (n = !0, r !== t ? I(e, t) : O(e, t));
+                    }, function(t) {
+                        n || (n = !0, R(e, t));
+                    }, e._label);
+                    !n && t7 && (n = !0, R(e, t7));
+                }, t6)) : O(t6, e15);
+            }
+            function I(e, t) {
+                if (e === t) R(e, new TypeError("You cannot resolve a promise with itself"));
+                else if (i = typeof (r = t), null === r || "object" !== i && "function" !== i) O(e, t);
+                else {
+                    var n = void 0;
+                    try {
+                        n = t.then;
+                    } catch (t8) {
+                        return void R(e, t8);
+                    }
+                    E(e, t, n);
+                }
+                var r, i;
+            }
+            function k(t) {
+                t._onerror && t._onerror(t._result), P(t);
+            }
+            function O(t, e) {
+                t._state === b && (t._result = e, t._state = x, 0 !== t._subscribers.length && a23(P, t));
+            }
+            function R(t, e) {
+                t._state === b && (t._state = L, t._result = e, a23(k, t));
+            }
+            function A(t, e, n, r) {
+                var i = t._subscribers, o = i.length;
+                t._onerror = null, i[o] = e, i[o + x] = n, i[o + L] = r, 0 === o && t._state && a23(P, t);
+            }
+            function P(t) {
+                var e = t._subscribers, n = t._state;
+                if (0 !== e.length) {
+                    for(var r = void 0, i = void 0, o = t._result, s = 0; s < e.length; s += 3)r = e[s], i = e[s + n], r ? F(n, r, i, o) : i(o);
+                    t._subscribers.length = 0;
+                }
+            }
+            function F(t, e, n, r) {
+                var i = c(n), o = void 0, s = void 0, a = !0;
+                if (i) {
+                    try {
+                        o = n(r);
+                    } catch (t) {
+                        a = !1, s = t;
+                    }
+                    if (e === o) return void R(e, new TypeError("A promises callback cannot return that same promise."));
+                } else o = r;
+                e._state !== b || (i && a ? I(e, o) : !1 === a ? R(e, s) : t === x ? O(e, o) : t === L && R(e, o));
+            }
+            var M = 0;
+            function j(t) {
+                t[w] = M++, t._state = void 0, t._result = void 0, t._subscribers = [];
+            }
+            var q = function() {
+                function t9(t, e) {
+                    this._instanceConstructor = t, this.promise = new t(T), this.promise[w] || j(this.promise), n6(e) ? (this.length = e.length, this._remaining = e.length, this._result = new Array(this.length), 0 === this.length ? O(this.promise, this._result) : (this.length = this.length || 0, this._enumerate(e), 0 === this._remaining && O(this.promise, this._result))) : R(this.promise, new Error("Array Methods must be provided an Array"));
+                }
+                return t9.prototype._enumerate = function(t) {
+                    for(var e = 0; this._state === b && e < t.length; e++)this._eachEntry(t[e], e);
+                }, t9.prototype._eachEntry = function(e, t11) {
+                    var n = this._instanceConstructor, r = n.resolve;
+                    if (r === S) {
+                        var i = void 0, o = void 0, s = !1;
+                        try {
+                            i = e.then;
+                        } catch (t10) {
+                            s = !0, o = t10;
+                        }
+                        if (i === _ && e._state !== b) this._settledAt(e._state, t11, e._result);
+                        else if ("function" != typeof i) this._remaining--, this._result[t11] = e;
+                        else if (n === N) {
+                            var a = new n(T);
+                            s ? R(a, o) : E(a, e, i), this._willSettleAt(a, t11);
+                        } else this._willSettleAt(new n(function(t) {
+                            return t(e);
+                        }), t11);
+                    } else this._willSettleAt(r(e), t11);
+                }, t9.prototype._settledAt = function(t, e, n) {
+                    var r = this.promise;
+                    r._state === b && (this._remaining--, t === L ? R(r, n) : this._result[e] = n), 0 === this._remaining && O(r, this._result);
+                }, t9.prototype._willSettleAt = function(t12, e) {
+                    var n = this;
+                    A(t12, void 0, function(t) {
+                        return n._settledAt(x, e, t);
+                    }, function(t) {
+                        return n._settledAt(L, e, t);
+                    });
+                }, t9;
+            }(), N = function() {
+                function e16(t13) {
+                    this[w] = M++, this._result = this._state = void 0, this._subscribers = [], T !== t13 && ("function" != typeof t13 && function() {
+                        throw new TypeError("You must pass a resolver function as the first argument to the promise constructor");
+                    }(), this instanceof e16 ? function(e, t14) {
+                        try {
+                            t14(function(t) {
+                                I(e, t);
+                            }, function(t) {
+                                R(e, t);
+                            });
+                        } catch (t) {
+                            R(e, t);
+                        }
+                    }(this, t13) : function() {
+                        throw new TypeError("Failed to construct 'Promise': Please use the 'new' operator, this object constructor cannot be called as a function.");
+                    }());
+                }
+                return e16.prototype.catch = function(t) {
+                    return this.then(null, t);
+                }, e16.prototype.finally = function(e) {
+                    var n = this.constructor;
+                    return c(e) ? this.then(function(t) {
+                        return n.resolve(e()).then(function() {
+                            return t;
+                        });
+                    }, function(t) {
+                        return n.resolve(e()).then(function() {
+                            throw t;
+                        });
+                    }) : this.then(e, e);
+                }, e16;
+            }();
+            return N.prototype.then = _, N.all = function(t) {
+                return new q(this, t).promise;
+            }, N.race = function(i) {
+                var o = this;
+                return n6(i) ? new o(function(t, e) {
+                    for(var n = i.length, r = 0; r < n; r++)o.resolve(i[r]).then(t, e);
+                }) : new o(function(t, e) {
+                    return e(new TypeError("You must pass an array to race."));
+                });
+            }, N.resolve = S, N.reject = function(t) {
+                var e = new this(T);
+                return R(e, t), e;
+            }, N._setScheduler = function(t) {
+                i5 = t;
+            }, N._setAsap = function(t) {
+                a23 = t;
+            }, N._asap = a23, N.polyfill = function() {
+                var t = void 0;
+                if ("undefined" != typeof global) t = global;
+                else if ("undefined" != typeof self) t = self;
+                else try {
+                    t = Function("return this")();
+                } catch (t15) {
+                    throw new Error("polyfill failed because global object is unavailable in this environment");
+                }
+                var e = t.Promise;
+                if (e) {
+                    var n = null;
+                    try {
+                        n = Object.prototype.toString.call(e.resolve());
+                    } catch (t) {}
+                    if ("[object Promise]" === n && !e.cast) return;
+                }
+                t.Promise = N;
+            }, N.Promise = N;
+        }();
+    },
+    function(t16, e17) {
+        var n = "undefined" != typeof crypto && crypto.getRandomValues && crypto.getRandomValues.bind(crypto) || "undefined" != typeof msCrypto && "function" == typeof window.msCrypto.getRandomValues && msCrypto.getRandomValues.bind(msCrypto);
+        if (n) {
+            var r = new Uint8Array(16);
+            t16.exports = function() {
+                return n(r), r;
+            };
+        } else {
+            var i = new Array(16);
+            t16.exports = function() {
+                for(var t, e = 0; e < 16; e++)0 == (3 & e) && (t = 4294967296 * Math.random()), i[e] = t >>> ((3 & e) << 3) & 255;
+                return i;
+            };
+        }
+    },
+    function(t17, e18, n8) {
+        "use strict";
+        n8.r(e18);
+        var r4 = n8(1), o5 = n8.n(r4), i6 = [].slice;
+        for(var s3 = [], a24 = 0; a24 < 256; ++a24)s3[a24] = (a24 + 256).toString(16).substr(1);
+        function c13(t) {
+            if (t && t.traceId && t.id && t.parentId) {
+                var e = t.sampled ? "01" : "00", n = t.sampled ? t.id : t.parentId;
+                return "00-" + t.traceId + "-" + n + "-" + e;
+            }
+        }
+        function l4(e, t18) {
+            var n = !1;
+            return "string" == typeof t18 ? n = e === t18 : Array.isArray(t18) && t18.forEach(function(t) {
+                n || (n = l4(e, t));
+            }), n;
+        }
+        function u2(t) {
+            var e, n, r, i;
+            return (e = o5()(), r = n || 0, [
+                (i = s3)[e[r++]],
+                i[e[r++]],
+                i[e[r++]],
+                i[e[r++]],
+                i[e[r++]],
+                i[e[r++]],
+                i[e[r++]],
+                i[e[r++]],
+                i[e[r++]],
+                i[e[r++]],
+                i[e[r++]],
+                i[e[r++]],
+                i[e[r++]],
+                i[e[r++]],
+                i[e[r++]],
+                i[e[r++]]
+            ].join("")).substr(0, t);
+        }
+        function d18() {
+            return "undefined" != typeof window && "function" == typeof Array.prototype.forEach && "function" == typeof JSON.stringify && "function" == typeof Function.bind && window.performance && "function" == typeof window.performance.now && "withCredentials" in new window.XMLHttpRequest;
+        }
+        function f10(t, e, n) {
+            if (n && t) {
+                var r = w(t);
+                return e && (e = String(e)), n[r] = e, n;
+            }
+        }
+        var h8 = [
+            "fetchStart",
+            "domainLookupStart",
+            "domainLookupEnd",
+            "connectStart",
+            "connectEnd",
+            "secureConnectionStart",
+            "requestStart",
+            "responseStart",
+            "responseEnd",
+            "domLoading",
+            "domInteractive",
+            "domContentLoadedEventStart",
+            "domContentLoadedEventEnd",
+            "domComplete",
+            "loadEventStart",
+            "loadEventEnd"
+        ];
+        function p(t) {
+            return t && t.split("?")[0];
+        }
+        function v2(t) {
+            return null !== t && "object" == typeof t;
+        }
+        function g(t, e, n) {
+            for(var r = 0, i = e.length; r < i; ++r){
+                var o = e[r];
+                if (v2(o) || "function" == typeof o) for(var s = Object.keys(o), a = 0, c = s.length; a < c; a++){
+                    var u = s[a], d = o[u];
+                    n && v2(d) ? (v2(t[u]) || (t[u] = Array.isArray(d) ? [] : {}), g(t[u], [
+                        d
+                    ], !1)) : t[u] = d;
+                }
+            }
+            return t;
+        }
+        function m(t) {
+            return g(t, i6.call(arguments, 1), !1);
+        }
+        function y(t) {
+            return g(t, i6.call(arguments, 1), !0);
+        }
+        function _(t) {
+            return void 0 === t;
+        }
+        function S() {}
+        function w(t) {
+            return t.replace(/[.*"]/g, "_");
+        }
+        function T() {
+            var n9, r5, i7, t19 = (n9 = window.performance.timing, r5 = n9.fetchStart, i7 = {}, h8.forEach(function(t) {
+                var e = n9[t];
+                e && r5 <= e && (i7[t] = e - r5);
+            }), i7), e19 = function() {
+                var t = {}, e = window.performance;
+                if (e.getEntriesByType) {
+                    var n = e.getEntriesByType("paint");
+                    if (0 < n.length) for(var r = e.timing, i = r.fetchStart - r.navigationStart, o = 0; o < n.length; o++){
+                        var s = n[o], a = 0 <= i ? s.startTime - i : s.startTime;
+                        t[s.name] = a;
+                    }
+                }
+                return t;
+            }(), o6 = {
+                timeToFirstByte: t19.responseStart,
+                domInteractive: t19.domInteractive,
+                domComplete: t19.domComplete
+            };
+            return e19["first-contentful-paint"] && (o6.firstContentfulPaint = e19["first-contentful-paint"]), {
+                navigationTiming: t19,
+                agent: o6
+            };
+        }
+        var b = {
+            fetchInProgress: !1
+        };
+        function x(t) {
+            return "__apm_symbol__" + t;
+        }
+        function L(t, e, n) {
+            for(var r = t; r && !r.hasOwnProperty(e);)r = Object.getPrototypeOf(r);
+            !r && t[e] && (r = t);
+            var i, o, s, a, c = x(e);
+            if (r && !(i = r[c])) {
+                i = r[c] = r[e];
+                var u = r && Object.getOwnPropertyDescriptor(r, e);
+                if (!(a = u) || !1 !== a.writable && ("function" != typeof a.get || void 0 !== a.set)) {
+                    var d = n(i, c, e);
+                    r[e] = function() {
+                        return d(this, arguments);
+                    }, o = r[e], s = i, o[x("OriginalDelegate")] = s;
+                }
+            }
+            return i;
+        }
+        var C = x("xhrIgnore"), E = x("xhrSync"), I = x("xhrURL"), k = x("xhrMethod"), O = "schedule", R = "invoke", A = "clear", P = "addEventListener", F = "removeEventListener", M = [
+            "link",
+            "css",
+            "script",
+            "img",
+            "xmlhttprequest",
+            "fetch",
+            "beacon",
+            "iframe"
+        ], j = 3e5, q = "page-load", N = "Unknown", H = 60, Q = 1024, D = "transaction:end", B = "config:change", z = "xmlhttprequest", U = "fetch", V = "history", X = "error", J = x("xhrTask"), Y = x("xhrListener"), $ = x("xhrScheduled");
+        function Z(s) {
+            var t20 = XMLHttpRequest.prototype, a = t20[P], c = t20[F];
+            if (!a) {
+                var e = window.XMLHttpRequestEventTarget;
+                if (e) {
+                    var n = e.prototype;
+                    a = n[P], c = n[F];
+                }
+            }
+            var u = "readystatechange";
+            function d(t) {
+                t.state = R, t.ignore || s(R, t);
+            }
+            var r6 = L(t20, "open", function() {
+                return function(t, e) {
+                    return t[k] = e[0], t[I] = e[1], t[E] = !1 === e[2], r6.apply(t, e);
+                };
+            }), f = L(t20, "send", function() {
+                return function(t21, e20) {
+                    var n10 = {
+                        source: z,
+                        state: "",
+                        type: "macroTask",
+                        ignore: t21[C],
+                        data: {
+                            target: t21,
+                            method: t21[k],
+                            sync: t21[E],
+                            url: t21[I],
+                            args: e20,
+                            aborted: !1
+                        }
+                    }, r7 = function(t) {
+                        XMLHttpRequest[$] = !1, t.state = O, t.ignore || s(O, t);
+                        var e = t.data, n = e.target, r = n[Y];
+                        a || (a = n[P], c = n[F]), r && c.call(n, u, r);
+                        var i = n[Y] = function() {
+                            n.readyState === n.DONE && !e.aborted && XMLHttpRequest[$] && t.state === O && d(t);
+                        };
+                        a.call(n, u, i), n[J] || (n[J] = t);
+                        var o = f.apply(n, e.args);
+                        return XMLHttpRequest[$] = !0, o;
+                    }(n10);
+                    return t21[E] && d(n10), r7;
+                };
+            }), i8 = L(t20, "abort", function() {
+                return function(t, e) {
+                    var n, r = t[J];
+                    if (r && "string" == typeof r.type) {
+                        if (r.data && r.data.aborted) return;
+                        (n = r).state = A, s(A, n), n.data.aborted = !0;
+                    }
+                    return i8.apply(t, e);
+                };
+            });
+        }
+        var G = n8(0);
+        function K(a) {
+            if (window.fetch && window.Request) {
+                var c = window.fetch;
+                window.fetch = function(t22, e21) {
+                    var i, n11, o = this, r8 = arguments;
+                    if ("string" == typeof t22) i = new Request(t22, e21), n11 = t22;
+                    else {
+                        if (!t22) return c.apply(o, r8);
+                        n11 = (i = t22).url;
+                    }
+                    var s = {
+                        source: U,
+                        state: "",
+                        type: "macroTask",
+                        data: {
+                            target: i,
+                            method: i.method,
+                            sync: !1,
+                            url: n11,
+                            args: r8,
+                            aborted: !1
+                        }
+                    };
+                    return new G.Promise(function(e, n) {
+                        var t24, r;
+                        b.fetchInProgress = !0, (t24 = s).state = O, a(O, t24);
+                        try {
+                            r = c.apply(o, [
+                                i
+                            ]);
+                        } catch (t23) {
+                            return n(t23), s.data.error = t23, u(s), void (b.fetchInProgress = !1);
+                        }
+                        r.then(function(t) {
+                            e(t), G.Promise.resolve().then(function() {
+                                s.data.response = t, u(s);
+                            });
+                        }, function(t) {
+                            n(t), G.Promise.resolve().then(function() {
+                                s.data.error = t, u(s);
+                            });
+                        }), b.fetchInProgress = !1;
+                    });
+                };
+            }
+            function u(t) {
+                t.state = R, a(R, t);
+            }
+        }
+        var W = function() {
+            function t25() {
+                this.observers = {};
+            }
+            var e22 = t25.prototype;
+            return e22.observe = function(e, n) {
+                var r = this;
+                if ("function" == typeof n) return this.observers[e] || (this.observers[e] = []), this.observers[e].push(n), function() {
+                    var t = r.observers[e].indexOf(n);
+                    -1 < t && r.observers[e].splice(t, 1);
+                };
+            }, e22.sendOnly = function(t26, e) {
+                var n = this.observers[t26];
+                n && n.forEach(function(t) {
+                    try {
+                        t.apply(void 0, e);
+                    } catch (t27) {
+                        console.log(t27, t27.stack);
+                    }
+                });
+            }, e22.send = function(t, e) {
+                this.sendOnly(t + ":before", e), this.sendOnly(t, e), this.sendOnly(t + ":after", e);
+            }, t25;
+        }(), tt = new W, et = !1;
+        function nt() {
+            return et || (et = !0, Z(function(t, e) {
+                tt.send(z, [
+                    t,
+                    e
+                ]);
+            }), K(function(t, e) {
+                tt.send(U, [
+                    t,
+                    e
+                ]);
+            }), function(r) {
+                if (window.history) {
+                    var i = history.pushState;
+                    "function" == typeof i && (history.pushState = function(t, e, n) {
+                        r(R, {
+                            source: V,
+                            data: {
+                                state: t,
+                                title: e,
+                                url: n
+                            }
+                        }), i.apply(this, arguments);
+                    });
+                }
+            }(function(t, e) {
+                tt.send(V, [
+                    t,
+                    e
+                ]);
+            })), tt;
+        }
+        var rt = !1, it = !1;
+        var ot = [
+            [
+                "#",
+                "hash"
+            ],
+            [
+                "?",
+                "query"
+            ],
+            [
+                "/",
+                "path"
+            ],
+            [
+                "@",
+                "auth",
+                1
+            ],
+            [
+                NaN,
+                "host",
+                void 0,
+                1
+            ]
+        ], st = /^([a-z][a-z0-9.+-]*:)?(\/\/)?([\S\s]*)/i, at = function() {
+            function t28(t) {
+                var e, n = this.extractProtocol(t || ""), r = n.protocol, i = n.address, o = n.slashes, s = !r && !o, a = this.getLocation(), c = ot.slice();
+                i = i.replace("\\", "/");
+                for(var u = 0; u < c.length; u++){
+                    var d = c[u], f = d[0], h = d[1];
+                    if ("string" == typeof f) {
+                        if (~(e = i.indexOf(f))) {
+                            var v = d[2];
+                            if (v) {
+                                var l = i.lastIndexOf(f);
+                                e = Math.max(e, l), this[h] = i.slice(0, e), i = i.slice(e + v);
+                            } else this[h] = i.slice(e), i = i.slice(0, e);
+                        }
+                    } else this[h] = i;
+                    this[h] = this[h] || s && d[3] && a[h] || "", d[3] && (this[h] = this[h].toLowerCase());
+                }
+                this.relative = s, this.protocol = r || a.protocol || "", this.origin = this.protocol && this.host && "file:" !== this.protocol ? this.protocol + "//" + this.host : "null", this.href = this.toString();
+            }
+            var e23 = t28.prototype;
+            return e23.toString = function() {
+                var t = this.protocol;
+                if (t += "//", this.auth) {
+                    var e = "[REDACTED]", n = this.auth.split(":");
+                    t += (n[0] ? e : "") + (n[1] ? ":" + e : "") + "@";
+                }
+                return t += this.host, t += this.path, t += this.query, t += this.hash;
+            }, e23.getLocation = function() {
+                var t = {};
+                return "undefined" != typeof window && (t = window), t.location;
+            }, e23.extractProtocol = function(t) {
+                var e = st.exec(t);
+                return {
+                    protocol: e[1] ? e[1].toLowerCase() : "",
+                    slashes: !!e[2],
+                    address: e[3]
+                };
+            }, t28;
+        }(), ct = {
+            service: {
+                name: [
+                    Q,
+                    !0
+                ],
+                version: !0,
+                agent: {
+                    version: [
+                        Q,
+                        !0
+                    ]
+                },
+                environment: !0
+            }
+        }, ut = {
+            "*": !0,
+            headers: {
+                "*": !0
+            }
+        }, dt = {
+            user: {
+                id: !0,
+                email: !0,
+                username: !0
+            },
+            tags: {
+                "*": !0
+            },
+            http: {
+                response: ut
+            },
+            response: ut
+        }, ft = {
+            name: [
+                Q,
+                !0
+            ],
+            type: [
+                Q,
+                !0
+            ],
+            id: [
+                Q,
+                !0
+            ],
+            trace_id: [
+                Q,
+                !0
+            ],
+            parent_id: [
+                Q,
+                !0
+            ],
+            transaction_id: [
+                Q,
+                !0
+            ],
+            subtype: !0,
+            action: !0,
+            context: dt
+        }, ht = {
+            name: !0,
+            parent_id: !0,
+            type: [
+                Q,
+                !0
+            ],
+            id: [
+                Q,
+                !0
+            ],
+            trace_id: [
+                Q,
+                !0
+            ],
+            span_count: {
+                started: [
+                    Q,
+                    !0
+                ]
+            },
+            context: dt
+        };
+        function vt(t) {
+            return null == t || "" === t || void 0 === t;
+        }
+        function lt(t, e, n) {
+            var r, i, o, s, a = (r = t[e], i = n[0], o = n[1], void 0 === i && (i = Q), void 0 === o && (o = !1), void 0 === s && (s = "N/A"), o && vt(r) && (r = s), "string" == typeof r ? r.substring(0, i) : r);
+            vt(a) ? delete t[e] : t[e] = a;
+        }
+        function pt(r, i, o) {
+            void 0 === r && (r = {}), void 0 === o && (o = i);
+            for(var s = Object.keys(r), a = [], t29 = function(t30) {
+                var e = s[t30], n = !0 === r[e] ? a : r[e];
+                Array.isArray(n) ? "*" === e ? Object.keys(o).forEach(function(t) {
+                    return lt(o, t, n);
+                }) : lt(o, e, n) : pt(n, i, o[e]);
+            }, e24 = 0; e24 < s.length; e24++)t29(e24);
+            return i;
+        }
+        var gt = function() {
+            function t31(t, e, n, r) {
+                this._apmServer = t, this._configService = e, this._logginService = n, this._transactionService = r;
+            }
+            var e25 = t31.prototype;
+            return e25.init = function(t32) {
+                var n = this;
+                void 0 === t32 && (t32 = {}), this._configService.events.observe(D + ":after", function(t) {
+                    var e = n.createTransactionPayload(t);
+                    e && n._apmServer.addTransaction(e);
+                }), t32[V] && tt.observe(V, this.getHistorySub()), t32[z] && tt.observe(z, this.getXHRSub()), t32[U] && tt.observe(U, this.getFetchSub());
+            }, e25.getHistorySub = function() {
+                var n = this._transactionService;
+                return function(t, e) {
+                    e.source === V && t === R && n.startTransaction(e.data.title, "route-change", {
+                        canReuse: !0
+                    });
+                };
+            }, e25.getXHRSub = function() {
+                var n = this;
+                return function(t, e) {
+                    e.source !== z || b.fetchInProgress || n.processAPICalls(t, e);
+                };
+            }, e25.getFetchSub = function() {
+                var n = this;
+                return function(t, e) {
+                    e.source === U && n.processAPICalls(t, e);
+                };
+            }, e25.processAPICalls = function(t, e) {
+                var n = this._configService, r = this._transactionService, i = n.get("ignoreSpansForRoutes");
+                if (t === O && e.data) {
+                    var o = new at(e.data.url);
+                    if (i && i.test && i.test(e.data.url)) return;
+                    var s = e.data.method + " " + (o.relative ? o.path : p(o.href)), a = r.startSpan(s, "external.http"), c = r.addTask();
+                    if (!a) return;
+                    var u = n.get("distributedTracing"), d = n.get("distributedTracingOrigins"), f = new at(window.location.href), h = l4(o.origin, f.origin) || l4(o.origin, d), v = e.data.target;
+                    u && h && v && this.injectDtHeader(a, v), a.addContext({
+                        http: {
+                            method: e.data.method,
+                            url: o.href
+                        }
+                    }), a.sync = e.data.sync, e.data.span = a, e.id = c;
+                }
+                t === R && e.data && e.data.span && (void 0 !== e.data.target.status ? e.data.span.addContext({
+                    http: {
+                        status_code: e.data.target.status
+                    }
+                }) : e.data.response && e.data.span.addContext({
+                    http: {
+                        status_code: e.data.response.status
+                    }
+                }), e.data.span.end()), t === R && e.id && r.removeTask(e.id);
+            }, e25.injectDtHeader = function(t, e) {
+                var n, r = this._configService, i = r.get("distributedTracingHeaderName"), o = r.get("distributedTracingHeaderValueCallback")(t), s = /^[\da-f]{2}-[\da-f]{32}-[\da-f]{16}-[\da-f]{2}$/.test(n = o) && "00000000000000000000000000000000" !== n.slice(3, 35) && "0000000000000000" !== n.slice(36, 52);
+                i && o && s && ("function" == typeof e.setRequestHeader ? e.setRequestHeader(i, o) : e.headers && "function" == typeof e.headers.append ? e.headers.append(i, o) : e[i] = o);
+            }, e25.extractDtHeader = function(t33) {
+                var e26 = this._configService.get("distributedTracingHeaderName");
+                if (t33) return function(t) {
+                    var e = /^([\da-f]{2})-([\da-f]{32})-([\da-f]{16})-([\da-f]{2})$/.exec(t);
+                    if (e) {
+                        var n = "00" !== e[4];
+                        return {
+                            traceId: e[2],
+                            id: e[3],
+                            sampled: n
+                        };
+                    }
+                }(t33[e26]);
+            }, e25.setTransactionContext = function(t) {
+                var e = this._configService.get("context");
+                e && t.addContext(e);
+            }, e25.filterTransaction = function(t) {
+                var e = this._configService.get("transactionDurationThreshold"), n = t.duration();
+                if (!n) return !1;
+                if (e < n) return !1;
+                if (0 === t.spans.length) return !1;
+                t.sampled || t.resetSpans();
+                var r = this._configService.get("browserResponsivenessInterval");
+                if (this._configService.get("checkBrowserResponsiveness") && !t.isHardNavigation) {
+                    var i = this._configService.get("browserResponsivenessBuffer");
+                    if (!this.checkBrowserResponsiveness(t, r, i)) return !1;
+                }
+                return !0;
+            }, e25.adjustTransactionTime = function(t34) {
+                var e27 = t34.spans, n12 = function(t) {
+                    for(var e = t[0], n = 1; n < t.length; n++){
+                        var r = t[n];
+                        e._start > r._start && (e = r);
+                    }
+                    return e;
+                }(e27);
+                n12 && n12._start < t34._start && (t34._start = n12._start);
+                var r9 = function(t) {
+                    for(var e = null, n = 0; n < t.length; n++){
+                        var r = t[n];
+                        -1 === String(r.type).indexOf("external") && (!e || e._end < r._end) && (e = r);
+                    }
+                    return e;
+                }(e27);
+                r9 && r9._end > t34._end && (t34._end = r9._end);
+                for(var i = t34._end, o = 0; o < e27.length; o++){
+                    var s = e27[o];
+                    s._end > i && (s._end = i, s.type += ".truncated"), s._start > i && (s._start = i);
+                }
+            }, e25.prepareTransaction = function(e28) {
+                if (e28.spans.sort(function(t, e) {
+                    return t._start - e._start;
+                }), this._configService.get("groupSimilarSpans")) {
+                    var t35 = this._configService.get("similarSpanThreshold");
+                    e28.spans = this.groupSmallContinuouslySimilarSpans(e28, t35);
+                }
+                e28.spans = e28.spans.filter(function(t) {
+                    return 0 < t.duration() && t._start >= e28._start && t._end <= e28._end;
+                }), this.setTransactionContext(e28);
+            }, e25.createTransactionDataModel = function(n) {
+                var t36 = this._configService.get("context"), r = n._start, e29 = n.spans.map(function(t) {
+                    var e = {
+                        id: t.id,
+                        transaction_id: n.id,
+                        parent_id: t.parentId || n.id,
+                        trace_id: n.traceId,
+                        name: t.name,
+                        type: t.type,
+                        subType: t.subType,
+                        action: t.action,
+                        sync: t.sync,
+                        start: t._start - r,
+                        duration: t.duration(),
+                        context: t.context
+                    };
+                    return pt(ft, e);
+                }), i = y({}, t36, n.context), o = {
+                    id: n.id,
+                    trace_id: n.traceId,
+                    name: n.name,
+                    type: n.type,
+                    duration: n.duration(),
+                    spans: e29,
+                    context: i,
+                    marks: n.marks,
+                    span_count: {
+                        started: e29.length
+                    },
+                    sampled: n.sampled
+                };
+                return pt(ht, o);
+            }, e25.createTransactionPayload = function(t) {
+                if (this.adjustTransactionTime(t), this.prepareTransaction(t), this.filterTransaction(t)) return this.createTransactionDataModel(t);
+            }, e25.convertTransactionsToServerModel = function(t37) {
+                var e = this;
+                return t37.map(function(t) {
+                    return e.createTransactionDataModel(t);
+                });
+            }, e25.groupSmallContinuouslySimilarSpans = function(o, s) {
+                var a = o.duration(), c = [], u = 1;
+                return o.spans.forEach(function(t, e) {
+                    if (0 === c.length) c.push(t);
+                    else {
+                        var n = c[c.length - 1], r = n.type === t.type && n.subType === t.subType && n.action === t.action && n.name === t.name && t.duration() / a < s && (t._start - n._end) / a < s, i = o.spans.length === e + 1;
+                        r && (u++, n._end = t._end), 1 < u && (!r || i) && (n.name = u + "x " + n.name, u = 1), r || c.push(t);
+                    }
+                }), c;
+            }, e25.checkBrowserResponsiveness = function(t, e, n) {
+                var r = t.browserResponsivenessCounter;
+                if (void 0 === e || void 0 === r) return !0;
+                var i = t.duration();
+                return Math.floor(i / e) <= r + n;
+            }, t31;
+        }(), mt = function() {
+            function t38(t, e, n) {
+                void 0 === n && (n = {}), t || (t = N), e || (e = "custom"), this.options = n, this.name = t, this.type = e, this.id = this.options.id || u2(16), this.traceId = this.options.traceId, this.sampled = this.options.sampled, this.timestamp = this.options.timestamp || Date.now(), this.ended = !1, this._start = window.performance.now(), this._end = void 0, this.onEnd = this.options.onEnd;
+            }
+            var e30 = t38.prototype;
+            return e30.ensureContext = function() {
+                this.context || (this.context = {});
+            }, e30.addTags = function(t) {
+                console.warn("addTags deprecated, please use addLabels"), this.addLabels(t);
+            }, e30.addLabels = function(e) {
+                this.ensureContext();
+                var n = this.context;
+                n.tags || (n.tags = {}), Object.keys(e).forEach(function(t) {
+                    return f10(t, e[t], n.tags);
+                });
+            }, e30.addContext = function(t) {
+                t && (this.ensureContext(), y(this.context, t));
+            }, e30.end = function() {
+                this.ended || (this.ended = !0, this._end = window.performance.now(), this.callOnEnd());
+            }, e30.callOnEnd = function() {
+                "function" == typeof this.onEnd && this.onEnd(this);
+            }, e30.duration = function() {
+                if (_(this._end) || _(this._start)) return null;
+                var t = this._end - this._start;
+                return parseFloat(t);
+            }, t38;
+        }();
+        var yt = function(o) {
+            var t39, e31;
+            function n13(t, e, n) {
+                var r;
+                if ((r = o.call(this, t, e, n) || this).parentId = r.options.parentId, r.subType = void 0, r.action = void 0, -1 !== r.type.indexOf(".")) {
+                    var i = r.type.split(".", 3);
+                    r.type = i[0], r.subType = i[1], r.action = i[2];
+                }
+                return r.sync = r.options.sync, r;
+            }
+            return e31 = o, (t39 = n13).prototype = Object.create(e31.prototype), (t39.prototype.constructor = t39).__proto__ = e31, n13;
+        }(mt);
+        var _t = function(i9) {
+            var t40, e32;
+            function n14(t, e, n) {
+                var r;
+                return (r = i9.call(this, t, e, n) || this).traceId = u2(), r.marks = void 0, r.spans = [], r._activeSpans = {}, r.nextAutoTaskId = 1, r._scheduledTasks = [], r.isHardNavigation = !1, r.sampled = Math.random() <= r.options.transactionSampleRate, r;
+            }
+            e32 = i9, (t40 = n14).prototype = Object.create(e32.prototype), (t40.prototype.constructor = t40).__proto__ = e32;
+            var r10 = n14.prototype;
+            return r10.addMarks = function(t) {
+                this.marks = y(this.marks || {}, t);
+            }, r10.mark = function(t) {
+                var e = w(t), n = window.performance.now() - this._start, r = {};
+                r[e] = n, this.addMarks({
+                    custom: r
+                });
+            }, r10.canReuse = function(t) {
+                return void 0 === t && (t = 5e3), !!this.options.canReuse && !this.ended && performance.now() - this._start < t;
+            }, r10.redefine = function(t, e, n) {
+                t && (this.name = t), e && (this.type = e), n && (this.options = m(this.options, n));
+            }, r10.startSpan = function(t41, e, n) {
+                var r = this;
+                if (!this.ended) {
+                    var i = m({}, n);
+                    i.onEnd = function(t) {
+                        r._onSpanEnd(t);
+                    }, i.traceId = this.traceId, i.sampled = this.sampled, i.parentId || (i.parentId = this.id);
+                    var o = new yt(t41, e, i);
+                    return this._activeSpans[o.id] = o;
+                }
+            }, r10.isFinished = function() {
+                return 0 === this._scheduledTasks.length;
+            }, r10.detectFinish = function() {
+                this.isFinished() && this.end();
+            }, r10.end = function() {
+                if (!this.ended) {
+                    for(var t in this.ended = !0, this._end = window.performance.now(), this._activeSpans){
+                        var e = this._activeSpans[t];
+                        e.type = e.type + ".truncated", e.end();
+                    }
+                    var n = {
+                        page: {
+                            referer: document.referrer,
+                            url: window.location.href
+                        }
+                    };
+                    this.addContext(n), this.callOnEnd();
+                }
+            }, r10.addTask = function(t) {
+                if (void 0 === t && (t = "task" + this.nextAutoTaskId++), -1 == this._scheduledTasks.indexOf(t)) return this._scheduledTasks.push(t), t;
+            }, r10.removeTask = function(t) {
+                var e = this._scheduledTasks.indexOf(t);
+                -1 < e && this._scheduledTasks.splice(e, 1), this.detectFinish();
+            }, r10.resetSpans = function() {
+                this.spans = [];
+            }, r10._onSpanEnd = function(t) {
+                this.spans.push(t), delete this._activeSpans[t.id];
+            }, n14;
+        }(mt), St = [
+            [
+                "domainLookupStart",
+                "domainLookupEnd",
+                "Domain lookup"
+            ],
+            [
+                "connectStart",
+                "connectEnd",
+                "Making a connection to the server"
+            ],
+            [
+                "requestStart",
+                "responseEnd",
+                "Requesting and receiving the document"
+            ],
+            [
+                "domLoading",
+                "domInteractive",
+                "Parsing the document, executing sync. scripts"
+            ],
+            [
+                "domContentLoadedEventStart",
+                "domContentLoadedEventEnd",
+                'Fire "DOMContentLoaded" event'
+            ],
+            [
+                "loadEventStart",
+                "loadEventEnd",
+                'Fire "load" event'
+            ]
+        ];
+        function wt(t, e, n, r) {
+            return "number" == typeof t && "number" == typeof e && n <= t && t < e && e - n <= r && e - t < j && t - n < j && e - n < j;
+        }
+        function Tt(t42) {
+            var e33 = {
+                transfer_size: t42.transferSize,
+                encoded_body_size: t42.encodedBodySize,
+                decoded_body_size: t42.decodedBodySize
+            }, n15 = function(t) {
+                void 0 === t && (t = []);
+                for(var e = [], n = 0; n < t.length; n++){
+                    var r = t[n], i = r.name, o = r.duration, s = r.description, a = i;
+                    s && (a += ";desc=" + s), o && (a += ";dur=" + o), e.push(a);
+                }
+                return e.join(", ");
+            }(t42.serverTiming);
+            return n15 && (e33.headers = {
+                "server-timing": n15
+            }), e33;
+        }
+        function bt(t) {
+            var e = t.name, n = t.initiatorType, r = t.startTime, i = t.responseEnd, o = "resource";
+            n && (o += "." + n);
+            var s = p(e), a = new yt(s, o);
+            return a.addContext({
+                http: {
+                    url: e,
+                    response: Tt(t)
+                }
+            }), a._start = r, a.end(), a._end = i, a;
+        }
+        function xt(e34) {
+            var t43 = window.performance;
+            if (e34.isHardNavigation && t43 && t43.timing) {
+                var n16 = t43.timing;
+                if (e34.marks && e34.marks.custom) {
+                    var r = e34.marks.custom;
+                    Object.keys(r).forEach(function(t) {
+                        r[t] += e34._start;
+                    });
+                }
+                e34._start = 0;
+                var i10 = e34._end;
+                if ((function(t, e, n) {
+                    for(var r = [], i = 0; i < St.length; i++){
+                        var o = t[St[i][0]], s = t[St[i][1]];
+                        if (wt(o, s, e, n)) {
+                            var a = new yt(St[i][2], "hard-navigation.browser-timing");
+                            "requestStart" === St[i][0] && (a.pageResponse = !0), a._start = o - e, a.ended = !0, a._end = s - e, r.push(a);
+                        }
+                    }
+                    return r;
+                })(n16, n16.fetchStart, i10).forEach(function(t) {
+                    t.traceId = e34.traceId, t.sampled = e34.sampled, t.pageResponse && e34.options.pageLoadSpanId && (t.id = e34.options.pageLoadSpanId), e34.spans.push(t);
+                }), "function" == typeof t43.getEntriesByType) {
+                    for(var o7 = t43.getEntriesByType("resource"), s4 = [], a25 = 0; a25 < e34.spans; a25++){
+                        var c = e34.spans[a25];
+                        "external" === c.type && "http" === c.subType || s4.push(c.name.split(" ")[1]);
+                    }
+                    (function(t, e, n) {
+                        for(var r = [], i = 0; i < t.length; i++){
+                            var o = t[i], s = o.initiatorType, a = o.name, c = o.startTime, u = o.responseEnd;
+                            if ("xmlhttprequest" !== s && "fetch" !== s && a) {
+                                if (-1 !== M.indexOf(s)) {
+                                    if (!wt(c, u, 0, n)) continue;
+                                    r.push(bt(t[i]));
+                                } else {
+                                    if (null != s) continue;
+                                    for(var d = !1, f = 0; f < e.length; f++){
+                                        var h = a.lastIndexOf(e[f]);
+                                        if (-1 < h && h === a.length - e[f].length) {
+                                            d = !0;
+                                            break;
+                                        }
+                                    }
+                                    !d && wt(c, u, 0, n) && r.push(bt(t[i]));
+                                }
+                            }
+                        }
+                        return r;
+                    })(o7, s4, i10).forEach(function(t) {
+                        return e34.spans.push(t);
+                    }), (function(t, e) {
+                        for(var n = [], r = 0; r < t.length; r++){
+                            var i = t[r], o = i.name, s = i.startTime, a = i.duration, c = s + a;
+                            if (!(a <= H) && wt(s, c, 0, e)) {
+                                var u = new yt(o, "app");
+                                u._start = s, u.end(), u._end = c, n.push(u);
+                            }
+                        }
+                        return n;
+                    })(t43.getEntriesByType("measure"), i10).forEach(function(t) {
+                        return e34.spans.push(t);
+                    });
+                    var u3 = t43.getEntriesByType("navigation");
+                    u3 && 0 < u3.length && (u3 = u3[0], e34.addContext({
+                        response: Tt(u3)
+                    }));
+                }
+            }
+        }
+        var Lt = function() {
+            function t44(t, e) {
+                this._config = e, this._logger = t, this.currentTransaction = void 0, this._alreadyCapturedPageLoad = !1;
+            }
+            var e35 = t44.prototype;
+            return e35.ensureCurrentTransaction = function(t) {
+                t || (t = this.createPerfOptions());
+                var e = this.getCurrentTransaction();
+                return e || (t.canReuse = !0, this.createTransaction(void 0, void 0, t));
+            }, e35.getCurrentTransaction = function() {
+                if (this.currentTransaction && !this.currentTransaction.ended) return this.currentTransaction;
+            }, e35.setCurrentTransaction = function(t) {
+                this.currentTransaction = t;
+            }, e35.createTransaction = function(t, e, n) {
+                var r = new _t(t, e, n);
+                return this.setCurrentTransaction(r), n.checkBrowserResponsiveness && this.startCounter(r), r;
+            }, e35.startCounter = function(t) {
+                t.browserResponsivenessCounter = 0;
+                var e = this._config.get("browserResponsivenessInterval");
+                if (void 0 !== e) var n = setInterval(function() {
+                    t.ended ? window.clearInterval(n) : t.browserResponsivenessCounter++;
+                }, e);
+            }, e35.capturePageLoadMetrics = function(t) {
+                if (this._config.get("capturePageLoad") && !this._alreadyCapturedPageLoad && t.isHardNavigation) return xt(t), t.addMarks(T()), self._alreadyCapturedPageLoad = !0;
+            }, e35.createPerfOptions = function(t) {
+                var e = this._config.config;
+                return m({
+                    pageLoadTraceId: e.pageLoadTraceId,
+                    pageLoadSampled: e.pageLoadSampled,
+                    pageLoadSpanId: e.pageLoadSpanId,
+                    pageLoadTransactionName: e.pageLoadTransactionName,
+                    transactionSampleRate: e.transactionSampleRate,
+                    checkBrowserResponsiveness: e.checkBrowserResponsiveness
+                }, t);
+            }, e35.startTransaction = function(t, e, n) {
+                var r = this, i = this.createPerfOptions(n), o = this.getCurrentTransaction();
+                return o ? o.canReuse() && i.canReuse ? o.redefine(t, void 0, i) : (o.end(), o = this.createTransaction(t, e, i)) : o = this.createTransaction(t, e, i), e === q && (o.isHardNavigation = !0, i.pageLoadTraceId && (o.traceId = i.pageLoadTraceId), i.pageLoadSampled && (o.sampled = i.pageLoadSampled), o.name === N && i.pageLoadTransactionName && (o.name = i.pageLoadTransactionName)), this._config.events.send("transaction:start", [
+                    o
+                ]), o.onEnd = function() {
+                    return G.Promise.resolve().then(function() {
+                        r.shouldIgnoreTransaction(o.name) || o.type === q || r.add(o);
+                    }, function(t) {});
+                }, o;
+            }, e35.shouldIgnoreTransaction = function(t) {
+                var e = this._config.get("ignoreTransactions");
+                if (e && e.length) for(var n = 0; n < e.length; n++){
+                    var r = e[n];
+                    if ("function" == typeof r.test) {
+                        if (r.test(t)) return !0;
+                    } else if (r === t) return !0;
+                }
+                return !1;
+            }, e35.startSpan = function(t, e, n) {
+                var r = this.ensureCurrentTransaction();
+                if (r) return r.startSpan(t, e, n);
+            }, e35.add = function(t) {
+                this._config.events.send(D, [
+                    t
+                ]);
+            }, e35.addTask = function(t) {
+                var e = this.ensureCurrentTransaction();
+                if (e) t = e.addTask(t);
+                return t;
+            }, e35.removeTask = function(t) {
+                var e = this.getCurrentTransaction();
+                e && e.removeTask(t);
+            }, e35.detectFinish = function() {
+                var t = this.getCurrentTransaction();
+                t && t.detectFinish();
+            }, t44;
+        }(), Ct = function(i) {
+            i.registerServiceCreator("TransactionService", function() {
+                var t = i.getService("ConfigService"), e = i.getService("LoggingService");
+                return new Lt(e, t);
+            }), i.registerServiceCreator("PerformanceMonitoring", function() {
+                var t = i.getService("ConfigService"), e = i.getService("LoggingService"), n = i.getService("ApmServer"), r = i.getService("TransactionService");
+                return new gt(n, t, e, r);
+            });
+        }, Et = function() {
+            function t45(t, e, n) {
+                e || (e = {}), this.onFlush = t, this.routeDurationThreshold = e.routeDurationThreshold || 500, this.queueLimit = e.queueLimit || -1, this.slowestTxnsQueueLimit = e.slowestTxnsQueueLimit || 10, this.flushInterval = e.flushInterval || 0, this.timeoutId = void 0, this.transactions = {}, this.slowestTxns = [], this.totalTrans = 0, this.urlMaxLength = n.get("urlMaxLength");
+            }
+            var e36 = t45.prototype;
+            return e36._setTimer = function() {
+                var t = this;
+                this.timeoutId = setTimeout(function() {
+                    t.flush();
+                }, this.flushInterval);
+            }, e36.flush = function() {
+                var t46 = Object.keys(this.transactions).map(function(t47) {
+                    var r = this.transactions[t47], e38 = {
+                        n: t47,
+                        d: [
+                            r.duration.count,
+                            r.duration.total,
+                            r.duration.min,
+                            r.duration.max
+                        ]
+                    };
+                    return e38.spans = Object.keys(r.spans).map(function(t) {
+                        var e = r.spans[t], n = {};
+                        return n.n = t, n.t = e.type, n.d = [
+                            e.duration.count,
+                            e.duration.total,
+                            e.duration.min,
+                            e.duration.max
+                        ], e.url && e.method && (n.u = e.url, n.m = e.method), n;
+                    }), e38;
+                }, this), n18 = [];
+                this.slowestTxns.forEach((function(t48) {
+                    var e39 = t48.context && t48.context.page && t48.context.page.url;
+                    if (e39) {
+                        var r = {
+                            n: e39.slice(0, this.urlMaxLength),
+                            d: t48.duration || 0,
+                            spans: []
+                        };
+                        t48.spans = t48.spans || [], t48.spans.forEach((function(t) {
+                            var e = {
+                                n: t.name,
+                                d: t.duration,
+                                s: t.start,
+                                t: t.type
+                            };
+                            if ("external" === t.type) {
+                                var n = t.context && t.context.http || {};
+                                if (window.atatus && window.atatus._isAllowedUrl && !window.atatus._isAllowedUrl(n.url || "")) return;
+                                e.m = n.method, e.st = n.status_code, e.u = n.url.slice(0, this.urlMaxLength), e.t = "ajax";
+                            }
+                            r.spans.push(e);
+                        }).bind(this)), n18.push(r);
+                    }
+                }).bind(this));
+                var e37 = {
+                    data: t46,
+                    slowestRoutes: n18
+                };
+                this.onFlush(e37), this._clear();
+            }, e36._clear = function() {
+                void 0 !== this.timeoutId && (clearTimeout(this.timeoutId), this.timeoutId = void 0), this.transactions = {}, this.slowestTxns = [], this.totalTrans = 0;
+            }, e36.addSlowestTxn = function(t) {
+                var e = this.slowestTxns.length;
+                if (e < this.slowestTxnsQueueLimit) this.slowestTxns.push(t);
+                else {
+                    var n = Math.floor(Math.random() * (e + 2));
+                    n < this.slowestTxnsQueueLimit && (this.slowestTxns[n] = t);
+                }
+            }, e36.add = function(t49) {
+                var e40 = (t49.context && t49.context.page && t49.context.page.url).split("?")[0];
+                if (e40 && (t49.duration = t49.duration || 0, t49.spans = t49.spans || [], t49.spans.length || !(4e3 < t49.duration))) {
+                    var i = this.transactions[e40] || {
+                        duration: {
+                            total: 0,
+                            min: t49.duration,
+                            max: t49.duration,
+                            count: 0
+                        },
+                        spans: {}
+                    };
+                    (this.transactions[e40] = i).duration.total += t49.duration, i.duration.max = t49.duration >= i.duration.max ? t49.duration : i.duration.max, i.duration.min = t49.duration < i.duration.min ? t49.duration : i.duration.min, i.duration.count++, this.totalTrans++, t49.spans.forEach(function(t) {
+                        var e = t.name;
+                        if (e) {
+                            var n = t.context && t.context.http && t.context.http.url || "";
+                            if (!window.atatus || !window.atatus._isAllowedUrl || window.atatus._isAllowedUrl(n)) {
+                                t.duration = t.duration || 0;
+                                var r = i.spans[e] || {
+                                    duration: {
+                                        total: 0,
+                                        min: t.duration,
+                                        max: t.duration,
+                                        count: 0
+                                    }
+                                };
+                                "external" === t.type ? (r.method = t.context && t.context.http && t.context.http.method, r.url = n.split("?")[0], r.type = "ajax") : r.type = t.type || "", r.duration.total += t.duration, r.duration.max = t.duration >= r.duration.max ? t.duration : r.duration.max, r.duration.min = t.duration < r.duration.min ? t.duration : r.duration.min, r.duration.count++, i.spans[e] = r;
+                            }
+                        }
+                    }, this), t49.duration >= this.routeDurationThreshold && this.addSlowestTxn(t49), -1 !== this.queueLimit && this.totalTrans >= this.queueLimit ? this.flush() : void 0 === this.timeoutId && this._setTimer();
+                }
+            }, t45;
+        }(), It = function() {
+            function t50(t, e) {
+                e || (e = {}), this.onFlush = t, this.items = [], this.queueLimit = e.queueLimit || -1, this.flushInterval = e.flushInterval || 0, this.timeoutId = void 0;
+            }
+            var e41 = t50.prototype;
+            return e41._setTimer = function() {
+                var t = this;
+                this.timeoutId = setTimeout(function() {
+                    t.flush();
+                }, this.flushInterval);
+            }, e41.flush = function() {
+                this.onFlush(this.items), this._clear();
+            }, e41._clear = function() {
+                void 0 !== this.timeoutId && (clearTimeout(this.timeoutId), this.timeoutId = void 0), this.items = [];
+            }, e41.add = function(t) {
+                this.items.push(t), -1 !== this.queueLimit && this.items.length >= this.queueLimit ? this.flush() : void 0 === this.timeoutId && this._setTimer();
+            }, t50;
+        }();
+        var kt = function(e, n, t51) {
+            var r, i = t51.context || this, o = t51.limit, s = t51.interval, a = t51.countFn || function() {}, c = 0;
+            return function() {
+                var t = "function" == typeof a && a.apply(i, arguments);
+                return "number" != typeof t && (t = 1), c += t, void 0 === r && (r = setTimeout(function() {
+                    r = void (c = 0);
+                }, s)), o < c ? "function" == typeof n ? n.apply(i, arguments) : void 0 : e.apply(i, arguments);
+            };
+        }, Ot = function() {
+            function t52() {}
+            return t52.stringify = function(t) {
+                return JSON.stringify(t) + "\n";
+            }, t52;
+        }(), Rt = function() {
+            function t53(t, e) {
+                this._configService = t, this._loggingService = e, this.errorQueue = void 0, this.transactionQueue = void 0, this.throttleAddError = void 0, this.throttleAddTransaction = void 0, this.initialized = !1, this.ndjsonSpan = {};
+            }
+            var e42 = t53.prototype;
+            return e42.init = function() {
+                this.initialized || (this.initialized = !0, this.initErrorQueue(), this.initTransactionQueue());
+            }, e42.createMetaData = function() {
+                var t = this._configService, e = {
+                    service: {
+                        name: t.get("serviceName"),
+                        version: t.get("serviceVersion"),
+                        agent: {
+                            name: "js-base",
+                            version: t.version
+                        },
+                        language: {
+                            name: "javascript"
+                        },
+                        environment: t.get("environment")
+                    }
+                };
+                return pt(ct, e);
+            }, e42._postJson = function(t, e) {
+                return this._makeHttpRequest("POST", t, e, {
+                    "Content-Type": "application/x-ndjson"
+                });
+            }, e42._constructError = function(t) {
+                var e = t.url, n = t.status, r = (t.responseText, e + " HTTP status: " + n);
+                return new Error(r);
+            }, e42._makeHttpRequest = function(e43, o, s, a) {
+                return new G.Promise(function(n, r) {
+                    var i = new window.XMLHttpRequest;
+                    if (i[C] = !0, i.open(e43, o, !0), i.timeout = 1e4, a) for(var t54 in a)a.hasOwnProperty(t54) && i.setRequestHeader(t54, a[t54]);
+                    i.onreadystatechange = function() {
+                        if (4 === i.readyState) {
+                            var t = i.status, e = i.responseText;
+                            0 === t || 399 < t && t < 600 ? r({
+                                url: o,
+                                status: t,
+                                responseText: e
+                            }) : n(e);
+                        }
+                    }, i.onerror = function() {
+                        var t = i.status, e = i.responseText;
+                        r({
+                            url: o,
+                            status: t,
+                            responseText: e
+                        });
+                    }, i.send(s);
+                });
+            }, e42._createQueue = function(t) {
+                var e = this._configService.get("queueLimit"), n = this._configService.get("flushInterval");
+                return new It(t, {
+                    queueLimit: e,
+                    flushInterval: n
+                });
+            }, e42._createTransactionQueue = function(t) {
+                var e = this._configService.get("queueLimit"), n = this._configService.get("flushInterval");
+                return new Et(t, {
+                    queueLimit: e,
+                    flushInterval: n
+                }, this._configService);
+            }, e42.initErrorQueue = function() {
+                var n = this;
+                this.errorQueue && this.errorQueue.flush(), this.errorQueue = this._createQueue(function(t56) {
+                    var e = n.sendErrors(t56);
+                    e && e.catch(function(t) {
+                        n._loggingService.warn("Failed sending errors!", n._constructError(t));
+                    });
+                });
+                var t55 = this._configService.get("errorThrottleLimit"), e44 = this._configService.get("errorThrottleInterval");
+                this.throttleAddError = kt(this.errorQueue.add.bind(this.errorQueue), function() {
+                    return n._loggingService.warn("Dropped error due to throttling!");
+                }, {
+                    limit: t55,
+                    interval: e44
+                });
+            }, e42.initTransactionQueue = function() {
+                var n = this;
+                this.transactionQueue && this.transactionQueue.flush(), this.transactionQueue = this._createTransactionQueue(function(t58) {
+                    var e = n.sendTransactions(t58);
+                    e && e.catch(function(t) {
+                        n._loggingService.warn("Failed sending transactions!", n._constructError(t));
+                    });
+                });
+                var t57 = this._configService.get("transactionThrottleLimit"), e45 = this._configService.get("transactionThrottleInterval");
+                this.throttleAddTransaction = kt(this.transactionQueue.add.bind(this.transactionQueue), function() {
+                    return n._loggingService.warn("Dropped transaction due to throttling!");
+                }, {
+                    limit: t57,
+                    interval: e45
+                });
+            }, e42.addError = function(t) {
+                this.errorQueue || this.initErrorQueue(), this.throttleAddError(t);
+            }, e42.addTransaction = function(t) {
+                this.transactionQueue || this.initTransactionQueue(), this.throttleAddTransaction(t);
+            }, e42.ndjsonErrors = function(t59) {
+                return t59.map(function(t) {
+                    return Ot.stringify({
+                        error: t
+                    });
+                });
+            }, e42.ndjsonTransactions = function(t60) {
+                var n = this.ndjsonSpan;
+                return t60.map(function(t61) {
+                    var e = "";
+                    return t61.spans && (e = t61.spans.map(function(t) {
+                        return n.span = t, Ot.stringify(n);
+                    }).join(""), delete t61.spans), Ot.stringify({
+                        transaction: t61
+                    }) + e;
+                });
+            }, e42._send = function(t, e) {
+                if (void 0 === t && (t = []), void 0 === e && (e = "transaction"), 0 !== t.length) {
+                    var n = {
+                        service: this.createMetaData().service,
+                        data: t
+                    }, r = this._configService.applyFilters(n);
+                    if (r) {
+                        var i, o = this._configService.getEndpointUrl();
+                        if ("errors" === e) i = this.ndjsonErrors(r.data);
+                        else {
+                            if ("transaction" !== e) return void 0;
+                            i = this.ndjsonTransactions(r.data);
+                        }
+                        i.unshift(Ot.stringify({
+                            metadata: {
+                                service: r.service
+                            }
+                        }));
+                        var s = i.join("");
+                        return this._postJson(o, s);
+                    }
+                    this._loggingService.warn("Dropped payload due to filtering!");
+                }
+            }, e42.sendTransactions = function(t) {
+                window.atatus.sendSPAPerf(t);
+            }, e42.sendErrors = function(t) {}, t53;
+        }();
+        var At = function() {
+            function t62() {
+                this.config = {}, this.defaults = {
+                    serviceName: "",
+                    serviceVersion: "",
+                    environment: "",
+                    serverUrl: "https://br-rx.atatus.com",
+                    serverUrlPrefix: "/browser/track",
+                    active: !0,
+                    instrument: !0,
+                    disableInstrumentations: [
+                        X,
+                        q
+                    ],
+                    debug: !1,
+                    logLevel: "warn",
+                    browserResponsivenessInterval: 500,
+                    browserResponsivenessBuffer: 3,
+                    checkBrowserResponsiveness: !0,
+                    groupSimilarSpans: !0,
+                    similarSpanThreshold: .05,
+                    capturePageLoad: !0,
+                    ignoreTransactions: [],
+                    errorThrottleLimit: 20,
+                    errorThrottleInterval: 3e4,
+                    transactionThrottleLimit: 20,
+                    transactionThrottleInterval: 3e4,
+                    transactionDurationThreshold: 6e4,
+                    queueLimit: -1,
+                    flushInterval: 3e4,
+                    sendPageLoadTransaction: !0,
+                    distributedTracing: !0,
+                    distributedTracingOrigins: [],
+                    distributedTracingHeaderValueCallback: c13,
+                    distributedTracingHeaderName: "atatus-apm-traceparent",
+                    pageLoadTraceId: "",
+                    pageLoadSpanId: "",
+                    pageLoadSampled: !1,
+                    pageLoadTransactionName: "",
+                    transactionSampleRate: 1,
+                    context: {},
+                    urlMaxLength: 250,
+                    ignoreSpansForRoutes: null
+                }, this.events = new W, this.filters = [], this.version = "";
+            }
+            var e46 = t62.prototype;
+            return e46.init = function() {
+                this.setConfig({});
+            }, e46.isActive = function() {
+                return this.get("active");
+            }, e46.setVersion = function(t) {
+                this.version = t;
+            }, e46.setIgnoreSpansForRoutes = function(t) {
+                this.config.ignoreSpansForRoutes = t;
+            }, e46.addFilter = function(t) {
+                if ("function" != typeof t) throw new Error("Argument to must be function");
+                this.filters.push(t);
+            }, e46.applyFilters = function(t) {
+                for(var e = 0; e < this.filters.length; e++)if (!(t = this.filters[e](t))) return;
+                return t;
+            }, e46.get = function(t63) {
+                return t63.split(".").reduce(function(t, e) {
+                    return t && t[e];
+                }, this.config);
+            }, e46.getEndpointUrl = function() {
+                return this.config.serverUrl + this.config.serverUrlPrefix;
+            }, e46.set = function(t, e) {
+                for(var n = t.split("."), r = n.length - 1, i = this.config, o = 0; o < r + 1; o++){
+                    var s = n[o];
+                    if (s) {
+                        if (o === r) i[s] = e;
+                        else {
+                            var a = i[s] || {};
+                            i[s] = a, i = a;
+                        }
+                    }
+                }
+            }, e46.setUserContext = function(t) {
+                void 0 === t && (t = {});
+                var e = {}, n = t, r = n.id, i = n.username, o = n.email;
+                "number" != typeof r && "string" != typeof r || (e.id = r), "string" == typeof i && (e.username = i), "string" == typeof o && (e.email = o), this.set("context.user", e);
+            }, e46.setCustomContext = function(t) {
+                t && "object" == typeof t && this.set("context.custom", t);
+            }, e46.addLabels = function(e) {
+                var n = this;
+                this.config.context.tags || (this.config.context.tags = {}), Object.keys(e).forEach(function(t) {
+                    return f10(t, e[t], n.config.context.tags);
+                });
+            }, e46.setConfig = function(t) {
+                void 0 === t && (t = {}), this.config = y({}, this.defaults, this.config, t), this.config.urlMaxLength = this.config.urlMaxLength || 250, this.events.send(B, [
+                    this.config
+                ]);
+            }, e46.validate = function(e) {
+                void 0 === e && (e = {});
+                var n = [
+                    "serviceName",
+                    "serverUrl"
+                ], r = {
+                    missing: [],
+                    invalid: []
+                };
+                return Object.keys(e).forEach(function(t) {
+                    -1 === n.indexOf(t) || e[t] || r.missing.push(t);
+                }), e.serviceName && !/^[a-zA-Z0-9 _-]+$/.test(e.serviceName) && r.invalid.push({
+                    key: "serviceName",
+                    value: e.serviceName,
+                    allowed: "a-z, A-Z, 0-9, _, -, <space>"
+                }), r;
+            }, t62;
+        }(), Pt = function() {
+            function t64(t) {
+                t || (t = {}), this.levels = [
+                    "trace",
+                    "debug",
+                    "info",
+                    "warn",
+                    "error"
+                ], this.level = t.level || "info", this.prefix = t.prefix || "", this.resetLogMethods();
+            }
+            var e47 = t64.prototype;
+            return e47.shouldLog = function(t) {
+                return this.levels.indexOf(t) >= this.levels.indexOf(this.level);
+            }, e47.setLevel = function(t) {
+                this.level = t, this.resetLogMethods();
+            }, e47.resetLogMethods = function() {
+                var o = this;
+                this.levels.forEach(function(i) {
+                    o[i] = o.shouldLog(i) ? function() {
+                        var t, e = o.prefix;
+                        switch(i){
+                            case "trace":
+                            case "debug":
+                                t = "info";
+                                break;
+                            default:
+                                t = i;
+                        }
+                        var n = arguments;
+                        e && ("function" == typeof e && (e = e(i)), n[0] = e + n[0]);
+                        if (console) {
+                            var r = console[t] ? console[t] : console.log;
+                            "function" == typeof r && r.apply(console, n);
+                        }
+                    } : S;
+                });
+            }, t64;
+        }(), Ft = function() {
+            function t65() {
+                this._serviceCreators = {}, this._serviceInstances = {}, this.initialized = !1;
+            }
+            var e48 = t65.prototype;
+            return e48.registerCoreServices = function() {
+                var t = this;
+                this.registerServiceCreator("ConfigService", function() {
+                    return new At;
+                }), this.registerServiceCreator("LoggingService", function() {
+                    return new Pt;
+                }), this.registerServiceCreator("ApmServer", function() {
+                    return new Rt(t.getService("ConfigService"), t.getService("LoggingService"));
+                });
+            }, e48.init = function() {
+                if (!this.initialized) {
+                    this.initialized = !0;
+                    var t = this.getService("ConfigService");
+                    t.init();
+                    var e = this.getService("LoggingService");
+                    n19(e, t), t.events.observe(B, function() {
+                        n19(e, t);
+                    }), this.getService("ApmServer").init();
+                }
+                function n19(t, e) {
+                    var n = e.get("debug"), r = e.get("logLevel");
+                    !0 === n && "trace" !== r ? t.setLevel("debug") : t.setLevel(r);
+                }
+            }, e48.registerServiceCreator = function(t, e) {
+                this._serviceCreators[t] = e;
+            }, e48.registerServiceInstance = function(t, e) {
+                this._serviceInstances[t] = e;
+            }, e48.getService = function(t) {
+                if (!this._serviceInstances[t]) {
+                    if ("function" != typeof this._serviceCreators[t]) throw new Error("Can not get service, No creator for: " + t);
+                    this._serviceInstances[t] = this._serviceCreators[t](this);
+                }
+                return this._serviceInstances[t];
+            }, t65;
+        }();
+        var Mt = function() {
+            function t66(t, e) {
+                this._disable = e, this.serviceFactory = t, this._initialized = !1;
+            }
+            var e49 = t66.prototype;
+            return e49.init = function(t67) {
+                if (this.isEnabled() && !this._initialized) {
+                    this._initialized = !0;
+                    var e = this.serviceFactory.getService("ConfigService");
+                    e.setVersion("4.0.2"), this.config(t67);
+                    var n = this.serviceFactory.getService("LoggingService");
+                    if (!e.isActive()) return n.info("Atatus agent is inactive"), this;
+                    this.serviceFactory.init();
+                    var r = (i = e.get("instrument"), o = e.get("disableInstrumentations"), (s = {})[z] = !1, s[U] = !1, s[V] = !1, s[q] = !1, s[X] = !1, a = s, i && Object.keys(a).forEach(function(t) {
+                        -1 === o.indexOf(t) && (a[t] = !0);
+                    }), a);
+                    if (this.serviceFactory.getService("PerformanceMonitoring").init(r), r[X]) this.serviceFactory.getService("ErrorLogging").registerGlobalEventListener();
+                    r[q] && e.get("sendPageLoadTransaction") && this._sendPageLoadMetrics();
+                }
+                var i, o, s, a;
+                return this;
+            }, e49._sendPageLoadMetrics = function() {
+                var t = this.serviceFactory.getService("TransactionService").startTransaction(void 0, q, {
+                    canReuse: !0
+                });
+                t && t.addTask(q);
+                var e = function() {
+                    setTimeout(function() {
+                        t && t.removeTask(q);
+                    });
+                };
+                "complete" === document.readyState ? e() : window.addEventListener("load", e);
+            }, e49.isEnabled = function() {
+                return !this._disable;
+            }, e49.observe = function(t, e) {
+                this.serviceFactory.getService("ConfigService").events.observe(t, e);
+            }, e49.config = function(t68) {
+                var e50 = this.serviceFactory.getService("ConfigService"), n20 = e50.validate(t68), r11 = n20.missing, o = n20.invalid;
+                if (0 === r11.length && 0 === o.length) e50.setConfig(t68);
+                else {
+                    var i12 = this.serviceFactory.getService("LoggingService"), s = "RUM Agent isn't correctly configured: ";
+                    0 < r11.length && (s += "Missing config - " + r11.join(", "), 0 < o.length && (s += ", ")), o.forEach(function(t, e) {
+                        var n = t.key, r = t.value, i = t.allowed;
+                        s += n + ' "' + r + '" contains invalid characters! (allowed: ' + i + ")" + (e !== o.length - 1 ? ", " : "");
+                    }), i12.error(s), e50.setConfig({
+                        active: !1
+                    });
+                }
+            }, e49.setIgnoreSpansForRoutes = function(t) {
+                this.serviceFactory.getService("ConfigService").setIgnoreSpansForRoutes(t);
+            }, e49.setUserContext = function(t) {
+                this.serviceFactory.getService("ConfigService").setUserContext(t);
+            }, e49.setCustomContext = function(t) {
+                this.serviceFactory.getService("ConfigService").setCustomContext(t);
+            }, e49.addTags = function(t) {
+                this.serviceFactory.getService("LoggingService").warn("addTags deprecated, please use addLabels"), this.addLabels(t);
+            }, e49.addLabels = function(t) {
+                this.serviceFactory.getService("ConfigService").addLabels(t);
+            }, e49.setInitialPageLoadName = function(t) {
+                this.isEnabled() && this.serviceFactory.getService("ConfigService").setConfig({
+                    pageLoadTransactionName: t
+                });
+            }, e49.startTransaction = function(t, e, n) {
+                if (this.isEnabled()) return this.serviceFactory.getService("TransactionService").startTransaction(t, e, n);
+            }, e49.startSpan = function(t, e) {
+                if (this.isEnabled()) return this.serviceFactory.getService("TransactionService").startSpan(t, e);
+            }, e49.getCurrentTransaction = function() {
+                if (this.isEnabled()) return this.serviceFactory.getService("TransactionService").getCurrentTransaction();
+            }, e49.getTransactionService = function() {
+                if (this.isEnabled()) return this.serviceFactory.getService("TransactionService");
+            }, e49.addFilter = function(t) {
+                this.serviceFactory.getService("ConfigService").addFilter(t);
+            }, t66;
+        }();
+        n8.d(e18, "init", function() {
+            return Qt;
+        }), n8.d(e18, "apmBase", function() {
+            return Ht;
+        }), n8.d(e18, "apm", function() {
+            return Ht;
+        }), n8.d(e18, "ApmBase", function() {
+            return Mt;
+        });
+        var jt, qt = (rt || (rt = !0, d18() ? (nt(), it = !0) : "undefined" != typeof window && console.log("APM: Platform is not supported!")), it), Nt = ((jt = new Ft).registerCoreServices(), Ct(jt), jt), Ht = new Mt(Nt, !qt);
+        "undefined" != typeof window && window.atatus && (window.atatus.spa = Ht, window.atatus.VERSION && (window.atatus.VERSION += "-spa"));
+        var Qt = Ht.init.bind(Ht);
+        e18.default = Qt;
+    }
+]);
+
+},{"process":"3rqvf"}],"3rqvf":[function(require,module,exports) {
+// shim for using process in browser
+var process = module.exports = {};
+// cached from whatever global is present so that test runners that stub it
+// don't break things.  But we need to wrap it in a try catch in case it is
+// wrapped in strict mode code which doesn't define any globals.  It's inside a
+// function because try/catches deoptimize in certain engines.
+var cachedSetTimeout;
+var cachedClearTimeout;
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout() {
+    throw new Error('clearTimeout has not been defined');
+}
+(function() {
+    try {
+        if (typeof setTimeout === 'function') cachedSetTimeout = setTimeout;
+        else cachedSetTimeout = defaultSetTimout;
+    } catch (e) {
+        cachedSetTimeout = defaultSetTimout;
+    }
+    try {
+        if (typeof clearTimeout === 'function') cachedClearTimeout = clearTimeout;
+        else cachedClearTimeout = defaultClearTimeout;
+    } catch (e1) {
+        cachedClearTimeout = defaultClearTimeout;
+    }
+})();
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) //normal enviroments in sane situations
+    return setTimeout(fun, 0);
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch (e) {
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch (e) {
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) //normal enviroments in sane situations
+    return clearTimeout(marker);
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e) {
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e) {
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+}
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+function cleanUpNextTick() {
+    if (!draining || !currentQueue) return;
+    draining = false;
+    if (currentQueue.length) queue = currentQueue.concat(queue);
+    else queueIndex = -1;
+    if (queue.length) drainQueue();
+}
+function drainQueue() {
+    if (draining) return;
+    var timeout = runTimeout(cleanUpNextTick);
+    draining = true;
+    var len = queue.length;
+    while(len){
+        currentQueue = queue;
+        queue = [];
+        while(++queueIndex < len)if (currentQueue) currentQueue[queueIndex].run();
+        queueIndex = -1;
+        len = queue.length;
+    }
+    currentQueue = null;
+    draining = false;
+    runClearTimeout(timeout);
+}
+process.nextTick = function(fun) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) for(var i = 1; i < arguments.length; i++)args[i - 1] = arguments[i];
+    queue.push(new Item(fun, args));
+    if (queue.length === 1 && !draining) runTimeout(drainQueue);
+};
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function() {
+    this.fun.apply(null, this.array);
+};
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+process.version = ''; // empty string to avoid regexp issues
+process.versions = {};
+function noop() {}
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+process.prependListener = noop;
+process.prependOnceListener = noop;
+process.listeners = function(name) {
+    return [];
+};
+process.binding = function(name) {
+    throw new Error('process.binding is not supported');
+};
+process.cwd = function() {
+    return '/';
+};
+process.chdir = function(dir) {
+    throw new Error('process.chdir is not supported');
+};
+process.umask = function() {
+    return 0;
+};
+
+},{}],"4gflv":[function(require,module,exports) {
 var $parcel$ReactRefreshHelpers$f7a6 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 var prevRefreshReg = window.$RefreshReg$;
 var prevRefreshSig = window.$RefreshSig$;
@@ -25626,25 +29514,28 @@ var _react = require("react");
 var _reactDefault = parcelHelpers.interopDefault(_react);
 var _axios = require("axios");
 var _axiosDefault = parcelHelpers.interopDefault(_axios);
-var _row = require("react-bootstrap/Row");
-var _rowDefault = parcelHelpers.interopDefault(_row);
-var _col = require("react-bootstrap/Col");
-var _colDefault = parcelHelpers.interopDefault(_col);
+var _reactRedux = require("react-redux");
 var _reactRouterDom = require("react-router-dom");
+var _actions = require("../../actions/actions");
+var _moviesList = require("../movies-list/movies-list");
+var _moviesListDefault = parcelHelpers.interopDefault(_moviesList);
 var _loginView = require("../login-view/login-view");
 var _registrationView = require("../registration-view/registration-view");
-var _movieCard = require("../movie-card/movie-card");
+//import { MovieCard } from '../movie-card/movie-card';
 var _movieView = require("../movie-view/movie-view");
 var _genreView = require("../genre-view/genre-view");
 var _directorView = require("../director-view/director-view");
 var _profileView = require("../profile-view/profile-view");
 var _navbar = require("../navbar");
 var _reactBootstrap = require("react-bootstrap");
+var _row = require("react-bootstrap/Row");
+var _rowDefault = parcelHelpers.interopDefault(_row);
+var _col = require("react-bootstrap/Col");
+var _colDefault = parcelHelpers.interopDefault(_col);
 class MainView extends _reactDefault.default.Component {
     constructor(){
         super();
         this.state = {
-            movies: [],
             user: null
         };
     }
@@ -25681,9 +29572,7 @@ class MainView extends _reactDefault.default.Component {
             }
         }).then((response)=>{
             //Assign the result to the state
-            this.setState({
-                movies: response.data
-            });
+            this.props.setMovies(response.data);
         }).catch(function(error) {
             console.log(error);
         });
@@ -25697,8 +29586,8 @@ class MainView extends _reactDefault.default.Component {
         window.open('/', '_self');
     }
     render() {
-        const { movies , user: user1  } = this.state;
-        //console.log(user);
+        const { movies  } = this.props;
+        const { user: user1  } = this.state;
         return /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_reactRouterDom.BrowserRouter, {
             children: [
                 /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_colDefault.default, {
@@ -25710,7 +29599,7 @@ class MainView extends _reactDefault.default.Component {
                             children: "Logout"
                         }, void 0, false, {
                             fileName: "src/components/main-view/main-view.jsx",
-                            lineNumber: 97,
+                            lineNumber: 100,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_reactRouterDom.Link, {
@@ -25723,18 +29612,23 @@ class MainView extends _reactDefault.default.Component {
                                 ]
                             }, void 0, true, {
                                 fileName: "src/components/main-view/main-view.jsx",
-                                lineNumber: 99,
+                                lineNumber: 102,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "src/components/main-view/main-view.jsx",
-                            lineNumber: 98,
+                            lineNumber: 101,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "src/components/main-view/main-view.jsx",
-                    lineNumber: 96,
+                    lineNumber: 99,
+                    columnNumber: 9
+                }, this),
+                /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_navbar.NavView, {}, void 0, false, {
+                    fileName: "src/components/main-view/main-view.jsx",
+                    lineNumber: 106,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_rowDefault.default, {
@@ -25752,18 +29646,13 @@ class MainView extends _reactDefault.default.Component {
                                 if (movies.length === 0) return /*#__PURE__*/ _jsxDevRuntime.jsxDEV("div", {
                                     className: "main-view"
                                 }, void 0, false, void 0, void 0);
-                                return movies.map((m)=>/*#__PURE__*/ _jsxDevRuntime.jsxDEV(_colDefault.default, {
-                                        md: 3,
-                                        children: /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_movieCard.MovieCard, {
-                                            movie: m,
-                                            user: user1
-                                        }, void 0, false, void 0, void 0)
-                                    }, m._id, false, void 0, void 0)
-                                );
+                                return /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_moviesListDefault.default, {
+                                    movies: movies
+                                }, void 0, false, void 0, void 0);
                             }
                         }, void 0, false, {
                             fileName: "src/components/main-view/main-view.jsx",
-                            lineNumber: 105,
+                            lineNumber: 109,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_reactRouterDom.Route, {
@@ -25880,25 +29769,32 @@ class MainView extends _reactDefault.default.Component {
                     ]
                 }, void 0, true, {
                     fileName: "src/components/main-view/main-view.jsx",
-                    lineNumber: 104,
+                    lineNumber: 108,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "src/components/main-view/main-view.jsx",
-            lineNumber: 94,
+            lineNumber: 97,
             columnNumber: 7
         }, this);
     }
 }
-exports.default = MainView; // onLoggedIn={user => this.onLoggedIn(user)} movies={movies} user={user} move to profileview
+let mapStateToProps = (state)=>{
+    return {
+        movies: state.movies
+    };
+};
+exports.default = _reactRedux.connect(mapStateToProps, {
+    setMovies: _actions.setMovies
+})(MainView);
 
   $parcel$ReactRefreshHelpers$f7a6.postlude(module);
 } finally {
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","axios":"jo6P5","react-bootstrap/Row":"cMC39","react-bootstrap/Col":"2L2I6","react-router-dom":"cHIiW","../login-view/login-view":"9YtA0","../registration-view/registration-view":"3U8r7","../movie-card/movie-card":"bwuIu","../movie-view/movie-view":"ggaUx","../genre-view/genre-view":"4tuA0","../director-view/director-view":"9tpci","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","../profile-view/profile-view":"2vVqf","../navbar":"gEkAm","react-bootstrap":"3AD9A"}],"jo6P5":[function(require,module,exports) {
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","axios":"jo6P5","react-redux":"bdVon","react-router-dom":"cHIiW","../../actions/actions":"biFwH","../movies-list/movies-list":"bPxKK","../login-view/login-view":"9YtA0","../registration-view/registration-view":"3U8r7","../movie-view/movie-view":"ggaUx","../genre-view/genre-view":"4tuA0","../director-view/director-view":"9tpci","../profile-view/profile-view":"2vVqf","../navbar":"gEkAm","react-bootstrap":"3AD9A","react-bootstrap/Row":"cMC39","react-bootstrap/Col":"2L2I6","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"jo6P5":[function(require,module,exports) {
 module.exports = require('./lib/axios');
 
 },{"./lib/axios":"63MyY"}],"63MyY":[function(require,module,exports) {
@@ -26181,7 +30077,7 @@ var toString = Object.prototype.toString;
  * @param {string} content with BOM
  * @return {string} content value without BOM
  */ function stripBOM(content) {
-    if (content.charCodeAt(0) === 65279) content = content.slice(1);
+    if (content.charCodeAt(0) === 0xFEFF) content = content.slice(1);
     return content;
 }
 module.exports = {
@@ -26594,152 +30490,7 @@ utils.forEach([
 });
 module.exports = defaults;
 
-},{"process":"3rqvf","./utils":"5By4s","./helpers/normalizeHeaderName":"adBZo","./core/enhanceError":"itUQr","./adapters/xhr":"ldm57","./adapters/http":"ldm57"}],"3rqvf":[function(require,module,exports) {
-// shim for using process in browser
-var process = module.exports = {};
-// cached from whatever global is present so that test runners that stub it
-// don't break things.  But we need to wrap it in a try catch in case it is
-// wrapped in strict mode code which doesn't define any globals.  It's inside a
-// function because try/catches deoptimize in certain engines.
-var cachedSetTimeout;
-var cachedClearTimeout;
-function defaultSetTimout() {
-    throw new Error('setTimeout has not been defined');
-}
-function defaultClearTimeout() {
-    throw new Error('clearTimeout has not been defined');
-}
-(function() {
-    try {
-        if (typeof setTimeout === 'function') cachedSetTimeout = setTimeout;
-        else cachedSetTimeout = defaultSetTimout;
-    } catch (e) {
-        cachedSetTimeout = defaultSetTimout;
-    }
-    try {
-        if (typeof clearTimeout === 'function') cachedClearTimeout = clearTimeout;
-        else cachedClearTimeout = defaultClearTimeout;
-    } catch (e1) {
-        cachedClearTimeout = defaultClearTimeout;
-    }
-})();
-function runTimeout(fun) {
-    if (cachedSetTimeout === setTimeout) //normal enviroments in sane situations
-    return setTimeout(fun, 0);
-    // if setTimeout wasn't available but was latter defined
-    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
-        cachedSetTimeout = setTimeout;
-        return setTimeout(fun, 0);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedSetTimeout(fun, 0);
-    } catch (e) {
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
-            return cachedSetTimeout.call(null, fun, 0);
-        } catch (e) {
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
-            return cachedSetTimeout.call(this, fun, 0);
-        }
-    }
-}
-function runClearTimeout(marker) {
-    if (cachedClearTimeout === clearTimeout) //normal enviroments in sane situations
-    return clearTimeout(marker);
-    // if clearTimeout wasn't available but was latter defined
-    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
-        cachedClearTimeout = clearTimeout;
-        return clearTimeout(marker);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedClearTimeout(marker);
-    } catch (e) {
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
-            return cachedClearTimeout.call(null, marker);
-        } catch (e) {
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
-            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
-            return cachedClearTimeout.call(this, marker);
-        }
-    }
-}
-var queue = [];
-var draining = false;
-var currentQueue;
-var queueIndex = -1;
-function cleanUpNextTick() {
-    if (!draining || !currentQueue) return;
-    draining = false;
-    if (currentQueue.length) queue = currentQueue.concat(queue);
-    else queueIndex = -1;
-    if (queue.length) drainQueue();
-}
-function drainQueue() {
-    if (draining) return;
-    var timeout = runTimeout(cleanUpNextTick);
-    draining = true;
-    var len = queue.length;
-    while(len){
-        currentQueue = queue;
-        queue = [];
-        while(++queueIndex < len)if (currentQueue) currentQueue[queueIndex].run();
-        queueIndex = -1;
-        len = queue.length;
-    }
-    currentQueue = null;
-    draining = false;
-    runClearTimeout(timeout);
-}
-process.nextTick = function(fun) {
-    var args = new Array(arguments.length - 1);
-    if (arguments.length > 1) for(var i = 1; i < arguments.length; i++)args[i - 1] = arguments[i];
-    queue.push(new Item(fun, args));
-    if (queue.length === 1 && !draining) runTimeout(drainQueue);
-};
-// v8 likes predictible objects
-function Item(fun, array) {
-    this.fun = fun;
-    this.array = array;
-}
-Item.prototype.run = function() {
-    this.fun.apply(null, this.array);
-};
-process.title = 'browser';
-process.browser = true;
-process.env = {};
-process.argv = [];
-process.version = ''; // empty string to avoid regexp issues
-process.versions = {};
-function noop() {}
-process.on = noop;
-process.addListener = noop;
-process.once = noop;
-process.off = noop;
-process.removeListener = noop;
-process.removeAllListeners = noop;
-process.emit = noop;
-process.prependListener = noop;
-process.prependOnceListener = noop;
-process.listeners = function(name) {
-    return [];
-};
-process.binding = function(name) {
-    throw new Error('process.binding is not supported');
-};
-process.cwd = function() {
-    return '/';
-};
-process.chdir = function(dir) {
-    throw new Error('process.chdir is not supported');
-};
-process.umask = function() {
-    return 0;
-};
-
-},{}],"adBZo":[function(require,module,exports) {
+},{"process":"3rqvf","./utils":"5By4s","./helpers/normalizeHeaderName":"adBZo","./core/enhanceError":"itUQr","./adapters/xhr":"ldm57","./adapters/http":"ldm57"}],"adBZo":[function(require,module,exports) {
 'use strict';
 var utils = require('../utils');
 module.exports = function normalizeHeaderName(headers, normalizedName) {
@@ -27394,120 +31145,7 @@ module.exports = CancelToken;
     return typeof payload === 'object' && payload.isAxiosError === true;
 };
 
-},{}],"cMC39":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _extends = require("@babel/runtime/helpers/esm/extends");
-var _extendsDefault = parcelHelpers.interopDefault(_extends);
-var _objectWithoutPropertiesLoose = require("@babel/runtime/helpers/esm/objectWithoutPropertiesLoose");
-var _objectWithoutPropertiesLooseDefault = parcelHelpers.interopDefault(_objectWithoutPropertiesLoose);
-var _classnames = require("classnames");
-var _classnamesDefault = parcelHelpers.interopDefault(_classnames);
-var _react = require("react");
-var _reactDefault = parcelHelpers.interopDefault(_react);
-var _themeProvider = require("./ThemeProvider");
-var _excluded = [
-    "bsPrefix",
-    "className",
-    "noGutters",
-    "as"
-];
-var DEVICE_SIZES = [
-    'xl',
-    'lg',
-    'md',
-    'sm',
-    'xs'
-];
-var defaultProps = {
-    noGutters: false
-};
-var Row = /*#__PURE__*/ _reactDefault.default.forwardRef(function(_ref, ref) {
-    var bsPrefix = _ref.bsPrefix, className = _ref.className, noGutters = _ref.noGutters, _ref$as = _ref.as, Component = _ref$as === void 0 ? 'div' : _ref$as, props = _objectWithoutPropertiesLooseDefault.default(_ref, _excluded);
-    var decoratedBsPrefix = _themeProvider.useBootstrapPrefix(bsPrefix, 'row');
-    var sizePrefix = decoratedBsPrefix + "-cols";
-    var classes = [];
-    DEVICE_SIZES.forEach(function(brkPoint) {
-        var propValue = props[brkPoint];
-        delete props[brkPoint];
-        var cols;
-        if (propValue != null && typeof propValue === 'object') cols = propValue.cols;
-        else cols = propValue;
-        var infix = brkPoint !== 'xs' ? "-" + brkPoint : '';
-        if (cols != null) classes.push("" + sizePrefix + infix + "-" + cols);
-    });
-    return /*#__PURE__*/ _reactDefault.default.createElement(Component, _extendsDefault.default({
-        ref: ref
-    }, props, {
-        className: _classnamesDefault.default.apply(void 0, [
-            className,
-            decoratedBsPrefix,
-            noGutters && 'no-gutters'
-        ].concat(classes))
-    }));
-});
-Row.displayName = 'Row';
-Row.defaultProps = defaultProps;
-exports.default = Row;
-
-},{"@babel/runtime/helpers/esm/extends":"fTBFS","@babel/runtime/helpers/esm/objectWithoutPropertiesLoose":"adHgr","classnames":"jocGM","react":"21dqq","./ThemeProvider":"dVixI","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"2L2I6":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _extends = require("@babel/runtime/helpers/esm/extends");
-var _extendsDefault = parcelHelpers.interopDefault(_extends);
-var _objectWithoutPropertiesLoose = require("@babel/runtime/helpers/esm/objectWithoutPropertiesLoose");
-var _objectWithoutPropertiesLooseDefault = parcelHelpers.interopDefault(_objectWithoutPropertiesLoose);
-var _classnames = require("classnames");
-var _classnamesDefault = parcelHelpers.interopDefault(_classnames);
-var _react = require("react");
-var _reactDefault = parcelHelpers.interopDefault(_react);
-var _themeProvider = require("./ThemeProvider");
-var _excluded = [
-    "bsPrefix",
-    "className",
-    "as"
-];
-var DEVICE_SIZES = [
-    'xl',
-    'lg',
-    'md',
-    'sm',
-    'xs'
-];
-var Col = /*#__PURE__*/ _reactDefault.default.forwardRef(function(_ref, ref) {
-    var bsPrefix = _ref.bsPrefix, className = _ref.className, _ref$as = _ref.as, Component = _ref$as === void 0 ? 'div' : _ref$as, props = _objectWithoutPropertiesLooseDefault.default(_ref, _excluded);
-    var prefix = _themeProvider.useBootstrapPrefix(bsPrefix, 'col');
-    var spans = [];
-    var classes = [];
-    DEVICE_SIZES.forEach(function(brkPoint) {
-        var propValue = props[brkPoint];
-        delete props[brkPoint];
-        var span;
-        var offset;
-        var order;
-        if (typeof propValue === 'object' && propValue != null) {
-            var _propValue$span = propValue.span;
-            span = _propValue$span === void 0 ? true : _propValue$span;
-            offset = propValue.offset;
-            order = propValue.order;
-        } else span = propValue;
-        var infix = brkPoint !== 'xs' ? "-" + brkPoint : '';
-        if (span) spans.push(span === true ? "" + prefix + infix : "" + prefix + infix + "-" + span);
-        if (order != null) classes.push("order" + infix + "-" + order);
-        if (offset != null) classes.push("offset" + infix + "-" + offset);
-    });
-    if (!spans.length) spans.push(prefix); // plain 'col'
-    return /*#__PURE__*/ _reactDefault.default.createElement(Component, _extendsDefault.default({}, props, {
-        ref: ref,
-        className: _classnamesDefault.default.apply(void 0, [
-            className
-        ].concat(spans, classes))
-    }));
-});
-Col.displayName = 'Col';
-exports.default = Col;
-
-},{"@babel/runtime/helpers/esm/extends":"fTBFS","@babel/runtime/helpers/esm/objectWithoutPropertiesLoose":"adHgr","classnames":"jocGM","react":"21dqq","./ThemeProvider":"dVixI","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"cHIiW":[function(require,module,exports) {
+},{}],"cHIiW":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "MemoryRouter", ()=>_reactRouter.MemoryRouter
@@ -29700,157 +33338,187 @@ module.exports = Array.isArray || function(arr) {
     return Object.prototype.toString.call(arr) == '[object Array]';
 };
 
-},{}],"9YtA0":[function(require,module,exports) {
-var $parcel$ReactRefreshHelpers$9fee = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
+},{}],"bPxKK":[function(require,module,exports) {
+var $parcel$ReactRefreshHelpers$89c8 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 var prevRefreshReg = window.$RefreshReg$;
 var prevRefreshSig = window.$RefreshSig$;
-$parcel$ReactRefreshHelpers$9fee.prelude(module);
+$parcel$ReactRefreshHelpers$89c8.prelude(module);
 
 try {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "LoginView", ()=>LoginView
-);
 var _jsxDevRuntime = require("react/jsx-dev-runtime");
 var _react = require("react");
 var _reactDefault = parcelHelpers.interopDefault(_react);
-var _axios = require("axios");
-var _axiosDefault = parcelHelpers.interopDefault(_axios);
-var _form = require("react-bootstrap/Form");
-var _formDefault = parcelHelpers.interopDefault(_form);
 var _col = require("react-bootstrap/Col");
 var _colDefault = parcelHelpers.interopDefault(_col);
-var _button = require("react-bootstrap/Button");
-var _buttonDefault = parcelHelpers.interopDefault(_button);
-var _reactRouterDom = require("react-router-dom");
-var _s = $RefreshSig$();
-function LoginView(props) {
-    _s();
-    const [username, setUsername] = _react.useState('');
-    const [password, setPassword] = _react.useState('');
-    const handleSubmit = (e)=>{
-        e.preventDefault(); //Sends a request to the server for authentication
-        _axiosDefault.default.post('https://yourfavoritereels.herokuapp.com/login', {
-            Username: username,
-            Password: password
-        }).then((response)=>{
-            const data = response.data;
-            props.onLoggedIn(data);
-        }).catch((e)=>{
-            console.log('no such user');
-        });
+var _reactRedux = require("react-redux");
+var _visibilityFilterInput = require("../visibility-filter-input/visibility-filter-input");
+var _visibilityFilterInputDefault = parcelHelpers.interopDefault(_visibilityFilterInput);
+var _movieCard = require("../movie-card/movie-card");
+const mapStateToProps = (state)=>{
+    const { visibilityFilter  } = state;
+    return {
+        visibilityFilter
     };
-    return /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_formDefault.default, {
-        children: /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_colDefault.default, {
-            md: 3,
-            children: [
-                /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_formDefault.default.Group, {
-                    controlId: "formUsername",
-                    children: [
-                        /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_formDefault.default.Label, {
-                            children: "Username:"
-                        }, void 0, false, {
-                            fileName: "src/components/login-view/login-view.jsx",
-                            lineNumber: 35,
-                            columnNumber: 11
-                        }, this),
-                        /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_formDefault.default.Control, {
-                            size: "lg",
-                            type: "text",
-                            placeholder: "Enter username",
-                            onChange: (e)=>setUsername(e.target.value)
-                        }, void 0, false, {
-                            fileName: "src/components/login-view/login-view.jsx",
-                            lineNumber: 36,
-                            columnNumber: 11
-                        }, this)
-                    ]
-                }, void 0, true, {
-                    fileName: "src/components/login-view/login-view.jsx",
-                    lineNumber: 34,
-                    columnNumber: 9
-                }, this),
-                /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_formDefault.default.Group, {
-                    controlId: "formPassword",
-                    children: [
-                        /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_formDefault.default.Label, {
-                            children: "Password"
-                        }, void 0, false, {
-                            fileName: "src/components/login-view/login-view.jsx",
-                            lineNumber: 40,
-                            columnNumber: 11
-                        }, this),
-                        /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_formDefault.default.Control, {
-                            size: "lg",
-                            type: "password",
-                            placeholder: "Password",
-                            onChange: (e)=>setPassword(e.target.value)
-                        }, void 0, false, {
-                            fileName: "src/components/login-view/login-view.jsx",
-                            lineNumber: 41,
-                            columnNumber: 11
-                        }, this)
-                    ]
-                }, void 0, true, {
-                    fileName: "src/components/login-view/login-view.jsx",
-                    lineNumber: 39,
-                    columnNumber: 9
-                }, this),
-                /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_buttonDefault.default, {
-                    variant: "outline-primary",
-                    type: "submit",
-                    onClick: handleSubmit,
-                    children: "Submit"
-                }, void 0, false, {
-                    fileName: "src/components/login-view/login-view.jsx",
-                    lineNumber: 43,
-                    columnNumber: 9
-                }, this),
-                /*#__PURE__*/ _jsxDevRuntime.jsxDEV("p", {
-                    children: " New? Just click the button below!"
-                }, void 0, false, {
-                    fileName: "src/components/login-view/login-view.jsx",
-                    lineNumber: 44,
-                    columnNumber: 9
-                }, this),
-                /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_reactRouterDom.Link, {
-                    to: `/register/`,
-                    children: /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_buttonDefault.default, {
-                        variant: "outline-dark",
-                        children: "Register"
-                    }, void 0, false, {
-                        fileName: "src/components/login-view/login-view.jsx",
-                        lineNumber: 46,
-                        columnNumber: 11
-                    }, this)
-                }, void 0, false, {
-                    fileName: "src/components/login-view/login-view.jsx",
-                    lineNumber: 45,
-                    columnNumber: 9
-                }, this)
-            ]
-        }, void 0, true, {
-            fileName: "src/components/login-view/login-view.jsx",
-            lineNumber: 33,
-            columnNumber: 7
-        }, this)
+};
+function MovieList(props) {
+    const { movies , visibilityFilter  } = props;
+    let filteredMovies = movies;
+    if (visibilityFilter !== '') filteredMovies = movies.filter((m)=>m.Title.toLowerCase().includes(visibilityFilter.toLowerCase())
+    );
+    if (!movies) return /*#__PURE__*/ _jsxDevRuntime.jsxDEV("div", {
+        className: "main-view"
     }, void 0, false, {
-        fileName: "src/components/login-view/login-view.jsx",
-        lineNumber: 32,
-        columnNumber: 5
+        fileName: "src/components/movies-list/movies-list.jsx",
+        lineNumber: 21,
+        columnNumber: 23
     }, this);
+    return /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_jsxDevRuntime.Fragment, {
+        children: [
+            /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_colDefault.default, {
+                md: 12,
+                style: {
+                    margin: '1em'
+                },
+                children: /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_visibilityFilterInputDefault.default, {
+                    visibilityFilter: visibilityFilter
+                }, void 0, false, {
+                    fileName: "src/components/movies-list/movies-list.jsx",
+                    lineNumber: 25,
+                    columnNumber: 7
+                }, this)
+            }, void 0, false, {
+                fileName: "src/components/movies-list/movies-list.jsx",
+                lineNumber: 24,
+                columnNumber: 5
+            }, this),
+            filteredMovies.map((m)=>/*#__PURE__*/ _jsxDevRuntime.jsxDEV(_colDefault.default, {
+                    md: 3,
+                    children: /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_movieCard.MovieCard, {
+                        movie: m
+                    }, void 0, false, {
+                        fileName: "src/components/movies-list/movies-list.jsx",
+                        lineNumber: 29,
+                        columnNumber: 9
+                    }, this)
+                }, m._id, false, {
+                    fileName: "src/components/movies-list/movies-list.jsx",
+                    lineNumber: 28,
+                    columnNumber: 7
+                }, this)
+            )
+        ]
+    }, void 0, true);
 }
-_s(LoginView, "wuQOK7xaXdVz4RMrZQhWbI751Oc=");
-_c = LoginView;
+_c = MovieList;
+exports.default = _reactRedux.connect(mapStateToProps)(MovieList);
 var _c;
-$RefreshReg$(_c, "LoginView");
+$RefreshReg$(_c, "MovieList");
 
-  $parcel$ReactRefreshHelpers$9fee.postlude(module);
+  $parcel$ReactRefreshHelpers$89c8.postlude(module);
 } finally {
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","axios":"jo6P5","react-bootstrap/Form":"iBZ80","react-bootstrap/Col":"2L2I6","react-bootstrap/Button":"aPzUt","react-router-dom":"cHIiW","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"iBZ80":[function(require,module,exports) {
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","react-bootstrap/Col":"2L2I6","react-redux":"bdVon","../visibility-filter-input/visibility-filter-input":"gtTIg","../movie-card/movie-card":"bwuIu","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"2L2I6":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _extends = require("@babel/runtime/helpers/esm/extends");
+var _extendsDefault = parcelHelpers.interopDefault(_extends);
+var _objectWithoutPropertiesLoose = require("@babel/runtime/helpers/esm/objectWithoutPropertiesLoose");
+var _objectWithoutPropertiesLooseDefault = parcelHelpers.interopDefault(_objectWithoutPropertiesLoose);
+var _classnames = require("classnames");
+var _classnamesDefault = parcelHelpers.interopDefault(_classnames);
+var _react = require("react");
+var _reactDefault = parcelHelpers.interopDefault(_react);
+var _themeProvider = require("./ThemeProvider");
+var _excluded = [
+    "bsPrefix",
+    "className",
+    "as"
+];
+var DEVICE_SIZES = [
+    'xl',
+    'lg',
+    'md',
+    'sm',
+    'xs'
+];
+var Col = /*#__PURE__*/ _reactDefault.default.forwardRef(function(_ref, ref) {
+    var bsPrefix = _ref.bsPrefix, className = _ref.className, _ref$as = _ref.as, Component = _ref$as === void 0 ? 'div' : _ref$as, props = _objectWithoutPropertiesLooseDefault.default(_ref, _excluded);
+    var prefix = _themeProvider.useBootstrapPrefix(bsPrefix, 'col');
+    var spans = [];
+    var classes = [];
+    DEVICE_SIZES.forEach(function(brkPoint) {
+        var propValue = props[brkPoint];
+        delete props[brkPoint];
+        var span;
+        var offset;
+        var order;
+        if (typeof propValue === 'object' && propValue != null) {
+            var _propValue$span = propValue.span;
+            span = _propValue$span === void 0 ? true : _propValue$span;
+            offset = propValue.offset;
+            order = propValue.order;
+        } else span = propValue;
+        var infix = brkPoint !== 'xs' ? "-" + brkPoint : '';
+        if (span) spans.push(span === true ? "" + prefix + infix : "" + prefix + infix + "-" + span);
+        if (order != null) classes.push("order" + infix + "-" + order);
+        if (offset != null) classes.push("offset" + infix + "-" + offset);
+    });
+    if (!spans.length) spans.push(prefix); // plain 'col'
+    return /*#__PURE__*/ _reactDefault.default.createElement(Component, _extendsDefault.default({}, props, {
+        ref: ref,
+        className: _classnamesDefault.default.apply(void 0, [
+            className
+        ].concat(spans, classes))
+    }));
+});
+Col.displayName = 'Col';
+exports.default = Col;
+
+},{"@babel/runtime/helpers/esm/extends":"fTBFS","@babel/runtime/helpers/esm/objectWithoutPropertiesLoose":"adHgr","classnames":"jocGM","react":"21dqq","./ThemeProvider":"dVixI","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gtTIg":[function(require,module,exports) {
+var $parcel$ReactRefreshHelpers$dea5 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
+var prevRefreshReg = window.$RefreshReg$;
+var prevRefreshSig = window.$RefreshSig$;
+$parcel$ReactRefreshHelpers$dea5.prelude(module);
+
+try {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _jsxDevRuntime = require("react/jsx-dev-runtime");
+var _react = require("react");
+var _reactDefault = parcelHelpers.interopDefault(_react);
+var _reactRedux = require("react-redux");
+var _form = require("react-bootstrap/Form");
+var _formDefault = parcelHelpers.interopDefault(_form);
+var _actions = require("../../actions/actions");
+function VisibilityFilterInput(props) {
+    return /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_formDefault.default.Control, {
+        onChange: (e)=>props.setFilter(e.target.value)
+        ,
+        value: props.visibilityFilter,
+        placeholder: "filter"
+    }, void 0, false, {
+        fileName: "src/components/visibility-filter-input/visibility-filter-input.jsx",
+        lineNumber: 9,
+        columnNumber: 10
+    }, this);
+}
+_c = VisibilityFilterInput;
+exports.default = _reactRedux.connect(null, {
+    setFilter: _actions.setFilter
+})(VisibilityFilterInput);
+var _c;
+$RefreshReg$(_c, "VisibilityFilterInput");
+
+  $parcel$ReactRefreshHelpers$dea5.postlude(module);
+} finally {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","react-redux":"bdVon","react-bootstrap/Form":"iBZ80","../../actions/actions":"biFwH","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"iBZ80":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _extends = require("@babel/runtime/helpers/esm/extends");
@@ -30693,7 +34361,231 @@ function camelize(string) {
 }
 exports.default = camelize;
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"aPzUt":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"km3Ru":[function(require,module,exports) {
+"use strict";
+var Refresh = require('react-refresh/runtime');
+function debounce(func, delay) {
+    var args1;
+    var timeout = undefined;
+    return function(args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(function() {
+            timeout = undefined;
+            func.call(null, args);
+        }, delay);
+    };
+}
+var enqueueUpdate = debounce(function() {
+    Refresh.performReactRefresh();
+}, 30); // Everthing below is either adapted or copied from
+// https://github.com/facebook/metro/blob/61de16bd1edd7e738dd0311c89555a644023ab2d/packages/metro/src/lib/polyfills/require.js
+// MIT License - Copyright (c) Facebook, Inc. and its affiliates.
+module.exports.prelude = function(module) {
+    window.$RefreshReg$ = function(type, id) {
+        Refresh.register(type, module.id + ' ' + id);
+    };
+    window.$RefreshSig$ = Refresh.createSignatureFunctionForTransform;
+};
+module.exports.postlude = function(module) {
+    if (isReactRefreshBoundary(module.exports)) {
+        registerExportsForReactRefresh(module);
+        if (module.hot) {
+            module.hot.dispose(function(data) {
+                if (Refresh.hasUnrecoverableErrors()) window.location.reload();
+                data.prevExports = module.exports;
+            });
+            module.hot.accept(function(getParents) {
+                var prevExports = module.hot.data.prevExports;
+                var nextExports = module.exports; // Since we just executed the code for it, it's possible
+                // that the new exports make it ineligible for being a boundary.
+                var isNoLongerABoundary = !isReactRefreshBoundary(nextExports); // It can also become ineligible if its exports are incompatible
+                // with the previous exports.
+                // For example, if you add/remove/change exports, we'll want
+                // to re-execute the importing modules, and force those components
+                // to re-render. Similarly, if you convert a class component
+                // to a function, we want to invalidate the boundary.
+                var didInvalidate = shouldInvalidateReactRefreshBoundary(prevExports, nextExports);
+                if (isNoLongerABoundary || didInvalidate) {
+                    // We'll be conservative. The only case in which we won't do a full
+                    // reload is if all parent modules are also refresh boundaries.
+                    // In that case we'll add them to the current queue.
+                    var parents = getParents();
+                    if (parents.length === 0) {
+                        // Looks like we bubbled to the root. Can't recover from that.
+                        window.location.reload();
+                        return;
+                    }
+                    return parents;
+                }
+                enqueueUpdate();
+            });
+        }
+    }
+};
+function isReactRefreshBoundary(exports) {
+    if (Refresh.isLikelyComponentType(exports)) return true;
+    if (exports == null || typeof exports !== 'object') // Exit if we can't iterate over exports.
+    return false;
+    var hasExports = false;
+    var areAllExportsComponents = true;
+    let isESM = '__esModule' in exports;
+    for(var key in exports){
+        hasExports = true;
+        if (key === '__esModule') continue;
+        var desc = Object.getOwnPropertyDescriptor(exports, key);
+        if (desc && desc.get && !isESM) // Don't invoke getters for CJS as they may have side effects.
+        return false;
+        var exportValue = exports[key];
+        if (!Refresh.isLikelyComponentType(exportValue)) areAllExportsComponents = false;
+    }
+    return hasExports && areAllExportsComponents;
+}
+function shouldInvalidateReactRefreshBoundary(prevExports, nextExports) {
+    var prevSignature = getRefreshBoundarySignature(prevExports);
+    var nextSignature = getRefreshBoundarySignature(nextExports);
+    if (prevSignature.length !== nextSignature.length) return true;
+    for(var i = 0; i < nextSignature.length; i++){
+        if (prevSignature[i] !== nextSignature[i]) return true;
+    }
+    return false;
+} // When this signature changes, it's unsafe to stop at this refresh boundary.
+function getRefreshBoundarySignature(exports) {
+    var signature = [];
+    signature.push(Refresh.getFamilyByType(exports));
+    if (exports == null || typeof exports !== 'object') // Exit if we can't iterate over exports.
+    // (This is important for legacy environments.)
+    return signature;
+    let isESM = '__esModule' in exports;
+    for(var key in exports){
+        if (key === '__esModule') continue;
+        var desc = Object.getOwnPropertyDescriptor(exports, key);
+        if (desc && desc.get && !isESM) continue;
+        var exportValue = exports[key];
+        signature.push(key);
+        signature.push(Refresh.getFamilyByType(exportValue));
+    }
+    return signature;
+}
+function registerExportsForReactRefresh(module) {
+    var exports = module.exports, id = module.id;
+    Refresh.register(exports, id + ' %exports%');
+    if (exports == null || typeof exports !== 'object') // Exit if we can't iterate over exports.
+    // (This is important for legacy environments.)
+    return;
+    let isESM = '__esModule' in exports;
+    for(var key in exports){
+        var desc = Object.getOwnPropertyDescriptor(exports, key);
+        if (desc && desc.get && !isESM) continue;
+        var exportValue = exports[key];
+        Refresh.register(exportValue, id + ' %exports% ' + key);
+    }
+}
+
+},{"react-refresh/runtime":"786KC"}],"bwuIu":[function(require,module,exports) {
+var $parcel$ReactRefreshHelpers$67b2 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
+var prevRefreshReg = window.$RefreshReg$;
+var prevRefreshSig = window.$RefreshSig$;
+$parcel$ReactRefreshHelpers$67b2.prelude(module);
+
+try {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "MovieCard", ()=>MovieCard
+);
+var _jsxDevRuntime = require("react/jsx-dev-runtime");
+var _react = require("react");
+var _reactDefault = parcelHelpers.interopDefault(_react);
+var _propTypes = require("prop-types");
+var _propTypesDefault = parcelHelpers.interopDefault(_propTypes);
+var _button = require("react-bootstrap/Button");
+var _buttonDefault = parcelHelpers.interopDefault(_button);
+var _card = require("react-bootstrap/Card");
+var _cardDefault = parcelHelpers.interopDefault(_card);
+var _reactRouterDom = require("react-router-dom");
+class MovieCard extends _reactDefault.default.Component {
+    render() {
+        const { movie  } = this.props;
+        return /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_jsxDevRuntime.Fragment, {
+            children: /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_cardDefault.default, {
+                children: [
+                    /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_cardDefault.default.Img, {
+                        variant: "top",
+                        src: movie.ImagePath
+                    }, void 0, false, {
+                        fileName: "src/components/movie-card/movie-card.jsx",
+                        lineNumber: 15,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_cardDefault.default.Body, {
+                        children: [
+                            /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_cardDefault.default.Title, {
+                                children: movie.Title
+                            }, void 0, false, {
+                                fileName: "src/components/movie-card/movie-card.jsx",
+                                lineNumber: 17,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_cardDefault.default.Text, {
+                                children: movie.Description
+                            }, void 0, false, {
+                                fileName: "src/components/movie-card/movie-card.jsx",
+                                lineNumber: 18,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_reactRouterDom.Link, {
+                                to: `/movies/${movie._id}`,
+                                children: /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_buttonDefault.default, {
+                                    variant: " link outline-dark",
+                                    children: "Open"
+                                }, void 0, false, {
+                                    fileName: "src/components/movie-card/movie-card.jsx",
+                                    lineNumber: 20,
+                                    columnNumber: 15
+                                }, this)
+                            }, void 0, false, {
+                                fileName: "src/components/movie-card/movie-card.jsx",
+                                lineNumber: 19,
+                                columnNumber: 13
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "src/components/movie-card/movie-card.jsx",
+                        lineNumber: 16,
+                        columnNumber: 11
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "src/components/movie-card/movie-card.jsx",
+                lineNumber: 14,
+                columnNumber: 9
+            }, this)
+        }, void 0, false);
+    }
+}
+MovieCard.propTypes = {
+    movie: _propTypesDefault.default.shape({
+        Title: _propTypesDefault.default.string.isRequired,
+        Description: _propTypesDefault.default.string.isRequired,
+        ImagePath: _propTypesDefault.default.string.isRequired,
+        Genre: _propTypesDefault.default.shape({
+            Name: _propTypesDefault.default.string.isRequired,
+            Description: _propTypesDefault.default.string.isRequired
+        }).isRequired,
+        Director: _propTypesDefault.default.shape({
+            Name: _propTypesDefault.default.string.isRequired,
+            Bio: _propTypesDefault.default.string.isRequired,
+            Birth: _propTypesDefault.default.string.isRequired
+        }).isRequired
+    }).isRequired,
+    onMovieClick: _propTypesDefault.default.func
+};
+
+  $parcel$ReactRefreshHelpers$67b2.postlude(module);
+} finally {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","prop-types":"7wKI2","react-bootstrap/Button":"aPzUt","react-bootstrap/Card":"lAynp","react-router-dom":"cHIiW","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"aPzUt":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _extends = require("@babel/runtime/helpers/esm/extends");
@@ -30832,127 +34724,300 @@ parcelHelpers.defineInteropFlag(exports);
 }
 exports.default = createChainedFunction;
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"km3Ru":[function(require,module,exports) {
-"use strict";
-var Refresh = require('react-refresh/runtime');
-function debounce(func, delay) {
-    var args1;
-    var timeout = undefined;
-    return function(args) {
-        clearTimeout(timeout);
-        timeout = setTimeout(function() {
-            timeout = undefined;
-            func.call(null, args);
-        }, delay);
-    };
-}
-var enqueueUpdate = debounce(function() {
-    Refresh.performReactRefresh();
-}, 30); // Everthing below is either adapted or copied from
-// https://github.com/facebook/metro/blob/61de16bd1edd7e738dd0311c89555a644023ab2d/packages/metro/src/lib/polyfills/require.js
-// MIT License - Copyright (c) Facebook, Inc. and its affiliates.
-module.exports.prelude = function(module) {
-    window.$RefreshReg$ = function(type, id) {
-        Refresh.register(type, module.id + ' ' + id);
-    };
-    window.$RefreshSig$ = Refresh.createSignatureFunctionForTransform;
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"lAynp":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _extends = require("@babel/runtime/helpers/esm/extends");
+var _extendsDefault = parcelHelpers.interopDefault(_extends);
+var _objectWithoutPropertiesLoose = require("@babel/runtime/helpers/esm/objectWithoutPropertiesLoose");
+var _objectWithoutPropertiesLooseDefault = parcelHelpers.interopDefault(_objectWithoutPropertiesLoose);
+var _classnames = require("classnames");
+var _classnamesDefault = parcelHelpers.interopDefault(_classnames);
+var _react = require("react");
+var _reactDefault = parcelHelpers.interopDefault(_react);
+var _themeProvider = require("./ThemeProvider");
+var _createWithBsPrefix = require("./createWithBsPrefix");
+var _createWithBsPrefixDefault = parcelHelpers.interopDefault(_createWithBsPrefix);
+var _divWithClassName = require("./divWithClassName");
+var _divWithClassNameDefault = parcelHelpers.interopDefault(_divWithClassName);
+var _cardContext = require("./CardContext");
+var _cardContextDefault = parcelHelpers.interopDefault(_cardContext);
+var _cardImg = require("./CardImg");
+var _cardImgDefault = parcelHelpers.interopDefault(_cardImg);
+var _excluded = [
+    "bsPrefix",
+    "className",
+    "bg",
+    "text",
+    "border",
+    "body",
+    "children",
+    "as"
+];
+var DivStyledAsH5 = _divWithClassNameDefault.default('h5');
+var DivStyledAsH6 = _divWithClassNameDefault.default('h6');
+var CardBody = _createWithBsPrefixDefault.default('card-body');
+var CardTitle = _createWithBsPrefixDefault.default('card-title', {
+    Component: DivStyledAsH5
+});
+var CardSubtitle = _createWithBsPrefixDefault.default('card-subtitle', {
+    Component: DivStyledAsH6
+});
+var CardLink = _createWithBsPrefixDefault.default('card-link', {
+    Component: 'a'
+});
+var CardText = _createWithBsPrefixDefault.default('card-text', {
+    Component: 'p'
+});
+var CardHeader = _createWithBsPrefixDefault.default('card-header');
+var CardFooter = _createWithBsPrefixDefault.default('card-footer');
+var CardImgOverlay = _createWithBsPrefixDefault.default('card-img-overlay');
+var defaultProps = {
+    body: false
 };
-module.exports.postlude = function(module) {
-    if (isReactRefreshBoundary(module.exports)) {
-        registerExportsForReactRefresh(module);
-        if (module.hot) {
-            module.hot.dispose(function(data) {
-                if (Refresh.hasUnrecoverableErrors()) window.location.reload();
-                data.prevExports = module.exports;
-            });
-            module.hot.accept(function(getParents) {
-                var prevExports = module.hot.data.prevExports;
-                var nextExports = module.exports; // Since we just executed the code for it, it's possible
-                // that the new exports make it ineligible for being a boundary.
-                var isNoLongerABoundary = !isReactRefreshBoundary(nextExports); // It can also become ineligible if its exports are incompatible
-                // with the previous exports.
-                // For example, if you add/remove/change exports, we'll want
-                // to re-execute the importing modules, and force those components
-                // to re-render. Similarly, if you convert a class component
-                // to a function, we want to invalidate the boundary.
-                var didInvalidate = shouldInvalidateReactRefreshBoundary(prevExports, nextExports);
-                if (isNoLongerABoundary || didInvalidate) {
-                    // We'll be conservative. The only case in which we won't do a full
-                    // reload is if all parent modules are also refresh boundaries.
-                    // In that case we'll add them to the current queue.
-                    var parents = getParents();
-                    if (parents.length === 0) {
-                        // Looks like we bubbled to the root. Can't recover from that.
-                        window.location.reload();
-                        return;
-                    }
-                    return parents;
-                }
-                enqueueUpdate();
-            });
-        }
-    }
-};
-function isReactRefreshBoundary(exports) {
-    if (Refresh.isLikelyComponentType(exports)) return true;
-    if (exports == null || typeof exports !== 'object') // Exit if we can't iterate over exports.
-    return false;
-    var hasExports = false;
-    var areAllExportsComponents = true;
-    let isESM = '__esModule' in exports;
-    for(var key in exports){
-        hasExports = true;
-        if (key === '__esModule') continue;
-        var desc = Object.getOwnPropertyDescriptor(exports, key);
-        if (desc && desc.get && !isESM) // Don't invoke getters for CJS as they may have side effects.
-        return false;
-        var exportValue = exports[key];
-        if (!Refresh.isLikelyComponentType(exportValue)) areAllExportsComponents = false;
-    }
-    return hasExports && areAllExportsComponents;
-}
-function shouldInvalidateReactRefreshBoundary(prevExports, nextExports) {
-    var prevSignature = getRefreshBoundarySignature(prevExports);
-    var nextSignature = getRefreshBoundarySignature(nextExports);
-    if (prevSignature.length !== nextSignature.length) return true;
-    for(var i = 0; i < nextSignature.length; i++){
-        if (prevSignature[i] !== nextSignature[i]) return true;
-    }
-    return false;
-} // When this signature changes, it's unsafe to stop at this refresh boundary.
-function getRefreshBoundarySignature(exports) {
-    var signature = [];
-    signature.push(Refresh.getFamilyByType(exports));
-    if (exports == null || typeof exports !== 'object') // Exit if we can't iterate over exports.
-    // (This is important for legacy environments.)
-    return signature;
-    let isESM = '__esModule' in exports;
-    for(var key in exports){
-        if (key === '__esModule') continue;
-        var desc = Object.getOwnPropertyDescriptor(exports, key);
-        if (desc && desc.get && !isESM) continue;
-        var exportValue = exports[key];
-        signature.push(key);
-        signature.push(Refresh.getFamilyByType(exportValue));
-    }
-    return signature;
-}
-function registerExportsForReactRefresh(module) {
-    var exports = module.exports, id = module.id;
-    Refresh.register(exports, id + ' %exports%');
-    if (exports == null || typeof exports !== 'object') // Exit if we can't iterate over exports.
-    // (This is important for legacy environments.)
-    return;
-    let isESM = '__esModule' in exports;
-    for(var key in exports){
-        var desc = Object.getOwnPropertyDescriptor(exports, key);
-        if (desc && desc.get && !isESM) continue;
-        var exportValue = exports[key];
-        Refresh.register(exportValue, id + ' %exports% ' + key);
-    }
-}
+var Card = /*#__PURE__*/ _reactDefault.default.forwardRef(function(_ref, ref) {
+    var bsPrefix = _ref.bsPrefix, className = _ref.className, bg = _ref.bg, text = _ref.text, border = _ref.border, body = _ref.body, children = _ref.children, _ref$as = _ref.as, Component = _ref$as === void 0 ? 'div' : _ref$as, props = _objectWithoutPropertiesLooseDefault.default(_ref, _excluded);
+    var prefix = _themeProvider.useBootstrapPrefix(bsPrefix, 'card');
+    var cardContext = _react.useMemo(function() {
+        return {
+            cardHeaderBsPrefix: prefix + "-header"
+        };
+    }, [
+        prefix
+    ]);
+    return /*#__PURE__*/ _reactDefault.default.createElement(_cardContextDefault.default.Provider, {
+        value: cardContext
+    }, /*#__PURE__*/ _reactDefault.default.createElement(Component, _extendsDefault.default({
+        ref: ref
+    }, props, {
+        className: _classnamesDefault.default(className, prefix, bg && "bg-" + bg, text && "text-" + text, border && "border-" + border)
+    }), body ? /*#__PURE__*/ // @ts-ignore
+    _reactDefault.default.createElement(CardBody, null, children) : children));
+});
+Card.displayName = 'Card';
+Card.defaultProps = defaultProps;
+Card.Img = _cardImgDefault.default;
+Card.Title = CardTitle;
+Card.Subtitle = CardSubtitle;
+Card.Body = CardBody;
+Card.Link = CardLink;
+Card.Text = CardText;
+Card.Header = CardHeader;
+Card.Footer = CardFooter;
+Card.ImgOverlay = CardImgOverlay;
+exports.default = Card;
 
-},{"react-refresh/runtime":"786KC"}],"3U8r7":[function(require,module,exports) {
+},{"@babel/runtime/helpers/esm/extends":"fTBFS","@babel/runtime/helpers/esm/objectWithoutPropertiesLoose":"adHgr","classnames":"jocGM","react":"21dqq","./ThemeProvider":"dVixI","./createWithBsPrefix":"itt7e","./divWithClassName":"eDg7t","./CardContext":"2ltzW","./CardImg":"1reTi","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"eDg7t":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _extends = require("@babel/runtime/helpers/esm/extends");
+var _extendsDefault = parcelHelpers.interopDefault(_extends);
+var _react = require("react");
+var _reactDefault = parcelHelpers.interopDefault(_react);
+var _classnames = require("classnames");
+var _classnamesDefault = parcelHelpers.interopDefault(_classnames);
+exports.default = function(className) {
+    return /*#__PURE__*/ _reactDefault.default.forwardRef(function(p, ref) {
+        return /*#__PURE__*/ _reactDefault.default.createElement("div", _extendsDefault.default({}, p, {
+            ref: ref,
+            className: _classnamesDefault.default(p.className, className)
+        }));
+    });
+};
+
+},{"@babel/runtime/helpers/esm/extends":"fTBFS","react":"21dqq","classnames":"jocGM","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"2ltzW":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _react = require("react");
+var _reactDefault = parcelHelpers.interopDefault(_react);
+var context = /*#__PURE__*/ _reactDefault.default.createContext(null);
+context.displayName = 'CardContext';
+exports.default = context;
+
+},{"react":"21dqq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"1reTi":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _extends = require("@babel/runtime/helpers/esm/extends");
+var _extendsDefault = parcelHelpers.interopDefault(_extends);
+var _objectWithoutPropertiesLoose = require("@babel/runtime/helpers/esm/objectWithoutPropertiesLoose");
+var _objectWithoutPropertiesLooseDefault = parcelHelpers.interopDefault(_objectWithoutPropertiesLoose);
+var _classnames = require("classnames");
+var _classnamesDefault = parcelHelpers.interopDefault(_classnames);
+var _react = require("react");
+var _reactDefault = parcelHelpers.interopDefault(_react);
+var _themeProvider = require("./ThemeProvider");
+var _excluded = [
+    "bsPrefix",
+    "className",
+    "variant",
+    "as"
+];
+var defaultProps = {
+    variant: null
+};
+var CardImg = /*#__PURE__*/ _reactDefault.default.forwardRef(function(_ref, ref) {
+    var bsPrefix = _ref.bsPrefix, className = _ref.className, variant = _ref.variant, _ref$as = _ref.as, Component = _ref$as === void 0 ? 'img' : _ref$as, props = _objectWithoutPropertiesLooseDefault.default(_ref, _excluded);
+    var prefix = _themeProvider.useBootstrapPrefix(bsPrefix, 'card-img');
+    return /*#__PURE__*/ _reactDefault.default.createElement(Component, _extendsDefault.default({
+        ref: ref,
+        className: _classnamesDefault.default(variant ? prefix + "-" + variant : prefix, className)
+    }, props));
+});
+CardImg.displayName = 'CardImg';
+CardImg.defaultProps = defaultProps;
+exports.default = CardImg;
+
+},{"@babel/runtime/helpers/esm/extends":"fTBFS","@babel/runtime/helpers/esm/objectWithoutPropertiesLoose":"adHgr","classnames":"jocGM","react":"21dqq","./ThemeProvider":"dVixI","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"9YtA0":[function(require,module,exports) {
+var $parcel$ReactRefreshHelpers$9fee = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
+var prevRefreshReg = window.$RefreshReg$;
+var prevRefreshSig = window.$RefreshSig$;
+$parcel$ReactRefreshHelpers$9fee.prelude(module);
+
+try {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "LoginView", ()=>LoginView
+);
+var _jsxDevRuntime = require("react/jsx-dev-runtime");
+var _react = require("react");
+var _reactDefault = parcelHelpers.interopDefault(_react);
+var _axios = require("axios");
+var _axiosDefault = parcelHelpers.interopDefault(_axios);
+var _form = require("react-bootstrap/Form");
+var _formDefault = parcelHelpers.interopDefault(_form);
+var _col = require("react-bootstrap/Col");
+var _colDefault = parcelHelpers.interopDefault(_col);
+var _button = require("react-bootstrap/Button");
+var _buttonDefault = parcelHelpers.interopDefault(_button);
+var _reactRouterDom = require("react-router-dom");
+var _s = $RefreshSig$();
+function LoginView(props) {
+    _s();
+    const [username, setUsername] = _react.useState('');
+    const [password, setPassword] = _react.useState('');
+    const handleSubmit = (e)=>{
+        e.preventDefault(); //Sends a request to the server for authentication
+        _axiosDefault.default.post('https://yourfavoritereels.herokuapp.com/login', {
+            Username: username,
+            Password: password
+        }).then((response)=>{
+            const data = response.data;
+            props.onLoggedIn(data);
+        }).catch((e)=>{
+            console.log('no such user');
+        });
+    };
+    return /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_formDefault.default, {
+        children: /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_colDefault.default, {
+            md: 3,
+            children: [
+                /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_formDefault.default.Group, {
+                    controlId: "formUsername",
+                    children: [
+                        /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_formDefault.default.Label, {
+                            children: "Username:"
+                        }, void 0, false, {
+                            fileName: "src/components/login-view/login-view.jsx",
+                            lineNumber: 35,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_formDefault.default.Control, {
+                            size: "lg",
+                            type: "text",
+                            placeholder: "Enter username",
+                            onChange: (e)=>setUsername(e.target.value)
+                        }, void 0, false, {
+                            fileName: "src/components/login-view/login-view.jsx",
+                            lineNumber: 36,
+                            columnNumber: 11
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "src/components/login-view/login-view.jsx",
+                    lineNumber: 34,
+                    columnNumber: 9
+                }, this),
+                /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_formDefault.default.Group, {
+                    controlId: "formPassword",
+                    children: [
+                        /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_formDefault.default.Label, {
+                            children: "Password"
+                        }, void 0, false, {
+                            fileName: "src/components/login-view/login-view.jsx",
+                            lineNumber: 40,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_formDefault.default.Control, {
+                            size: "lg",
+                            type: "password",
+                            placeholder: "Password",
+                            onChange: (e)=>setPassword(e.target.value)
+                        }, void 0, false, {
+                            fileName: "src/components/login-view/login-view.jsx",
+                            lineNumber: 41,
+                            columnNumber: 11
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "src/components/login-view/login-view.jsx",
+                    lineNumber: 39,
+                    columnNumber: 9
+                }, this),
+                /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_buttonDefault.default, {
+                    variant: "outline-primary",
+                    type: "submit",
+                    onClick: handleSubmit,
+                    children: "Submit"
+                }, void 0, false, {
+                    fileName: "src/components/login-view/login-view.jsx",
+                    lineNumber: 43,
+                    columnNumber: 9
+                }, this),
+                /*#__PURE__*/ _jsxDevRuntime.jsxDEV("p", {
+                    children: " New? Just click the button below!"
+                }, void 0, false, {
+                    fileName: "src/components/login-view/login-view.jsx",
+                    lineNumber: 44,
+                    columnNumber: 9
+                }, this),
+                /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_reactRouterDom.Link, {
+                    to: `/register/`,
+                    children: /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_buttonDefault.default, {
+                        variant: "outline-dark",
+                        children: "Register"
+                    }, void 0, false, {
+                        fileName: "src/components/login-view/login-view.jsx",
+                        lineNumber: 46,
+                        columnNumber: 11
+                    }, this)
+                }, void 0, false, {
+                    fileName: "src/components/login-view/login-view.jsx",
+                    lineNumber: 45,
+                    columnNumber: 9
+                }, this)
+            ]
+        }, void 0, true, {
+            fileName: "src/components/login-view/login-view.jsx",
+            lineNumber: 33,
+            columnNumber: 7
+        }, this)
+    }, void 0, false, {
+        fileName: "src/components/login-view/login-view.jsx",
+        lineNumber: 32,
+        columnNumber: 5
+    }, this);
+}
+_s(LoginView, "wuQOK7xaXdVz4RMrZQhWbI751Oc=");
+_c = LoginView;
+var _c;
+$RefreshReg$(_c, "LoginView");
+
+  $parcel$ReactRefreshHelpers$9fee.postlude(module);
+} finally {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","axios":"jo6P5","react-bootstrap/Form":"iBZ80","react-bootstrap/Col":"2L2I6","react-bootstrap/Button":"aPzUt","react-router-dom":"cHIiW","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"3U8r7":[function(require,module,exports) {
 var $parcel$ReactRefreshHelpers$789c = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 var prevRefreshReg = window.$RefreshReg$;
 var prevRefreshSig = window.$RefreshSig$;
@@ -31204,254 +35269,7 @@ $RefreshReg$(_c, "RegistrationView");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","axios":"jo6P5","prop-types":"7wKI2","react-router-dom":"cHIiW","react-bootstrap/Button":"aPzUt","react-bootstrap/Form":"iBZ80","react-bootstrap/Col":"2L2I6","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"bwuIu":[function(require,module,exports) {
-var $parcel$ReactRefreshHelpers$67b2 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
-var prevRefreshReg = window.$RefreshReg$;
-var prevRefreshSig = window.$RefreshSig$;
-$parcel$ReactRefreshHelpers$67b2.prelude(module);
-
-try {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "MovieCard", ()=>MovieCard
-);
-var _jsxDevRuntime = require("react/jsx-dev-runtime");
-var _react = require("react");
-var _reactDefault = parcelHelpers.interopDefault(_react);
-var _propTypes = require("prop-types");
-var _propTypesDefault = parcelHelpers.interopDefault(_propTypes);
-var _button = require("react-bootstrap/Button");
-var _buttonDefault = parcelHelpers.interopDefault(_button);
-var _card = require("react-bootstrap/Card");
-var _cardDefault = parcelHelpers.interopDefault(_card);
-var _reactRouterDom = require("react-router-dom");
-class MovieCard extends _reactDefault.default.Component {
-    render() {
-        const { movie  } = this.props;
-        return /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_jsxDevRuntime.Fragment, {
-            children: /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_cardDefault.default, {
-                children: [
-                    /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_cardDefault.default.Img, {
-                        variant: "top",
-                        src: movie.ImagePath
-                    }, void 0, false, {
-                        fileName: "src/components/movie-card/movie-card.jsx",
-                        lineNumber: 15,
-                        columnNumber: 11
-                    }, this),
-                    /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_cardDefault.default.Body, {
-                        children: [
-                            /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_cardDefault.default.Title, {
-                                children: movie.Title
-                            }, void 0, false, {
-                                fileName: "src/components/movie-card/movie-card.jsx",
-                                lineNumber: 17,
-                                columnNumber: 13
-                            }, this),
-                            /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_cardDefault.default.Text, {
-                                children: movie.Description
-                            }, void 0, false, {
-                                fileName: "src/components/movie-card/movie-card.jsx",
-                                lineNumber: 18,
-                                columnNumber: 13
-                            }, this),
-                            /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_reactRouterDom.Link, {
-                                to: `/movies/${movie._id}`,
-                                children: /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_buttonDefault.default, {
-                                    variant: " link outline-dark",
-                                    children: "Open"
-                                }, void 0, false, {
-                                    fileName: "src/components/movie-card/movie-card.jsx",
-                                    lineNumber: 20,
-                                    columnNumber: 15
-                                }, this)
-                            }, void 0, false, {
-                                fileName: "src/components/movie-card/movie-card.jsx",
-                                lineNumber: 19,
-                                columnNumber: 13
-                            }, this)
-                        ]
-                    }, void 0, true, {
-                        fileName: "src/components/movie-card/movie-card.jsx",
-                        lineNumber: 16,
-                        columnNumber: 11
-                    }, this)
-                ]
-            }, void 0, true, {
-                fileName: "src/components/movie-card/movie-card.jsx",
-                lineNumber: 14,
-                columnNumber: 9
-            }, this)
-        }, void 0, false);
-    }
-}
-MovieCard.propTypes = {
-    movie: _propTypesDefault.default.shape({
-        Title: _propTypesDefault.default.string.isRequired,
-        Description: _propTypesDefault.default.string.isRequired,
-        ImagePath: _propTypesDefault.default.string.isRequired,
-        Genre: _propTypesDefault.default.shape({
-            Name: _propTypesDefault.default.string.isRequired,
-            Description: _propTypesDefault.default.string.isRequired
-        }).isRequired,
-        Director: _propTypesDefault.default.shape({
-            Name: _propTypesDefault.default.string.isRequired,
-            Bio: _propTypesDefault.default.string.isRequired,
-            Birth: _propTypesDefault.default.string.isRequired
-        }).isRequired
-    }).isRequired,
-    onMovieClick: _propTypesDefault.default.func
-};
-
-  $parcel$ReactRefreshHelpers$67b2.postlude(module);
-} finally {
-  window.$RefreshReg$ = prevRefreshReg;
-  window.$RefreshSig$ = prevRefreshSig;
-}
-},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","prop-types":"7wKI2","react-bootstrap/Button":"aPzUt","react-bootstrap/Card":"lAynp","react-router-dom":"cHIiW","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"lAynp":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _extends = require("@babel/runtime/helpers/esm/extends");
-var _extendsDefault = parcelHelpers.interopDefault(_extends);
-var _objectWithoutPropertiesLoose = require("@babel/runtime/helpers/esm/objectWithoutPropertiesLoose");
-var _objectWithoutPropertiesLooseDefault = parcelHelpers.interopDefault(_objectWithoutPropertiesLoose);
-var _classnames = require("classnames");
-var _classnamesDefault = parcelHelpers.interopDefault(_classnames);
-var _react = require("react");
-var _reactDefault = parcelHelpers.interopDefault(_react);
-var _themeProvider = require("./ThemeProvider");
-var _createWithBsPrefix = require("./createWithBsPrefix");
-var _createWithBsPrefixDefault = parcelHelpers.interopDefault(_createWithBsPrefix);
-var _divWithClassName = require("./divWithClassName");
-var _divWithClassNameDefault = parcelHelpers.interopDefault(_divWithClassName);
-var _cardContext = require("./CardContext");
-var _cardContextDefault = parcelHelpers.interopDefault(_cardContext);
-var _cardImg = require("./CardImg");
-var _cardImgDefault = parcelHelpers.interopDefault(_cardImg);
-var _excluded = [
-    "bsPrefix",
-    "className",
-    "bg",
-    "text",
-    "border",
-    "body",
-    "children",
-    "as"
-];
-var DivStyledAsH5 = _divWithClassNameDefault.default('h5');
-var DivStyledAsH6 = _divWithClassNameDefault.default('h6');
-var CardBody = _createWithBsPrefixDefault.default('card-body');
-var CardTitle = _createWithBsPrefixDefault.default('card-title', {
-    Component: DivStyledAsH5
-});
-var CardSubtitle = _createWithBsPrefixDefault.default('card-subtitle', {
-    Component: DivStyledAsH6
-});
-var CardLink = _createWithBsPrefixDefault.default('card-link', {
-    Component: 'a'
-});
-var CardText = _createWithBsPrefixDefault.default('card-text', {
-    Component: 'p'
-});
-var CardHeader = _createWithBsPrefixDefault.default('card-header');
-var CardFooter = _createWithBsPrefixDefault.default('card-footer');
-var CardImgOverlay = _createWithBsPrefixDefault.default('card-img-overlay');
-var defaultProps = {
-    body: false
-};
-var Card = /*#__PURE__*/ _reactDefault.default.forwardRef(function(_ref, ref) {
-    var bsPrefix = _ref.bsPrefix, className = _ref.className, bg = _ref.bg, text = _ref.text, border = _ref.border, body = _ref.body, children = _ref.children, _ref$as = _ref.as, Component = _ref$as === void 0 ? 'div' : _ref$as, props = _objectWithoutPropertiesLooseDefault.default(_ref, _excluded);
-    var prefix = _themeProvider.useBootstrapPrefix(bsPrefix, 'card');
-    var cardContext = _react.useMemo(function() {
-        return {
-            cardHeaderBsPrefix: prefix + "-header"
-        };
-    }, [
-        prefix
-    ]);
-    return /*#__PURE__*/ _reactDefault.default.createElement(_cardContextDefault.default.Provider, {
-        value: cardContext
-    }, /*#__PURE__*/ _reactDefault.default.createElement(Component, _extendsDefault.default({
-        ref: ref
-    }, props, {
-        className: _classnamesDefault.default(className, prefix, bg && "bg-" + bg, text && "text-" + text, border && "border-" + border)
-    }), body ? /*#__PURE__*/ // @ts-ignore
-    _reactDefault.default.createElement(CardBody, null, children) : children));
-});
-Card.displayName = 'Card';
-Card.defaultProps = defaultProps;
-Card.Img = _cardImgDefault.default;
-Card.Title = CardTitle;
-Card.Subtitle = CardSubtitle;
-Card.Body = CardBody;
-Card.Link = CardLink;
-Card.Text = CardText;
-Card.Header = CardHeader;
-Card.Footer = CardFooter;
-Card.ImgOverlay = CardImgOverlay;
-exports.default = Card;
-
-},{"@babel/runtime/helpers/esm/extends":"fTBFS","@babel/runtime/helpers/esm/objectWithoutPropertiesLoose":"adHgr","classnames":"jocGM","react":"21dqq","./ThemeProvider":"dVixI","./createWithBsPrefix":"itt7e","./divWithClassName":"eDg7t","./CardContext":"2ltzW","./CardImg":"1reTi","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"eDg7t":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _extends = require("@babel/runtime/helpers/esm/extends");
-var _extendsDefault = parcelHelpers.interopDefault(_extends);
-var _react = require("react");
-var _reactDefault = parcelHelpers.interopDefault(_react);
-var _classnames = require("classnames");
-var _classnamesDefault = parcelHelpers.interopDefault(_classnames);
-exports.default = function(className) {
-    return /*#__PURE__*/ _reactDefault.default.forwardRef(function(p, ref) {
-        return /*#__PURE__*/ _reactDefault.default.createElement("div", _extendsDefault.default({}, p, {
-            ref: ref,
-            className: _classnamesDefault.default(p.className, className)
-        }));
-    });
-};
-
-},{"@babel/runtime/helpers/esm/extends":"fTBFS","react":"21dqq","classnames":"jocGM","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"2ltzW":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _react = require("react");
-var _reactDefault = parcelHelpers.interopDefault(_react);
-var context = /*#__PURE__*/ _reactDefault.default.createContext(null);
-context.displayName = 'CardContext';
-exports.default = context;
-
-},{"react":"21dqq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"1reTi":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _extends = require("@babel/runtime/helpers/esm/extends");
-var _extendsDefault = parcelHelpers.interopDefault(_extends);
-var _objectWithoutPropertiesLoose = require("@babel/runtime/helpers/esm/objectWithoutPropertiesLoose");
-var _objectWithoutPropertiesLooseDefault = parcelHelpers.interopDefault(_objectWithoutPropertiesLoose);
-var _classnames = require("classnames");
-var _classnamesDefault = parcelHelpers.interopDefault(_classnames);
-var _react = require("react");
-var _reactDefault = parcelHelpers.interopDefault(_react);
-var _themeProvider = require("./ThemeProvider");
-var _excluded = [
-    "bsPrefix",
-    "className",
-    "variant",
-    "as"
-];
-var defaultProps = {
-    variant: null
-};
-var CardImg = /*#__PURE__*/ _reactDefault.default.forwardRef(function(_ref, ref) {
-    var bsPrefix = _ref.bsPrefix, className = _ref.className, variant = _ref.variant, _ref$as = _ref.as, Component = _ref$as === void 0 ? 'img' : _ref$as, props = _objectWithoutPropertiesLooseDefault.default(_ref, _excluded);
-    var prefix = _themeProvider.useBootstrapPrefix(bsPrefix, 'card-img');
-    return /*#__PURE__*/ _reactDefault.default.createElement(Component, _extendsDefault.default({
-        ref: ref,
-        className: _classnamesDefault.default(variant ? prefix + "-" + variant : prefix, className)
-    }, props));
-});
-CardImg.displayName = 'CardImg';
-CardImg.defaultProps = defaultProps;
-exports.default = CardImg;
-
-},{"@babel/runtime/helpers/esm/extends":"fTBFS","@babel/runtime/helpers/esm/objectWithoutPropertiesLoose":"adHgr","classnames":"jocGM","react":"21dqq","./ThemeProvider":"dVixI","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"ggaUx":[function(require,module,exports) {
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","axios":"jo6P5","prop-types":"7wKI2","react-router-dom":"cHIiW","react-bootstrap/Button":"aPzUt","react-bootstrap/Form":"iBZ80","react-bootstrap/Col":"2L2I6","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"ggaUx":[function(require,module,exports) {
 var $parcel$ReactRefreshHelpers$e9f6 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 var prevRefreshReg = window.$RefreshReg$;
 var prevRefreshSig = window.$RefreshSig$;
@@ -31614,7 +35432,7 @@ class MovieView extends _reactDefault.default.Component {
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","react-bootstrap/Button":"aPzUt","prop-types":"7wKI2","react-bootstrap":"3AD9A","react-router-dom":"cHIiW","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","../navbar":"gEkAm","axios":"jo6P5"}],"3AD9A":[function(require,module,exports) {
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","axios":"jo6P5","react-bootstrap/Button":"aPzUt","prop-types":"7wKI2","react-bootstrap":"3AD9A","react-router-dom":"cHIiW","../navbar":"gEkAm","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"3AD9A":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "Accordion", ()=>_accordionDefault.default
@@ -31924,7 +35742,7 @@ var _toggleButtonGroupDefault = parcelHelpers.interopDefault(_toggleButtonGroup)
 var _tooltip = require("./Tooltip");
 var _tooltipDefault = parcelHelpers.interopDefault(_tooltip);
 
-},{"./Accordion":false,"./AccordionContext":false,"./AccordionCollapse":false,"./AccordionToggle":false,"./Alert":false,"./Badge":false,"./Breadcrumb":false,"./BreadcrumbItem":false,"./Button":"aPzUt","./ButtonGroup":false,"./ButtonToolbar":false,"./Card":"lAynp","./CardColumns":false,"./CardDeck":false,"./CardImg":"1reTi","./CardGroup":false,"./Carousel":false,"./CarouselItem":false,"./CloseButton":false,"./Col":"2L2I6","./Collapse":"acuzI","./Dropdown":"88m2L","./DropdownButton":false,"./Fade":false,"./Form":false,"./FormControl":"iynMc","./FormCheck":"idkr0","./FormFile":"jzm8K","./FormGroup":"1qBHH","./FormLabel":"66epi","./FormText":"ffeC7","./Container":"hEdsw","./Image":false,"./Figure":false,"./InputGroup":false,"./Jumbotron":false,"./ListGroup":false,"./ListGroupItem":false,"./Media":false,"./Modal":false,"./ModalBody":false,"./ModalDialog":false,"./ModalFooter":false,"./ModalTitle":false,"./Nav":"cXyL2","./Navbar":"1mHjo","./NavbarBrand":"iOo4v","./NavDropdown":"8e6QB","./NavItem":"ew05W","./NavLink":"7geL8","./Overlay":false,"./OverlayTrigger":false,"./PageItem":false,"./Pagination":false,"./Popover":false,"./PopoverTitle":false,"./PopoverContent":false,"./ProgressBar":false,"./ResponsiveEmbed":false,"./Row":"cMC39","./SafeAnchor":"7vUDg","./Spinner":false,"./SplitButton":false,"./Tab":false,"./TabContainer":false,"./TabContent":false,"./Table":false,"./TabPane":false,"./Tabs":false,"./ThemeProvider":"dVixI","./Toast":false,"./ToastBody":false,"./ToastHeader":false,"./ToggleButton":false,"./ToggleButtonGroup":false,"./Tooltip":false,"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"acuzI":[function(require,module,exports) {
+},{"./Accordion":false,"./AccordionContext":false,"./AccordionCollapse":false,"./AccordionToggle":false,"./Alert":false,"./Badge":false,"./Breadcrumb":false,"./BreadcrumbItem":false,"./Button":"aPzUt","./ButtonGroup":false,"./ButtonToolbar":false,"./Card":"lAynp","./CardColumns":false,"./CardDeck":false,"./CardImg":"1reTi","./CardGroup":false,"./Carousel":false,"./CarouselItem":false,"./CloseButton":false,"./Col":"2L2I6","./Collapse":"acuzI","./Dropdown":false,"./DropdownButton":false,"./Fade":false,"./Form":false,"./FormControl":"iynMc","./FormCheck":"idkr0","./FormFile":"jzm8K","./FormGroup":"1qBHH","./FormLabel":"66epi","./FormText":"ffeC7","./Container":"hEdsw","./Image":false,"./Figure":false,"./InputGroup":false,"./Jumbotron":false,"./ListGroup":false,"./ListGroupItem":false,"./Media":false,"./Modal":false,"./ModalBody":false,"./ModalDialog":false,"./ModalFooter":false,"./ModalTitle":false,"./Nav":"cXyL2","./Navbar":"1mHjo","./NavbarBrand":"iOo4v","./NavDropdown":false,"./NavItem":"ew05W","./NavLink":"7geL8","./Overlay":false,"./OverlayTrigger":false,"./PageItem":false,"./Pagination":false,"./Popover":false,"./PopoverTitle":false,"./PopoverContent":false,"./ProgressBar":false,"./ResponsiveEmbed":false,"./Row":"cMC39","./SafeAnchor":"7vUDg","./Spinner":false,"./SplitButton":false,"./Tab":false,"./TabContainer":false,"./TabContent":false,"./Table":false,"./TabPane":false,"./Tabs":false,"./ThemeProvider":"dVixI","./Toast":false,"./ToastBody":false,"./ToastHeader":false,"./ToggleButton":false,"./ToggleButtonGroup":false,"./Tooltip":false,"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"acuzI":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _extends = require("@babel/runtime/helpers/esm/extends");
@@ -32872,7 +36690,7 @@ function triggerBrowserReflow(node) {
 }
 exports.default = triggerBrowserReflow;
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"88m2L":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"cXyL2":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _extends = require("@babel/runtime/helpers/esm/extends");
@@ -32881,355 +36699,67 @@ var _objectWithoutPropertiesLoose = require("@babel/runtime/helpers/esm/objectWi
 var _objectWithoutPropertiesLooseDefault = parcelHelpers.interopDefault(_objectWithoutPropertiesLoose);
 var _classnames = require("classnames");
 var _classnamesDefault = parcelHelpers.interopDefault(_classnames);
+var _all = require("prop-types-extra/lib/all");
+var _allDefault = parcelHelpers.interopDefault(_all);
 var _react = require("react");
 var _reactDefault = parcelHelpers.interopDefault(_react);
-var _dropdown = require("react-overlays/Dropdown");
-var _dropdownDefault = parcelHelpers.interopDefault(_dropdown);
 var _uncontrollable = require("uncontrollable");
-var _useEventCallback = require("@restart/hooks/useEventCallback");
-var _useEventCallbackDefault = parcelHelpers.interopDefault(_useEventCallback);
-var _dropdownItem = require("./DropdownItem");
-var _dropdownItemDefault = parcelHelpers.interopDefault(_dropdownItem);
-var _dropdownMenu = require("./DropdownMenu");
-var _dropdownMenuDefault = parcelHelpers.interopDefault(_dropdownMenu);
-var _dropdownToggle = require("./DropdownToggle");
-var _dropdownToggleDefault = parcelHelpers.interopDefault(_dropdownToggle);
-var _selectableContext = require("./SelectableContext");
-var _selectableContextDefault = parcelHelpers.interopDefault(_selectableContext);
 var _themeProvider = require("./ThemeProvider");
-var _createWithBsPrefix = require("./createWithBsPrefix");
-var _createWithBsPrefixDefault = parcelHelpers.interopDefault(_createWithBsPrefix);
+var _navbarContext = require("./NavbarContext");
+var _navbarContextDefault = parcelHelpers.interopDefault(_navbarContext);
+var _cardContext = require("./CardContext");
+var _cardContextDefault = parcelHelpers.interopDefault(_cardContext);
+var _abstractNav = require("./AbstractNav");
+var _abstractNavDefault = parcelHelpers.interopDefault(_abstractNav);
+var _navItem = require("./NavItem");
+var _navItemDefault = parcelHelpers.interopDefault(_navItem);
+var _navLink = require("./NavLink");
+var _navLinkDefault = parcelHelpers.interopDefault(_navLink);
 var _excluded = [
-    "bsPrefix",
-    "drop",
-    "show",
-    "className",
-    "alignRight",
-    "onSelect",
-    "onToggle",
-    "focusFirstItemOnShow",
     "as",
-    "navbar"
+    "bsPrefix",
+    "variant",
+    "fill",
+    "justify",
+    "navbar",
+    "navbarScroll",
+    "className",
+    "children",
+    "activeKey"
 ];
-var DropdownHeader = _createWithBsPrefixDefault.default('dropdown-header', {
-    defaultProps: {
-        role: 'heading'
-    }
-});
-var DropdownDivider = _createWithBsPrefixDefault.default('dropdown-divider', {
-    defaultProps: {
-        role: 'separator'
-    }
-});
-var DropdownItemText = _createWithBsPrefixDefault.default('dropdown-item-text', {
-    Component: 'span'
-});
 var defaultProps = {
-    navbar: false
+    justify: false,
+    fill: false
 };
-var Dropdown = /*#__PURE__*/ _reactDefault.default.forwardRef(function(pProps, ref) {
-    var _useUncontrolled = _uncontrollable.useUncontrolled(pProps, {
-        show: 'onToggle'
-    }), bsPrefix = _useUncontrolled.bsPrefix, drop = _useUncontrolled.drop, show = _useUncontrolled.show, className = _useUncontrolled.className, alignRight = _useUncontrolled.alignRight, onSelect = _useUncontrolled.onSelect, onToggle = _useUncontrolled.onToggle, focusFirstItemOnShow = _useUncontrolled.focusFirstItemOnShow, _useUncontrolled$as = _useUncontrolled.as, Component = _useUncontrolled$as === void 0 ? 'div' : _useUncontrolled$as, _4 = _useUncontrolled.navbar, props = _objectWithoutPropertiesLooseDefault.default(_useUncontrolled, _excluded);
-    var onSelectCtx = _react.useContext(_selectableContextDefault.default);
-    var prefix = _themeProvider.useBootstrapPrefix(bsPrefix, 'dropdown');
-    var handleToggle = _useEventCallbackDefault.default(function(nextShow, event, source) {
-        if (source === void 0) source = event.type;
-        if (event.currentTarget === document && (source !== 'keydown' || event.key === 'Escape')) source = 'rootClose';
-        if (onToggle) onToggle(nextShow, event, {
-            source: source
-        });
-    });
-    var handleSelect = _useEventCallbackDefault.default(function(key, event) {
-        if (onSelectCtx) onSelectCtx(key, event);
-        if (onSelect) onSelect(key, event);
-        handleToggle(false, event, 'select');
-    });
-    return /*#__PURE__*/ _reactDefault.default.createElement(_selectableContextDefault.default.Provider, {
-        value: handleSelect
-    }, /*#__PURE__*/ _reactDefault.default.createElement(_dropdownDefault.default, {
-        drop: drop,
-        show: show,
-        alignEnd: alignRight,
-        onToggle: handleToggle,
-        focusFirstItemOnShow: focusFirstItemOnShow,
-        itemSelector: "." + prefix + "-item:not(.disabled):not(:disabled)"
-    }, /*#__PURE__*/ _reactDefault.default.createElement(Component, _extendsDefault.default({}, props, {
+var Nav = /*#__PURE__*/ _reactDefault.default.forwardRef(function(uncontrolledProps, ref) {
+    var _classNames;
+    var _useUncontrolled = _uncontrollable.useUncontrolled(uncontrolledProps, {
+        activeKey: 'onSelect'
+    }), _useUncontrolled$as = _useUncontrolled.as, as = _useUncontrolled$as === void 0 ? 'div' : _useUncontrolled$as, initialBsPrefix = _useUncontrolled.bsPrefix, variant = _useUncontrolled.variant, fill = _useUncontrolled.fill, justify = _useUncontrolled.justify, navbar = _useUncontrolled.navbar, navbarScroll = _useUncontrolled.navbarScroll, className = _useUncontrolled.className, children = _useUncontrolled.children, activeKey = _useUncontrolled.activeKey, props = _objectWithoutPropertiesLooseDefault.default(_useUncontrolled, _excluded);
+    var bsPrefix = _themeProvider.useBootstrapPrefix(initialBsPrefix, 'nav');
+    var navbarBsPrefix;
+    var cardHeaderBsPrefix;
+    var isNavbar = false;
+    var navbarContext = _react.useContext(_navbarContextDefault.default);
+    var cardContext = _react.useContext(_cardContextDefault.default);
+    if (navbarContext) {
+        navbarBsPrefix = navbarContext.bsPrefix;
+        isNavbar = navbar == null ? true : navbar;
+    } else if (cardContext) cardHeaderBsPrefix = cardContext.cardHeaderBsPrefix;
+    return /*#__PURE__*/ _reactDefault.default.createElement(_abstractNavDefault.default, _extendsDefault.default({
+        as: as,
         ref: ref,
-        className: _classnamesDefault.default(className, show && 'show', (!drop || drop === 'down') && prefix, drop === 'up' && 'dropup', drop === 'right' && 'dropright', drop === 'left' && 'dropleft')
-    }))));
+        activeKey: activeKey,
+        className: _classnamesDefault.default(className, (_classNames = {}, _classNames[bsPrefix] = !isNavbar, _classNames[navbarBsPrefix + "-nav"] = isNavbar, _classNames[navbarBsPrefix + "-nav-scroll"] = isNavbar && navbarScroll, _classNames[cardHeaderBsPrefix + "-" + variant] = !!cardHeaderBsPrefix, _classNames[bsPrefix + "-" + variant] = !!variant, _classNames[bsPrefix + "-fill"] = fill, _classNames[bsPrefix + "-justified"] = justify, _classNames))
+    }, props), children);
 });
-Dropdown.displayName = 'Dropdown';
-Dropdown.defaultProps = defaultProps;
-Dropdown.Divider = DropdownDivider;
-Dropdown.Header = DropdownHeader;
-Dropdown.Item = _dropdownItemDefault.default;
-Dropdown.ItemText = DropdownItemText;
-Dropdown.Menu = _dropdownMenuDefault.default;
-Dropdown.Toggle = _dropdownToggleDefault.default;
-exports.default = Dropdown;
+Nav.displayName = 'Nav';
+Nav.defaultProps = defaultProps;
+Nav.Item = _navItemDefault.default;
+Nav.Link = _navLinkDefault.default;
+exports.default = Nav;
 
-},{"@babel/runtime/helpers/esm/extends":"fTBFS","@babel/runtime/helpers/esm/objectWithoutPropertiesLoose":"adHgr","classnames":"jocGM","react":"21dqq","react-overlays/Dropdown":"elUOx","uncontrollable":"b3yWY","@restart/hooks/useEventCallback":"7ONdq","./DropdownItem":"xQ9Cw","./DropdownMenu":"6UpAn","./DropdownToggle":"gCRNt","./SelectableContext":"1LJNj","./ThemeProvider":"dVixI","./createWithBsPrefix":"itt7e","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"elUOx":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _matches = require("dom-helpers/matches");
-var _matchesDefault = parcelHelpers.interopDefault(_matches);
-var _querySelectorAll = require("dom-helpers/querySelectorAll");
-var _querySelectorAllDefault = parcelHelpers.interopDefault(_querySelectorAll);
-var _addEventListener = require("dom-helpers/addEventListener");
-var _addEventListenerDefault = parcelHelpers.interopDefault(_addEventListener);
-var _react = require("react");
-var _reactDefault = parcelHelpers.interopDefault(_react);
-var _propTypes = require("prop-types");
-var _propTypesDefault = parcelHelpers.interopDefault(_propTypes);
-var _uncontrollable = require("uncontrollable");
-var _usePrevious = require("@restart/hooks/usePrevious");
-var _usePreviousDefault = parcelHelpers.interopDefault(_usePrevious);
-var _useForceUpdate = require("@restart/hooks/useForceUpdate");
-var _useForceUpdateDefault = parcelHelpers.interopDefault(_useForceUpdate);
-var _useGlobalListener = require("@restart/hooks/useGlobalListener");
-var _useGlobalListenerDefault = parcelHelpers.interopDefault(_useGlobalListener);
-var _useEventCallback = require("@restart/hooks/useEventCallback");
-var _useEventCallbackDefault = parcelHelpers.interopDefault(_useEventCallback);
-var _dropdownContext = require("./DropdownContext");
-var _dropdownContextDefault = parcelHelpers.interopDefault(_dropdownContext);
-var _dropdownMenu = require("./DropdownMenu");
-var _dropdownMenuDefault = parcelHelpers.interopDefault(_dropdownMenu);
-var _dropdownToggle = require("./DropdownToggle");
-var _dropdownToggleDefault = parcelHelpers.interopDefault(_dropdownToggle);
-var propTypes = {
-    /**
-   * A render prop that returns the root dropdown element. The `props`
-   * argument should spread through to an element containing _both_ the
-   * menu and toggle in order to handle keyboard events for focus management.
-   *
-   * @type {Function ({
-   *   props: {
-   *     onKeyDown: (SyntheticEvent) => void,
-   *   },
-   * }) => React.Element}
-   */ children: _propTypesDefault.default.node,
-    /**
-   * Determines the direction and location of the Menu in relation to it's Toggle.
-   */ drop: _propTypesDefault.default.oneOf([
-        'up',
-        'left',
-        'right',
-        'down'
-    ]),
-    /**
-   * Controls the focus behavior for when the Dropdown is opened. Set to
-   * `true` to always focus the first menu item, `keyboard` to focus only when
-   * navigating via the keyboard, or `false` to disable completely
-   *
-   * The Default behavior is `false` **unless** the Menu has a `role="menu"`
-   * where it will default to `keyboard` to match the recommended [ARIA Authoring practices](https://www.w3.org/TR/wai-aria-practices-1.1/#menubutton).
-   */ focusFirstItemOnShow: _propTypesDefault.default.oneOf([
-        false,
-        true,
-        'keyboard'
-    ]),
-    /**
-   * A css slector string that will return __focusable__ menu items.
-   * Selectors should be relative to the menu component:
-   * e.g. ` > li:not('.disabled')`
-   */ itemSelector: _propTypesDefault.default.string,
-    /**
-   * Align the menu to the 'end' side of the placement side of the Dropdown toggle. The default placement is `top-start` or `bottom-start`.
-   */ alignEnd: _propTypesDefault.default.bool,
-    /**
-   * Whether or not the Dropdown is visible.
-   *
-   * @controllable onToggle
-   */ show: _propTypesDefault.default.bool,
-    /**
-   * Sets the initial show position of the Dropdown.
-   */ defaultShow: _propTypesDefault.default.bool,
-    /**
-   * A callback fired when the Dropdown wishes to change visibility. Called with the requested
-   * `show` value, the DOM event, and the source that fired it: `'click'`,`'keydown'`,`'rootClose'`, or `'select'`.
-   *
-   * ```ts static
-   * function(
-   *   isOpen: boolean,
-   *   event: SyntheticEvent,
-   * ): void
-   * ```
-   *
-   * @controllable show
-   */ onToggle: _propTypesDefault.default.func
-};
-function useRefWithUpdate() {
-    var forceUpdate = _useForceUpdateDefault.default();
-    var ref = _react.useRef(null);
-    var attachRef = _react.useCallback(function(element) {
-        ref.current = element; // ensure that a menu set triggers an update for consumers
-        forceUpdate();
-    }, [
-        forceUpdate
-    ]);
-    return [
-        ref,
-        attachRef
-    ];
-}
-/**
- * @displayName Dropdown
- * @public
- */ function Dropdown(_ref) {
-    var drop = _ref.drop, alignEnd = _ref.alignEnd, defaultShow = _ref.defaultShow, rawShow = _ref.show, rawOnToggle = _ref.onToggle, _ref$itemSelector = _ref.itemSelector, itemSelector = _ref$itemSelector === void 0 ? '* > *' : _ref$itemSelector, focusFirstItemOnShow = _ref.focusFirstItemOnShow, children = _ref.children;
-    var _useUncontrolledProp = _uncontrollable.useUncontrolledProp(rawShow, defaultShow, rawOnToggle), show = _useUncontrolledProp[0], onToggle = _useUncontrolledProp[1]; // We use normal refs instead of useCallbackRef in order to populate the
-    // the value as quickly as possible, otherwise the effect to focus the element
-    // may run before the state value is set
-    var _useRefWithUpdate = useRefWithUpdate(), menuRef = _useRefWithUpdate[0], setMenu = _useRefWithUpdate[1];
-    var menuElement = menuRef.current;
-    var _useRefWithUpdate2 = useRefWithUpdate(), toggleRef = _useRefWithUpdate2[0], setToggle = _useRefWithUpdate2[1];
-    var toggleElement = toggleRef.current;
-    var lastShow = _usePreviousDefault.default(show);
-    var lastSourceEvent = _react.useRef(null);
-    var focusInDropdown = _react.useRef(false);
-    var toggle = _react.useCallback(function(nextShow, event) {
-        onToggle(nextShow, event);
-    }, [
-        onToggle
-    ]);
-    var context = _react.useMemo(function() {
-        return {
-            toggle: toggle,
-            drop: drop,
-            show: show,
-            alignEnd: alignEnd,
-            menuElement: menuElement,
-            toggleElement: toggleElement,
-            setMenu: setMenu,
-            setToggle: setToggle
-        };
-    }, [
-        toggle,
-        drop,
-        show,
-        alignEnd,
-        menuElement,
-        toggleElement,
-        setMenu,
-        setToggle
-    ]);
-    if (menuElement && lastShow && !show) focusInDropdown.current = menuElement.contains(document.activeElement);
-    var focusToggle = _useEventCallbackDefault.default(function() {
-        if (toggleElement && toggleElement.focus) toggleElement.focus();
-    });
-    var maybeFocusFirst = _useEventCallbackDefault.default(function() {
-        var type = lastSourceEvent.current;
-        var focusType = focusFirstItemOnShow;
-        if (focusType == null) focusType = menuRef.current && _matchesDefault.default(menuRef.current, '[role=menu]') ? 'keyboard' : false;
-        if (focusType === false || focusType === 'keyboard' && !/^key.+$/.test(type)) return;
-        var first = _querySelectorAllDefault.default(menuRef.current, itemSelector)[0];
-        if (first && first.focus) first.focus();
-    });
-    _react.useEffect(function() {
-        if (show) maybeFocusFirst();
-        else if (focusInDropdown.current) {
-            focusInDropdown.current = false;
-            focusToggle();
-        } // only `show` should be changing
-    }, [
-        show,
-        focusInDropdown,
-        focusToggle,
-        maybeFocusFirst
-    ]);
-    _react.useEffect(function() {
-        lastSourceEvent.current = null;
-    });
-    var getNextFocusedChild = function getNextFocusedChild(current, offset) {
-        if (!menuRef.current) return null;
-        var items = _querySelectorAllDefault.default(menuRef.current, itemSelector);
-        var index = items.indexOf(current) + offset;
-        index = Math.max(0, Math.min(index, items.length));
-        return items[index];
-    };
-    _useGlobalListenerDefault.default('keydown', function(event) {
-        var _menuRef$current, _toggleRef$current;
-        var key = event.key;
-        var target = event.target;
-        var fromMenu = (_menuRef$current = menuRef.current) == null ? void 0 : _menuRef$current.contains(target);
-        var fromToggle = (_toggleRef$current = toggleRef.current) == null ? void 0 : _toggleRef$current.contains(target); // Second only to https://github.com/twbs/bootstrap/blob/8cfbf6933b8a0146ac3fbc369f19e520bd1ebdac/js/src/dropdown.js#L400
-        // in inscrutability
-        var isInput = /input|textarea/i.test(target.tagName);
-        if (isInput && (key === ' ' || key !== 'Escape' && fromMenu)) return;
-        if (!fromMenu && !fromToggle) return;
-        if (!menuRef.current && key === 'Tab') return;
-        lastSourceEvent.current = event.type;
-        switch(key){
-            case 'ArrowUp':
-                var next = getNextFocusedChild(target, -1);
-                if (next && next.focus) next.focus();
-                event.preventDefault();
-                return;
-            case 'ArrowDown':
-                event.preventDefault();
-                if (!show) onToggle(true, event);
-                else {
-                    var _next = getNextFocusedChild(target, 1);
-                    if (_next && _next.focus) _next.focus();
-                }
-                return;
-            case 'Tab':
-                // on keydown the target is the element being tabbed FROM, we need that
-                // to know if this event is relevant to this dropdown (e.g. in this menu).
-                // On `keyup` the target is the element being tagged TO which we use to check
-                // if focus has left the menu
-                _addEventListenerDefault.default(document, 'keyup', function(e) {
-                    var _menuRef$current2;
-                    if (e.key === 'Tab' && !e.target || !((_menuRef$current2 = menuRef.current) != null && _menuRef$current2.contains(e.target))) onToggle(false, event);
-                }, {
-                    once: true
-                });
-                break;
-            case 'Escape':
-                event.preventDefault();
-                event.stopPropagation();
-                onToggle(false, event);
-                break;
-            default:
-        }
-    });
-    return /*#__PURE__*/ _reactDefault.default.createElement(_dropdownContextDefault.default.Provider, {
-        value: context
-    }, children);
-}
-Dropdown.displayName = 'ReactOverlaysDropdown';
-Dropdown.propTypes = propTypes;
-Dropdown.Menu = _dropdownMenuDefault.default;
-Dropdown.Toggle = _dropdownToggleDefault.default;
-exports.default = Dropdown;
-
-},{"dom-helpers/matches":"9nz6i","dom-helpers/querySelectorAll":"g5Sx6","dom-helpers/addEventListener":"c5x2p","react":"21dqq","prop-types":"7wKI2","uncontrollable":"b3yWY","@restart/hooks/usePrevious":"gDCGm","@restart/hooks/useForceUpdate":"3Y4bz","@restart/hooks/useGlobalListener":"iey73","@restart/hooks/useEventCallback":"7ONdq","./DropdownContext":"5Z71u","./DropdownMenu":"9BXyB","./DropdownToggle":"bQaE1","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"9nz6i":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var matchesImpl;
-function matches(node, selector) {
-    if (!matchesImpl) {
-        var body = document.body;
-        var nativeMatch = body.matches || body.matchesSelector || body.webkitMatchesSelector || body.mozMatchesSelector || body.msMatchesSelector;
-        matchesImpl = function matchesImpl(n, s) {
-            return nativeMatch.call(n, s);
-        };
-    }
-    return matchesImpl(node, selector);
-}
-exports.default = matches;
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"g5Sx6":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var toArray = Function.prototype.bind.call(Function.prototype.call, [].slice);
-function qsa(element, selector) {
-    return toArray(element.querySelectorAll(selector));
-}
-exports.default = qsa;
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"b3yWY":[function(require,module,exports) {
+},{"@babel/runtime/helpers/esm/extends":"fTBFS","@babel/runtime/helpers/esm/objectWithoutPropertiesLoose":"adHgr","classnames":"jocGM","prop-types-extra/lib/all":"37Ank","react":"21dqq","uncontrollable":"b3yWY","./ThemeProvider":"dVixI","./NavbarContext":"dpn1g","./CardContext":"2ltzW","./AbstractNav":"8S2zj","./NavItem":"ew05W","./NavLink":"7geL8","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"b3yWY":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "useUncontrolled", ()=>_hookDefault.default
@@ -33636,3090 +37166,7 @@ function polyfill(Component) {
     return Component;
 }
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gDCGm":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _react = require("react");
-function usePrevious(value) {
-    var ref = _react.useRef(null);
-    _react.useEffect(function() {
-        ref.current = value;
-    });
-    return ref.current;
-}
-exports.default = usePrevious;
-
-},{"react":"21dqq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"3Y4bz":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _react = require("react");
-function useForceUpdate() {
-    // The toggling state value is designed to defeat React optimizations for skipping
-    // updates when they are stricting equal to the last state value
-    var _useReducer = _react.useReducer(function(state) {
-        return !state;
-    }, false), dispatch = _useReducer[1];
-    return dispatch;
-}
-exports.default = useForceUpdate;
-
-},{"react":"21dqq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"iey73":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _useEventListener = require("./useEventListener");
-var _useEventListenerDefault = parcelHelpers.interopDefault(_useEventListener);
-var _react = require("react");
-function useGlobalListener(event, handler, capture) {
-    if (capture === void 0) capture = false;
-    var documentTarget = _react.useCallback(function() {
-        return document;
-    }, []);
-    return _useEventListenerDefault.default(documentTarget, event, handler, capture);
-}
-exports.default = useGlobalListener;
-
-},{"./useEventListener":"dBDI3","react":"21dqq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"dBDI3":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _react = require("react");
-var _useEventCallback = require("./useEventCallback");
-var _useEventCallbackDefault = parcelHelpers.interopDefault(_useEventCallback);
-function useEventListener(eventTarget, event, listener, capture) {
-    if (capture === void 0) capture = false;
-    var handler = _useEventCallbackDefault.default(listener);
-    _react.useEffect(function() {
-        var target = typeof eventTarget === 'function' ? eventTarget() : eventTarget;
-        target.addEventListener(event, handler, capture);
-        return function() {
-            return target.removeEventListener(event, handler, capture);
-        };
-    }, [
-        eventTarget
-    ]);
-}
-exports.default = useEventListener;
-
-},{"react":"21dqq","./useEventCallback":"7ONdq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"7ONdq":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _react = require("react");
-var _useCommittedRef = require("./useCommittedRef");
-var _useCommittedRefDefault = parcelHelpers.interopDefault(_useCommittedRef);
-function useEventCallback(fn) {
-    var ref = _useCommittedRefDefault.default(fn);
-    return _react.useCallback(function() {
-        return ref.current && ref.current.apply(ref, arguments);
-    }, [
-        ref
-    ]);
-}
-exports.default = useEventCallback;
-
-},{"react":"21dqq","./useCommittedRef":"g5BYG","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"g5BYG":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _react = require("react");
-/**
- * Creates a `Ref` whose value is updated in an effect, ensuring the most recent
- * value is the one rendered with. Generally only required for Concurrent mode usage
- * where previous work in `render()` may be discarded befor being used.
- *
- * This is safe to access in an event handler.
- *
- * @param value The `Ref` value
- */ function useCommittedRef(value) {
-    var ref = _react.useRef(value);
-    _react.useEffect(function() {
-        ref.current = value;
-    }, [
-        value
-    ]);
-    return ref;
-}
-exports.default = useCommittedRef;
-
-},{"react":"21dqq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"5Z71u":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _react = require("react");
-var _reactDefault = parcelHelpers.interopDefault(_react);
-var DropdownContext = /*#__PURE__*/ _reactDefault.default.createContext(null);
-exports.default = DropdownContext;
-
-},{"react":"21dqq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"9BXyB":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-/**
- * @memberOf Dropdown
- * @param {object}  options
- * @param {boolean} options.flip Automatically adjust the menu `drop` position based on viewport edge detection
- * @param {[number, number]} options.offset Define an offset distance between the Menu and the Toggle
- * @param {boolean} options.show Display the menu manually, ignored in the context of a `Dropdown`
- * @param {boolean} options.usePopper opt in/out of using PopperJS to position menus. When disabled you must position it yourself.
- * @param {string}  options.rootCloseEvent The pointer event to listen for when determining "clicks outside" the menu for triggering a close.
- * @param {object}  options.popperConfig Options passed to the [`usePopper`](/api/usePopper) hook.
- */ parcelHelpers.export(exports, "useDropdownMenu", ()=>useDropdownMenu
-);
-var _objectWithoutPropertiesLoose = require("@babel/runtime/helpers/esm/objectWithoutPropertiesLoose");
-var _objectWithoutPropertiesLooseDefault = parcelHelpers.interopDefault(_objectWithoutPropertiesLoose);
-var _extends = require("@babel/runtime/helpers/esm/extends");
-var _extendsDefault = parcelHelpers.interopDefault(_extends);
-var _propTypes = require("prop-types");
-var _propTypesDefault = parcelHelpers.interopDefault(_propTypes);
-var _react = require("react");
-var _reactDefault = parcelHelpers.interopDefault(_react);
-var _useCallbackRef = require("@restart/hooks/useCallbackRef");
-var _useCallbackRefDefault = parcelHelpers.interopDefault(_useCallbackRef);
-var _dropdownContext = require("./DropdownContext");
-var _dropdownContextDefault = parcelHelpers.interopDefault(_dropdownContext);
-var _usePopper = require("./usePopper");
-var _usePopperDefault = parcelHelpers.interopDefault(_usePopper);
-var _useRootClose = require("./useRootClose");
-var _useRootCloseDefault = parcelHelpers.interopDefault(_useRootClose);
-var _mergeOptionsWithPopperConfig = require("./mergeOptionsWithPopperConfig");
-var _mergeOptionsWithPopperConfigDefault = parcelHelpers.interopDefault(_mergeOptionsWithPopperConfig);
-var noop = function noop() {};
-function useDropdownMenu(options) {
-    if (options === void 0) options = {};
-    var context = _react.useContext(_dropdownContextDefault.default);
-    var _useCallbackRef1 = _useCallbackRefDefault.default(), arrowElement = _useCallbackRef1[0], attachArrowRef = _useCallbackRef1[1];
-    var hasShownRef = _react.useRef(false);
-    var _options = options, flip = _options.flip, offset = _options.offset, rootCloseEvent = _options.rootCloseEvent, _options$fixed = _options.fixed, fixed = _options$fixed === void 0 ? false : _options$fixed, _options$popperConfig = _options.popperConfig, popperConfig = _options$popperConfig === void 0 ? {} : _options$popperConfig, _options$usePopper = _options.usePopper, shouldUsePopper = _options$usePopper === void 0 ? !!context : _options$usePopper;
-    var show = (context == null ? void 0 : context.show) == null ? !!options.show : context.show;
-    var alignEnd = (context == null ? void 0 : context.alignEnd) == null ? options.alignEnd : context.alignEnd;
-    if (show && !hasShownRef.current) hasShownRef.current = true;
-    var handleClose = function handleClose(e) {
-        context == null || context.toggle(false, e);
-    };
-    var _ref = context || {}, drop = _ref.drop, setMenu = _ref.setMenu, menuElement = _ref.menuElement, toggleElement = _ref.toggleElement;
-    var placement = alignEnd ? 'bottom-end' : 'bottom-start';
-    if (drop === 'up') placement = alignEnd ? 'top-end' : 'top-start';
-    else if (drop === 'right') placement = alignEnd ? 'right-end' : 'right-start';
-    else if (drop === 'left') placement = alignEnd ? 'left-end' : 'left-start';
-    var popper = _usePopperDefault.default(toggleElement, menuElement, _mergeOptionsWithPopperConfigDefault.default({
-        placement: placement,
-        enabled: !!(shouldUsePopper && show),
-        enableEvents: show,
-        offset: offset,
-        flip: flip,
-        fixed: fixed,
-        arrowElement: arrowElement,
-        popperConfig: popperConfig
-    }));
-    var menuProps = _extendsDefault.default({
-        ref: setMenu || noop,
-        'aria-labelledby': toggleElement == null ? void 0 : toggleElement.id
-    }, popper.attributes.popper, {
-        style: popper.styles.popper
-    });
-    var metadata = {
-        show: show,
-        alignEnd: alignEnd,
-        hasShown: hasShownRef.current,
-        toggle: context == null ? void 0 : context.toggle,
-        popper: shouldUsePopper ? popper : null,
-        arrowProps: shouldUsePopper ? _extendsDefault.default({
-            ref: attachArrowRef
-        }, popper.attributes.arrow, {
-            style: popper.styles.arrow
-        }) : {}
-    };
-    _useRootCloseDefault.default(menuElement, handleClose, {
-        clickTrigger: rootCloseEvent,
-        disabled: !show
-    });
-    return [
-        menuProps,
-        metadata
-    ];
-}
-var propTypes = {
-    /**
-   * A render prop that returns a Menu element. The `props`
-   * argument should spread through to **a component that can accept a ref**.
-   *
-   * @type {Function ({
-   *   show: boolean,
-   *   alignEnd: boolean,
-   *   close: (?SyntheticEvent) => void,
-   *   placement: Placement,
-   *   update: () => void,
-   *   forceUpdate: () => void,
-   *   props: {
-   *     ref: (?HTMLElement) => void,
-   *     style: { [string]: string | number },
-   *     aria-labelledby: ?string
-   *   },
-   *   arrowProps: {
-   *     ref: (?HTMLElement) => void,
-   *     style: { [string]: string | number },
-   *   },
-   * }) => React.Element}
-   */ children: _propTypesDefault.default.func.isRequired,
-    /**
-   * Controls the visible state of the menu, generally this is
-   * provided by the parent `Dropdown` component,
-   * but may also be specified as a prop directly.
-   */ show: _propTypesDefault.default.bool,
-    /**
-   * Aligns the dropdown menu to the 'end' of it's placement position.
-   * Generally this is provided by the parent `Dropdown` component,
-   * but may also be specified as a prop directly.
-   */ alignEnd: _propTypesDefault.default.bool,
-    /**
-   * Enables the Popper.js `flip` modifier, allowing the Dropdown to
-   * automatically adjust it's placement in case of overlap with the viewport or toggle.
-   * Refer to the [flip docs](https://popper.js.org/popper-documentation.html#modifiers..flip.enabled) for more info
-   */ flip: _propTypesDefault.default.bool,
-    usePopper: _propTypesDefault.default.oneOf([
-        true,
-        false
-    ]),
-    /**
-   * A set of popper options and props passed directly to react-popper's Popper component.
-   */ popperConfig: _propTypesDefault.default.object,
-    /**
-   * Override the default event used by RootCloseWrapper.
-   */ rootCloseEvent: _propTypesDefault.default.string
-};
-var defaultProps = {
-    usePopper: true
-};
-/**
- * Also exported as `<Dropdown.Menu>` from `Dropdown`.
- *
- * @displayName DropdownMenu
- * @memberOf Dropdown
- */ function DropdownMenu(_ref2) {
-    var children = _ref2.children, options = _objectWithoutPropertiesLooseDefault.default(_ref2, [
-        "children"
-    ]);
-    var _useDropdownMenu = useDropdownMenu(options), props = _useDropdownMenu[0], meta = _useDropdownMenu[1];
-    return /*#__PURE__*/ _reactDefault.default.createElement(_reactDefault.default.Fragment, null, meta.hasShown ? children(props, meta) : null);
-}
-DropdownMenu.displayName = 'ReactOverlaysDropdownMenu';
-DropdownMenu.propTypes = propTypes;
-DropdownMenu.defaultProps = defaultProps;
-/** @component */ exports.default = DropdownMenu;
-
-},{"@babel/runtime/helpers/esm/objectWithoutPropertiesLoose":"adHgr","@babel/runtime/helpers/esm/extends":"fTBFS","prop-types":"7wKI2","react":"21dqq","@restart/hooks/useCallbackRef":"82p6M","./DropdownContext":"5Z71u","./usePopper":"ib67v","./useRootClose":"7c33z","./mergeOptionsWithPopperConfig":"8kgO1","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"82p6M":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _react = require("react");
-function useCallbackRef() {
-    return _react.useState(null);
-}
-exports.default = useCallbackRef;
-
-},{"react":"21dqq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"ib67v":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _extends = require("@babel/runtime/helpers/esm/extends");
-var _extendsDefault = parcelHelpers.interopDefault(_extends);
-var _objectWithoutPropertiesLoose = require("@babel/runtime/helpers/esm/objectWithoutPropertiesLoose");
-var _objectWithoutPropertiesLooseDefault = parcelHelpers.interopDefault(_objectWithoutPropertiesLoose);
-var _react = require("react");
-var _useSafeState = require("@restart/hooks/useSafeState");
-var _useSafeStateDefault = parcelHelpers.interopDefault(_useSafeState);
-var _popper = require("./popper");
-var initialPopperStyles = function initialPopperStyles(position) {
-    return {
-        position: position,
-        top: '0',
-        left: '0',
-        opacity: '0',
-        pointerEvents: 'none'
-    };
-};
-var disabledApplyStylesModifier = {
-    name: 'applyStyles',
-    enabled: false
-}; // until docjs supports type exports...
-var ariaDescribedByModifier = {
-    name: 'ariaDescribedBy',
-    enabled: true,
-    phase: 'afterWrite',
-    effect: function effect(_ref) {
-        var state = _ref.state;
-        return function() {
-            var _state$elements = state.elements, reference = _state$elements.reference, popper = _state$elements.popper;
-            if ('removeAttribute' in reference) {
-                var ids = (reference.getAttribute('aria-describedby') || '').split(',').filter(function(id) {
-                    return id.trim() !== popper.id;
-                });
-                if (!ids.length) reference.removeAttribute('aria-describedby');
-                else reference.setAttribute('aria-describedby', ids.join(','));
-            }
-        };
-    },
-    fn: function fn(_ref2) {
-        var _popper$getAttribute;
-        var state = _ref2.state;
-        var _state$elements2 = state.elements, popper = _state$elements2.popper, reference = _state$elements2.reference;
-        var role = (_popper$getAttribute = popper.getAttribute('role')) == null ? void 0 : _popper$getAttribute.toLowerCase();
-        if (popper.id && role === 'tooltip' && 'setAttribute' in reference) {
-            var ids = reference.getAttribute('aria-describedby');
-            if (ids && ids.split(',').indexOf(popper.id) !== -1) return;
-            reference.setAttribute('aria-describedby', ids ? ids + "," + popper.id : popper.id);
-        }
-    }
-};
-var EMPTY_MODIFIERS = [];
-/**
- * Position an element relative some reference element using Popper.js
- *
- * @param referenceElement
- * @param popperElement
- * @param {object}      options
- * @param {object=}     options.modifiers Popper.js modifiers
- * @param {boolean=}    options.enabled toggle the popper functionality on/off
- * @param {string=}     options.placement The popper element placement relative to the reference element
- * @param {string=}     options.strategy the positioning strategy
- * @param {boolean=}    options.eventsEnabled have Popper listen on window resize events to reposition the element
- * @param {function=}   options.onCreate called when the popper is created
- * @param {function=}   options.onUpdate called when the popper is updated
- *
- * @returns {UsePopperState} The popper state
- */ function usePopper(referenceElement, popperElement, _temp) {
-    var _ref3 = _temp === void 0 ? {} : _temp, _ref3$enabled = _ref3.enabled, enabled = _ref3$enabled === void 0 ? true : _ref3$enabled, _ref3$placement = _ref3.placement, placement = _ref3$placement === void 0 ? 'bottom' : _ref3$placement, _ref3$strategy = _ref3.strategy, strategy = _ref3$strategy === void 0 ? 'absolute' : _ref3$strategy, _ref3$modifiers = _ref3.modifiers, modifiers = _ref3$modifiers === void 0 ? EMPTY_MODIFIERS : _ref3$modifiers, config = _objectWithoutPropertiesLooseDefault.default(_ref3, [
-        "enabled",
-        "placement",
-        "strategy",
-        "modifiers"
-    ]);
-    var popperInstanceRef = _react.useRef();
-    var update = _react.useCallback(function() {
-        var _popperInstanceRef$cu;
-        (_popperInstanceRef$cu = popperInstanceRef.current) == null || _popperInstanceRef$cu.update();
-    }, []);
-    var forceUpdate = _react.useCallback(function() {
-        var _popperInstanceRef$cu2;
-        (_popperInstanceRef$cu2 = popperInstanceRef.current) == null || _popperInstanceRef$cu2.forceUpdate();
-    }, []);
-    var _useSafeState1 = _useSafeStateDefault.default(_react.useState({
-        placement: placement,
-        update: update,
-        forceUpdate: forceUpdate,
-        attributes: {},
-        styles: {
-            popper: initialPopperStyles(strategy),
-            arrow: {}
-        }
-    })), popperState = _useSafeState1[0], setState = _useSafeState1[1];
-    var updateModifier = _react.useMemo(function() {
-        return {
-            name: 'updateStateModifier',
-            enabled: true,
-            phase: 'write',
-            requires: [
-                'computeStyles'
-            ],
-            fn: function fn(_ref4) {
-                var state = _ref4.state;
-                var styles = {};
-                var attributes = {};
-                Object.keys(state.elements).forEach(function(element) {
-                    styles[element] = state.styles[element];
-                    attributes[element] = state.attributes[element];
-                });
-                setState({
-                    state: state,
-                    styles: styles,
-                    attributes: attributes,
-                    update: update,
-                    forceUpdate: forceUpdate,
-                    placement: state.placement
-                });
-            }
-        };
-    }, [
-        update,
-        forceUpdate,
-        setState
-    ]);
-    _react.useEffect(function() {
-        if (!popperInstanceRef.current || !enabled) return;
-        popperInstanceRef.current.setOptions({
-            placement: placement,
-            strategy: strategy,
-            modifiers: [].concat(modifiers, [
-                updateModifier,
-                disabledApplyStylesModifier
-            ])
-        }); // intentionally NOT re-running on new modifiers
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [
-        strategy,
-        placement,
-        updateModifier,
-        enabled
-    ]);
-    _react.useEffect(function() {
-        if (!enabled || referenceElement == null || popperElement == null) return undefined;
-        popperInstanceRef.current = _popper.createPopper(referenceElement, popperElement, _extendsDefault.default({}, config, {
-            placement: placement,
-            strategy: strategy,
-            modifiers: [].concat(modifiers, [
-                ariaDescribedByModifier,
-                updateModifier
-            ])
-        }));
-        return function() {
-            if (popperInstanceRef.current != null) {
-                popperInstanceRef.current.destroy();
-                popperInstanceRef.current = undefined;
-                setState(function(s) {
-                    return _extendsDefault.default({}, s, {
-                        attributes: {},
-                        styles: {
-                            popper: initialPopperStyles(strategy)
-                        }
-                    });
-                });
-            }
-        }; // This is only run once to _create_ the popper
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [
-        enabled,
-        referenceElement,
-        popperElement
-    ]);
-    return popperState;
-}
-exports.default = usePopper;
-
-},{"@babel/runtime/helpers/esm/extends":"fTBFS","@babel/runtime/helpers/esm/objectWithoutPropertiesLoose":"adHgr","react":"21dqq","@restart/hooks/useSafeState":"OEC1E","./popper":"gLJ5h","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"OEC1E":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _react = require("react");
-var _useMounted = require("./useMounted");
-var _useMountedDefault = parcelHelpers.interopDefault(_useMounted);
-function useSafeState(state) {
-    var isMounted = _useMountedDefault.default();
-    return [
-        state[0],
-        _react.useCallback(function(nextState) {
-            if (!isMounted()) return;
-            return state[1](nextState);
-        }, [
-            isMounted,
-            state[1]
-        ])
-    ];
-}
-exports.default = useSafeState;
-
-},{"react":"21dqq","./useMounted":"iK6A1","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"iK6A1":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _react = require("react");
-function useMounted() {
-    var mounted = _react.useRef(true);
-    var isMounted = _react.useRef(function() {
-        return mounted.current;
-    });
-    _react.useEffect(function() {
-        return function() {
-            mounted.current = false;
-        };
-    }, []);
-    return isMounted.current;
-}
-exports.default = useMounted;
-
-},{"react":"21dqq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gLJ5h":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "createPopper", ()=>createPopper
-);
-parcelHelpers.export(exports, "placements", ()=>_enums.placements
-);
-var _arrow = require("@popperjs/core/lib/modifiers/arrow");
-var _arrowDefault = parcelHelpers.interopDefault(_arrow);
-var _computeStyles = require("@popperjs/core/lib/modifiers/computeStyles");
-var _computeStylesDefault = parcelHelpers.interopDefault(_computeStyles);
-var _eventListeners = require("@popperjs/core/lib/modifiers/eventListeners");
-var _eventListenersDefault = parcelHelpers.interopDefault(_eventListeners);
-var _flip = require("@popperjs/core/lib/modifiers/flip");
-var _flipDefault = parcelHelpers.interopDefault(_flip);
-var _hide = require("@popperjs/core/lib/modifiers/hide");
-var _hideDefault = parcelHelpers.interopDefault(_hide);
-var _offset = require("@popperjs/core/lib/modifiers/offset");
-var _offsetDefault = parcelHelpers.interopDefault(_offset);
-var _popperOffsets = require("@popperjs/core/lib/modifiers/popperOffsets");
-var _popperOffsetsDefault = parcelHelpers.interopDefault(_popperOffsets);
-var _preventOverflow = require("@popperjs/core/lib/modifiers/preventOverflow");
-var _preventOverflowDefault = parcelHelpers.interopDefault(_preventOverflow);
-var _enums = require("@popperjs/core/lib/enums");
-var _popperBase = require("@popperjs/core/lib/popper-base"); // For the common JS build we will turn this file into a bundle with no imports.
-var createPopper = _popperBase.popperGenerator({
-    defaultModifiers: [
-        _hideDefault.default,
-        _popperOffsetsDefault.default,
-        _computeStylesDefault.default,
-        _eventListenersDefault.default,
-        _offsetDefault.default,
-        _flipDefault.default,
-        _preventOverflowDefault.default,
-        _arrowDefault.default
-    ]
-});
-
-},{"@popperjs/core/lib/modifiers/arrow":"31HFW","@popperjs/core/lib/modifiers/computeStyles":"gDlm2","@popperjs/core/lib/modifiers/eventListeners":"hBKsL","@popperjs/core/lib/modifiers/flip":"fv5wq","@popperjs/core/lib/modifiers/hide":"2g4OF","@popperjs/core/lib/modifiers/offset":"3GKVY","@popperjs/core/lib/modifiers/popperOffsets":"6I679","@popperjs/core/lib/modifiers/preventOverflow":"1AMhb","@popperjs/core/lib/enums":"lCAq5","@popperjs/core/lib/popper-base":"9X7Du","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"31HFW":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _getBasePlacementJs = require("../utils/getBasePlacement.js");
-var _getBasePlacementJsDefault = parcelHelpers.interopDefault(_getBasePlacementJs);
-var _getLayoutRectJs = require("../dom-utils/getLayoutRect.js");
-var _getLayoutRectJsDefault = parcelHelpers.interopDefault(_getLayoutRectJs);
-var _containsJs = require("../dom-utils/contains.js");
-var _containsJsDefault = parcelHelpers.interopDefault(_containsJs);
-var _getOffsetParentJs = require("../dom-utils/getOffsetParent.js");
-var _getOffsetParentJsDefault = parcelHelpers.interopDefault(_getOffsetParentJs);
-var _getMainAxisFromPlacementJs = require("../utils/getMainAxisFromPlacement.js");
-var _getMainAxisFromPlacementJsDefault = parcelHelpers.interopDefault(_getMainAxisFromPlacementJs);
-var _withinJs = require("../utils/within.js");
-var _mergePaddingObjectJs = require("../utils/mergePaddingObject.js");
-var _mergePaddingObjectJsDefault = parcelHelpers.interopDefault(_mergePaddingObjectJs);
-var _expandToHashMapJs = require("../utils/expandToHashMap.js");
-var _expandToHashMapJsDefault = parcelHelpers.interopDefault(_expandToHashMapJs);
-var _enumsJs = require("../enums.js");
-var _instanceOfJs = require("../dom-utils/instanceOf.js"); // eslint-disable-next-line import/no-unused-modules
-var toPaddingObject = function toPaddingObject(padding, state) {
-    padding = typeof padding === 'function' ? padding(Object.assign({}, state.rects, {
-        placement: state.placement
-    })) : padding;
-    return _mergePaddingObjectJsDefault.default(typeof padding !== 'number' ? padding : _expandToHashMapJsDefault.default(padding, _enumsJs.basePlacements));
-};
-function arrow(_ref) {
-    var _state$modifiersData$;
-    var state = _ref.state, name = _ref.name, options = _ref.options;
-    var arrowElement = state.elements.arrow;
-    var popperOffsets = state.modifiersData.popperOffsets;
-    var basePlacement = _getBasePlacementJsDefault.default(state.placement);
-    var axis = _getMainAxisFromPlacementJsDefault.default(basePlacement);
-    var isVertical = [
-        _enumsJs.left,
-        _enumsJs.right
-    ].indexOf(basePlacement) >= 0;
-    var len = isVertical ? 'height' : 'width';
-    if (!arrowElement || !popperOffsets) return;
-    var paddingObject = toPaddingObject(options.padding, state);
-    var arrowRect = _getLayoutRectJsDefault.default(arrowElement);
-    var minProp = axis === 'y' ? _enumsJs.top : _enumsJs.left;
-    var maxProp = axis === 'y' ? _enumsJs.bottom : _enumsJs.right;
-    var endDiff = state.rects.reference[len] + state.rects.reference[axis] - popperOffsets[axis] - state.rects.popper[len];
-    var startDiff = popperOffsets[axis] - state.rects.reference[axis];
-    var arrowOffsetParent = _getOffsetParentJsDefault.default(arrowElement);
-    var clientSize = arrowOffsetParent ? axis === 'y' ? arrowOffsetParent.clientHeight || 0 : arrowOffsetParent.clientWidth || 0 : 0;
-    var centerToReference = endDiff / 2 - startDiff / 2; // Make sure the arrow doesn't overflow the popper if the center point is
-    // outside of the popper bounds
-    var min = paddingObject[minProp];
-    var max = clientSize - arrowRect[len] - paddingObject[maxProp];
-    var center = clientSize / 2 - arrowRect[len] / 2 + centerToReference;
-    var offset = _withinJs.within(min, center, max); // Prevents breaking syntax highlighting...
-    var axisProp = axis;
-    state.modifiersData[name] = (_state$modifiersData$ = {}, _state$modifiersData$[axisProp] = offset, _state$modifiersData$.centerOffset = offset - center, _state$modifiersData$);
-}
-function effect(_ref2) {
-    var state = _ref2.state, options = _ref2.options;
-    var _options$element = options.element, arrowElement = _options$element === void 0 ? '[data-popper-arrow]' : _options$element;
-    if (arrowElement == null) return;
-     // CSS selector
-    if (typeof arrowElement === 'string') {
-        arrowElement = state.elements.popper.querySelector(arrowElement);
-        if (!arrowElement) return;
-    }
-    if (!_instanceOfJs.isHTMLElement(arrowElement)) console.error([
-        'Popper: "arrow" element must be an HTMLElement (not an SVGElement).',
-        'To use an SVG arrow, wrap it in an HTMLElement that will be used as',
-        'the arrow.'
-    ].join(' '));
-    if (!_containsJsDefault.default(state.elements.popper, arrowElement)) {
-        console.error([
-            'Popper: "arrow" modifier\'s `element` must be a child of the popper',
-            'element.'
-        ].join(' '));
-        return;
-    }
-    state.elements.arrow = arrowElement;
-} // eslint-disable-next-line import/no-unused-modules
-exports.default = {
-    name: 'arrow',
-    enabled: true,
-    phase: 'main',
-    fn: arrow,
-    effect: effect,
-    requires: [
-        'popperOffsets'
-    ],
-    requiresIfExists: [
-        'preventOverflow'
-    ]
-};
-
-},{"../utils/getBasePlacement.js":"59Wp3","../dom-utils/getLayoutRect.js":"jvjuf","../dom-utils/contains.js":"4QxRR","../dom-utils/getOffsetParent.js":"laoYw","../utils/getMainAxisFromPlacement.js":"1Xlom","../utils/within.js":"3glSz","../utils/mergePaddingObject.js":"lEIf9","../utils/expandToHashMap.js":"iQlH5","../enums.js":"lCAq5","../dom-utils/instanceOf.js":"gYFUC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"59Wp3":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _enumsJs = require("../enums.js");
-function getBasePlacement(placement) {
-    return placement.split('-')[0];
-}
-exports.default = getBasePlacement;
-
-},{"../enums.js":"lCAq5","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"lCAq5":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "top", ()=>top
-);
-parcelHelpers.export(exports, "bottom", ()=>bottom
-);
-parcelHelpers.export(exports, "right", ()=>right
-);
-parcelHelpers.export(exports, "left", ()=>left
-);
-parcelHelpers.export(exports, "auto", ()=>auto
-);
-parcelHelpers.export(exports, "basePlacements", ()=>basePlacements
-);
-parcelHelpers.export(exports, "start", ()=>start
-);
-parcelHelpers.export(exports, "end", ()=>end
-);
-parcelHelpers.export(exports, "clippingParents", ()=>clippingParents
-);
-parcelHelpers.export(exports, "viewport", ()=>viewport
-);
-parcelHelpers.export(exports, "popper", ()=>popper
-);
-parcelHelpers.export(exports, "reference", ()=>reference
-);
-parcelHelpers.export(exports, "variationPlacements", ()=>variationPlacements
-);
-parcelHelpers.export(exports, "placements", ()=>placements
-);
-parcelHelpers.export(exports, "beforeRead", ()=>beforeRead
-);
-parcelHelpers.export(exports, "read", ()=>read
-);
-parcelHelpers.export(exports, "afterRead", ()=>afterRead
-);
-parcelHelpers.export(exports, "beforeMain", ()=>beforeMain
-);
-parcelHelpers.export(exports, "main", ()=>main
-);
-parcelHelpers.export(exports, "afterMain", ()=>afterMain
-);
-parcelHelpers.export(exports, "beforeWrite", ()=>beforeWrite
-);
-parcelHelpers.export(exports, "write", ()=>write
-);
-parcelHelpers.export(exports, "afterWrite", ()=>afterWrite
-);
-parcelHelpers.export(exports, "modifierPhases", ()=>modifierPhases
-);
-var top = 'top';
-var bottom = 'bottom';
-var right = 'right';
-var left = 'left';
-var auto = 'auto';
-var basePlacements = [
-    top,
-    bottom,
-    right,
-    left
-];
-var start = 'start';
-var end = 'end';
-var clippingParents = 'clippingParents';
-var viewport = 'viewport';
-var popper = 'popper';
-var reference = 'reference';
-var variationPlacements = /*#__PURE__*/ basePlacements.reduce(function(acc, placement) {
-    return acc.concat([
-        placement + "-" + start,
-        placement + "-" + end
-    ]);
-}, []);
-var placements = /*#__PURE__*/ [].concat(basePlacements, [
-    auto
-]).reduce(function(acc, placement) {
-    return acc.concat([
-        placement,
-        placement + "-" + start,
-        placement + "-" + end
-    ]);
-}, []); // modifiers that need to read the DOM
-var beforeRead = 'beforeRead';
-var read = 'read';
-var afterRead = 'afterRead'; // pure-logic modifiers
-var beforeMain = 'beforeMain';
-var main = 'main';
-var afterMain = 'afterMain'; // modifier with the purpose to write to the DOM (or write into a framework state)
-var beforeWrite = 'beforeWrite';
-var write = 'write';
-var afterWrite = 'afterWrite';
-var modifierPhases = [
-    beforeRead,
-    read,
-    afterRead,
-    beforeMain,
-    main,
-    afterMain,
-    beforeWrite,
-    write,
-    afterWrite
-];
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"jvjuf":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _getBoundingClientRectJs = require("./getBoundingClientRect.js"); // Returns the layout rect of an element relative to its offsetParent. Layout
-var _getBoundingClientRectJsDefault = parcelHelpers.interopDefault(_getBoundingClientRectJs);
-function getLayoutRect(element) {
-    var clientRect = _getBoundingClientRectJsDefault.default(element); // Use the clientRect sizes if it's not been transformed.
-    // Fixes https://github.com/popperjs/popper-core/issues/1223
-    var width = element.offsetWidth;
-    var height = element.offsetHeight;
-    if (Math.abs(clientRect.width - width) <= 1) width = clientRect.width;
-    if (Math.abs(clientRect.height - height) <= 1) height = clientRect.height;
-    return {
-        x: element.offsetLeft,
-        y: element.offsetTop,
-        width: width,
-        height: height
-    };
-}
-exports.default = getLayoutRect;
-
-},{"./getBoundingClientRect.js":"9CFSQ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"9CFSQ":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _instanceOfJs = require("./instanceOf.js");
-var _mathJs = require("../utils/math.js");
-function getBoundingClientRect(element, includeScale) {
-    if (includeScale === void 0) includeScale = false;
-    var rect = element.getBoundingClientRect();
-    var scaleX = 1;
-    var scaleY = 1;
-    if (_instanceOfJs.isHTMLElement(element) && includeScale) {
-        var offsetHeight = element.offsetHeight;
-        var offsetWidth = element.offsetWidth; // Do not attempt to divide by 0, otherwise we get `Infinity` as scale
-        // Fallback to 1 in case both values are `0`
-        if (offsetWidth > 0) scaleX = _mathJs.round(rect.width) / offsetWidth || 1;
-        if (offsetHeight > 0) scaleY = _mathJs.round(rect.height) / offsetHeight || 1;
-    }
-    return {
-        width: rect.width / scaleX,
-        height: rect.height / scaleY,
-        top: rect.top / scaleY,
-        right: rect.right / scaleX,
-        bottom: rect.bottom / scaleY,
-        left: rect.left / scaleX,
-        x: rect.left / scaleX,
-        y: rect.top / scaleY
-    };
-}
-exports.default = getBoundingClientRect;
-
-},{"./instanceOf.js":"gYFUC","../utils/math.js":"gQqVe","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gYFUC":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "isElement", ()=>isElement
-);
-parcelHelpers.export(exports, "isHTMLElement", ()=>isHTMLElement
-);
-parcelHelpers.export(exports, "isShadowRoot", ()=>isShadowRoot
-);
-var _getWindowJs = require("./getWindow.js");
-var _getWindowJsDefault = parcelHelpers.interopDefault(_getWindowJs);
-function isElement(node) {
-    var OwnElement = _getWindowJsDefault.default(node).Element;
-    return node instanceof OwnElement || node instanceof Element;
-}
-function isHTMLElement(node) {
-    var OwnElement = _getWindowJsDefault.default(node).HTMLElement;
-    return node instanceof OwnElement || node instanceof HTMLElement;
-}
-function isShadowRoot(node) {
-    // IE 11 has no ShadowRoot
-    if (typeof ShadowRoot === 'undefined') return false;
-    var OwnElement = _getWindowJsDefault.default(node).ShadowRoot;
-    return node instanceof OwnElement || node instanceof ShadowRoot;
-}
-
-},{"./getWindow.js":"2SkOo","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"2SkOo":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-function getWindow(node) {
-    if (node == null) return window;
-    if (node.toString() !== '[object Window]') {
-        var ownerDocument = node.ownerDocument;
-        return ownerDocument ? ownerDocument.defaultView || window : window;
-    }
-    return node;
-}
-exports.default = getWindow;
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gQqVe":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "max", ()=>max
-);
-parcelHelpers.export(exports, "min", ()=>min
-);
-parcelHelpers.export(exports, "round", ()=>round
-);
-var max = Math.max;
-var min = Math.min;
-var round = Math.round;
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"4QxRR":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _instanceOfJs = require("./instanceOf.js");
-function contains(parent, child) {
-    var rootNode = child.getRootNode && child.getRootNode(); // First, attempt with faster native method
-    if (parent.contains(child)) return true;
-    else if (rootNode && _instanceOfJs.isShadowRoot(rootNode)) {
-        var next = child;
-        do {
-            if (next && parent.isSameNode(next)) return true;
-             // $FlowFixMe[prop-missing]: need a better way to handle this...
-            next = next.parentNode || next.host;
-        }while (next)
-    } // Give up, the result is false
-    return false;
-}
-exports.default = contains;
-
-},{"./instanceOf.js":"gYFUC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"laoYw":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _getWindowJs = require("./getWindow.js");
-var _getWindowJsDefault = parcelHelpers.interopDefault(_getWindowJs);
-var _getNodeNameJs = require("./getNodeName.js");
-var _getNodeNameJsDefault = parcelHelpers.interopDefault(_getNodeNameJs);
-var _getComputedStyleJs = require("./getComputedStyle.js");
-var _getComputedStyleJsDefault = parcelHelpers.interopDefault(_getComputedStyleJs);
-var _instanceOfJs = require("./instanceOf.js");
-var _isTableElementJs = require("./isTableElement.js");
-var _isTableElementJsDefault = parcelHelpers.interopDefault(_isTableElementJs);
-var _getParentNodeJs = require("./getParentNode.js");
-var _getParentNodeJsDefault = parcelHelpers.interopDefault(_getParentNodeJs);
-function getTrueOffsetParent(element) {
-    if (!_instanceOfJs.isHTMLElement(element) || _getComputedStyleJsDefault.default(element).position === 'fixed') return null;
-    return element.offsetParent;
-} // `.offsetParent` reports `null` for fixed elements, while absolute elements
-// return the containing block
-function getContainingBlock(element) {
-    var isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') !== -1;
-    var isIE = navigator.userAgent.indexOf('Trident') !== -1;
-    if (isIE && _instanceOfJs.isHTMLElement(element)) {
-        // In IE 9, 10 and 11 fixed elements containing block is always established by the viewport
-        var elementCss = _getComputedStyleJsDefault.default(element);
-        if (elementCss.position === 'fixed') return null;
-    }
-    var currentNode = _getParentNodeJsDefault.default(element);
-    if (_instanceOfJs.isShadowRoot(currentNode)) currentNode = currentNode.host;
-    while(_instanceOfJs.isHTMLElement(currentNode) && [
-        'html',
-        'body'
-    ].indexOf(_getNodeNameJsDefault.default(currentNode)) < 0){
-        var css = _getComputedStyleJsDefault.default(currentNode); // This is non-exhaustive but covers the most common CSS properties that
-        // create a containing block.
-        // https://developer.mozilla.org/en-US/docs/Web/CSS/Containing_block#identifying_the_containing_block
-        if (css.transform !== 'none' || css.perspective !== 'none' || css.contain === 'paint' || [
-            'transform',
-            'perspective'
-        ].indexOf(css.willChange) !== -1 || isFirefox && css.willChange === 'filter' || isFirefox && css.filter && css.filter !== 'none') return currentNode;
-        else currentNode = currentNode.parentNode;
-    }
-    return null;
-} // Gets the closest ancestor positioned element. Handles some edge cases,
-function getOffsetParent(element) {
-    var window = _getWindowJsDefault.default(element);
-    var offsetParent = getTrueOffsetParent(element);
-    while(offsetParent && _isTableElementJsDefault.default(offsetParent) && _getComputedStyleJsDefault.default(offsetParent).position === 'static')offsetParent = getTrueOffsetParent(offsetParent);
-    if (offsetParent && (_getNodeNameJsDefault.default(offsetParent) === 'html' || _getNodeNameJsDefault.default(offsetParent) === 'body' && _getComputedStyleJsDefault.default(offsetParent).position === 'static')) return window;
-    return offsetParent || getContainingBlock(element) || window;
-}
-exports.default = getOffsetParent;
-
-},{"./getWindow.js":"2SkOo","./getNodeName.js":"a2Qom","./getComputedStyle.js":"3mZjB","./instanceOf.js":"gYFUC","./isTableElement.js":"2qBb7","./getParentNode.js":"bIHpd","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"a2Qom":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-function getNodeName(element) {
-    return element ? (element.nodeName || '').toLowerCase() : null;
-}
-exports.default = getNodeName;
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"3mZjB":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _getWindowJs = require("./getWindow.js");
-var _getWindowJsDefault = parcelHelpers.interopDefault(_getWindowJs);
-function getComputedStyle(element) {
-    return _getWindowJsDefault.default(element).getComputedStyle(element);
-}
-exports.default = getComputedStyle;
-
-},{"./getWindow.js":"2SkOo","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"2qBb7":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _getNodeNameJs = require("./getNodeName.js");
-var _getNodeNameJsDefault = parcelHelpers.interopDefault(_getNodeNameJs);
-function isTableElement(element) {
-    return [
-        'table',
-        'td',
-        'th'
-    ].indexOf(_getNodeNameJsDefault.default(element)) >= 0;
-}
-exports.default = isTableElement;
-
-},{"./getNodeName.js":"a2Qom","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"bIHpd":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _getNodeNameJs = require("./getNodeName.js");
-var _getNodeNameJsDefault = parcelHelpers.interopDefault(_getNodeNameJs);
-var _getDocumentElementJs = require("./getDocumentElement.js");
-var _getDocumentElementJsDefault = parcelHelpers.interopDefault(_getDocumentElementJs);
-var _instanceOfJs = require("./instanceOf.js");
-function getParentNode(element) {
-    if (_getNodeNameJsDefault.default(element) === 'html') return element;
-    return(// $FlowFixMe[incompatible-return]
-    // $FlowFixMe[prop-missing]
-    element.assignedSlot || element.parentNode || (_instanceOfJs.isShadowRoot(element) ? element.host : null) || // $FlowFixMe[incompatible-call]: HTMLElement is a Node
-    _getDocumentElementJsDefault.default(element) // fallback
-    );
-}
-exports.default = getParentNode;
-
-},{"./getNodeName.js":"a2Qom","./getDocumentElement.js":"eJ9Y1","./instanceOf.js":"gYFUC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"eJ9Y1":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _instanceOfJs = require("./instanceOf.js");
-function getDocumentElement(element) {
-    // $FlowFixMe[incompatible-return]: assume body is always available
-    return ((_instanceOfJs.isElement(element) ? element.ownerDocument : element.document) || window.document).documentElement;
-}
-exports.default = getDocumentElement;
-
-},{"./instanceOf.js":"gYFUC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"1Xlom":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-function getMainAxisFromPlacement(placement) {
-    return [
-        'top',
-        'bottom'
-    ].indexOf(placement) >= 0 ? 'x' : 'y';
-}
-exports.default = getMainAxisFromPlacement;
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"3glSz":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "within", ()=>within
-);
-parcelHelpers.export(exports, "withinMaxClamp", ()=>withinMaxClamp
-);
-var _mathJs = require("./math.js");
-function within(min, value, max) {
-    return _mathJs.max(min, _mathJs.min(value, max));
-}
-function withinMaxClamp(min, value, max) {
-    var v = within(min, value, max);
-    return v > max ? max : v;
-}
-
-},{"./math.js":"gQqVe","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"lEIf9":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _getFreshSideObjectJs = require("./getFreshSideObject.js");
-var _getFreshSideObjectJsDefault = parcelHelpers.interopDefault(_getFreshSideObjectJs);
-function mergePaddingObject(paddingObject) {
-    return Object.assign({}, _getFreshSideObjectJsDefault.default(), paddingObject);
-}
-exports.default = mergePaddingObject;
-
-},{"./getFreshSideObject.js":"g4xOt","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"g4xOt":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-function getFreshSideObject() {
-    return {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0
-    };
-}
-exports.default = getFreshSideObject;
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"iQlH5":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-function expandToHashMap(value, keys) {
-    return keys.reduce(function(hashMap, key) {
-        hashMap[key] = value;
-        return hashMap;
-    }, {});
-}
-exports.default = expandToHashMap;
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gDlm2":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "mapToStyles", ()=>mapToStyles
-);
-var _enumsJs = require("../enums.js");
-var _getOffsetParentJs = require("../dom-utils/getOffsetParent.js");
-var _getOffsetParentJsDefault = parcelHelpers.interopDefault(_getOffsetParentJs);
-var _getWindowJs = require("../dom-utils/getWindow.js");
-var _getWindowJsDefault = parcelHelpers.interopDefault(_getWindowJs);
-var _getDocumentElementJs = require("../dom-utils/getDocumentElement.js");
-var _getDocumentElementJsDefault = parcelHelpers.interopDefault(_getDocumentElementJs);
-var _getComputedStyleJs = require("../dom-utils/getComputedStyle.js");
-var _getComputedStyleJsDefault = parcelHelpers.interopDefault(_getComputedStyleJs);
-var _getBasePlacementJs = require("../utils/getBasePlacement.js");
-var _getBasePlacementJsDefault = parcelHelpers.interopDefault(_getBasePlacementJs);
-var _getVariationJs = require("../utils/getVariation.js");
-var _getVariationJsDefault = parcelHelpers.interopDefault(_getVariationJs);
-var _mathJs = require("../utils/math.js"); // eslint-disable-next-line import/no-unused-modules
-var unsetSides = {
-    top: 'auto',
-    right: 'auto',
-    bottom: 'auto',
-    left: 'auto'
-}; // Round the offsets to the nearest suitable subpixel based on the DPR.
-// Zooming can change the DPR, but it seems to report a value that will
-// cleanly divide the values into the appropriate subpixels.
-function roundOffsetsByDPR(_ref) {
-    var x = _ref.x, y = _ref.y;
-    var win = window;
-    var dpr = win.devicePixelRatio || 1;
-    return {
-        x: _mathJs.round(x * dpr) / dpr || 0,
-        y: _mathJs.round(y * dpr) / dpr || 0
-    };
-}
-function mapToStyles(_ref2) {
-    var _Object$assign2;
-    var popper = _ref2.popper, popperRect = _ref2.popperRect, placement = _ref2.placement, variation = _ref2.variation, offsets = _ref2.offsets, position = _ref2.position, gpuAcceleration = _ref2.gpuAcceleration, adaptive = _ref2.adaptive, roundOffsets = _ref2.roundOffsets, isFixed = _ref2.isFixed;
-    var _offsets$x = offsets.x, x = _offsets$x === void 0 ? 0 : _offsets$x, _offsets$y = offsets.y, y = _offsets$y === void 0 ? 0 : _offsets$y;
-    var _ref3 = typeof roundOffsets === 'function' ? roundOffsets({
-        x: x,
-        y: y
-    }) : {
-        x: x,
-        y: y
-    };
-    x = _ref3.x;
-    y = _ref3.y;
-    var hasX = offsets.hasOwnProperty('x');
-    var hasY = offsets.hasOwnProperty('y');
-    var sideX = _enumsJs.left;
-    var sideY = _enumsJs.top;
-    var win = window;
-    if (adaptive) {
-        var offsetParent = _getOffsetParentJsDefault.default(popper);
-        var heightProp = 'clientHeight';
-        var widthProp = 'clientWidth';
-        if (offsetParent === _getWindowJsDefault.default(popper)) {
-            offsetParent = _getDocumentElementJsDefault.default(popper);
-            if (_getComputedStyleJsDefault.default(offsetParent).position !== 'static' && position === 'absolute') {
-                heightProp = 'scrollHeight';
-                widthProp = 'scrollWidth';
-            }
-        } // $FlowFixMe[incompatible-cast]: force type refinement, we compare offsetParent with window above, but Flow doesn't detect it
-        if (placement === _enumsJs.top || (placement === _enumsJs.left || placement === _enumsJs.right) && variation === _enumsJs.end) {
-            sideY = _enumsJs.bottom;
-            var offsetY = isFixed && offsetParent === win && win.visualViewport ? win.visualViewport.height : offsetParent[heightProp];
-            y -= offsetY - popperRect.height;
-            y *= gpuAcceleration ? 1 : -1;
-        }
-        if (placement === _enumsJs.left || (placement === _enumsJs.top || placement === _enumsJs.bottom) && variation === _enumsJs.end) {
-            sideX = _enumsJs.right;
-            var offsetX = isFixed && offsetParent === win && win.visualViewport ? win.visualViewport.width : offsetParent[widthProp];
-            x -= offsetX - popperRect.width;
-            x *= gpuAcceleration ? 1 : -1;
-        }
-    }
-    var commonStyles = Object.assign({
-        position: position
-    }, adaptive && unsetSides);
-    var _ref4 = roundOffsets === true ? roundOffsetsByDPR({
-        x: x,
-        y: y
-    }) : {
-        x: x,
-        y: y
-    };
-    x = _ref4.x;
-    y = _ref4.y;
-    if (gpuAcceleration) {
-        var _Object$assign;
-        return Object.assign({}, commonStyles, (_Object$assign = {}, _Object$assign[sideY] = hasY ? '0' : '', _Object$assign[sideX] = hasX ? '0' : '', _Object$assign.transform = (win.devicePixelRatio || 1) <= 1 ? "translate(" + x + "px, " + y + "px)" : "translate3d(" + x + "px, " + y + "px, 0)", _Object$assign));
-    }
-    return Object.assign({}, commonStyles, (_Object$assign2 = {}, _Object$assign2[sideY] = hasY ? y + "px" : '', _Object$assign2[sideX] = hasX ? x + "px" : '', _Object$assign2.transform = '', _Object$assign2));
-}
-function computeStyles(_ref5) {
-    var state = _ref5.state, options = _ref5.options;
-    var _options$gpuAccelerat = options.gpuAcceleration, gpuAcceleration = _options$gpuAccelerat === void 0 ? true : _options$gpuAccelerat, _options$adaptive = options.adaptive, adaptive = _options$adaptive === void 0 ? true : _options$adaptive, _options$roundOffsets = options.roundOffsets, roundOffsets = _options$roundOffsets === void 0 ? true : _options$roundOffsets;
-    var transitionProperty = _getComputedStyleJsDefault.default(state.elements.popper).transitionProperty || '';
-    if (adaptive && [
-        'transform',
-        'top',
-        'right',
-        'bottom',
-        'left'
-    ].some(function(property) {
-        return transitionProperty.indexOf(property) >= 0;
-    })) console.warn([
-        'Popper: Detected CSS transitions on at least one of the following',
-        'CSS properties: "transform", "top", "right", "bottom", "left".',
-        '\n\n',
-        'Disable the "computeStyles" modifier\'s `adaptive` option to allow',
-        'for smooth transitions, or remove these properties from the CSS',
-        'transition declaration on the popper element if only transitioning',
-        'opacity or background-color for example.',
-        '\n\n',
-        'We recommend using the popper element as a wrapper around an inner',
-        'element that can have any CSS property transitioned for animations.'
-    ].join(' '));
-    var commonStyles = {
-        placement: _getBasePlacementJsDefault.default(state.placement),
-        variation: _getVariationJsDefault.default(state.placement),
-        popper: state.elements.popper,
-        popperRect: state.rects.popper,
-        gpuAcceleration: gpuAcceleration,
-        isFixed: state.options.strategy === 'fixed'
-    };
-    if (state.modifiersData.popperOffsets != null) state.styles.popper = Object.assign({}, state.styles.popper, mapToStyles(Object.assign({}, commonStyles, {
-        offsets: state.modifiersData.popperOffsets,
-        position: state.options.strategy,
-        adaptive: adaptive,
-        roundOffsets: roundOffsets
-    })));
-    if (state.modifiersData.arrow != null) state.styles.arrow = Object.assign({}, state.styles.arrow, mapToStyles(Object.assign({}, commonStyles, {
-        offsets: state.modifiersData.arrow,
-        position: 'absolute',
-        adaptive: false,
-        roundOffsets: roundOffsets
-    })));
-    state.attributes.popper = Object.assign({}, state.attributes.popper, {
-        'data-popper-placement': state.placement
-    });
-} // eslint-disable-next-line import/no-unused-modules
-exports.default = {
-    name: 'computeStyles',
-    enabled: true,
-    phase: 'beforeWrite',
-    fn: computeStyles,
-    data: {}
-};
-
-},{"../enums.js":"lCAq5","../dom-utils/getOffsetParent.js":"laoYw","../dom-utils/getWindow.js":"2SkOo","../dom-utils/getDocumentElement.js":"eJ9Y1","../dom-utils/getComputedStyle.js":"3mZjB","../utils/getBasePlacement.js":"59Wp3","../utils/getVariation.js":"hIo7Y","../utils/math.js":"gQqVe","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"hIo7Y":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-function getVariation(placement) {
-    return placement.split('-')[1];
-}
-exports.default = getVariation;
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"hBKsL":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _getWindowJs = require("../dom-utils/getWindow.js"); // eslint-disable-next-line import/no-unused-modules
-var _getWindowJsDefault = parcelHelpers.interopDefault(_getWindowJs);
-var passive = {
-    passive: true
-};
-function effect(_ref) {
-    var state = _ref.state, instance = _ref.instance, options = _ref.options;
-    var _options$scroll = options.scroll, scroll = _options$scroll === void 0 ? true : _options$scroll, _options$resize = options.resize, resize = _options$resize === void 0 ? true : _options$resize;
-    var window = _getWindowJsDefault.default(state.elements.popper);
-    var scrollParents = [].concat(state.scrollParents.reference, state.scrollParents.popper);
-    if (scroll) scrollParents.forEach(function(scrollParent) {
-        scrollParent.addEventListener('scroll', instance.update, passive);
-    });
-    if (resize) window.addEventListener('resize', instance.update, passive);
-    return function() {
-        if (scroll) scrollParents.forEach(function(scrollParent) {
-            scrollParent.removeEventListener('scroll', instance.update, passive);
-        });
-        if (resize) window.removeEventListener('resize', instance.update, passive);
-    };
-} // eslint-disable-next-line import/no-unused-modules
-exports.default = {
-    name: 'eventListeners',
-    enabled: true,
-    phase: 'write',
-    fn: function fn() {},
-    effect: effect,
-    data: {}
-};
-
-},{"../dom-utils/getWindow.js":"2SkOo","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"fv5wq":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _getOppositePlacementJs = require("../utils/getOppositePlacement.js");
-var _getOppositePlacementJsDefault = parcelHelpers.interopDefault(_getOppositePlacementJs);
-var _getBasePlacementJs = require("../utils/getBasePlacement.js");
-var _getBasePlacementJsDefault = parcelHelpers.interopDefault(_getBasePlacementJs);
-var _getOppositeVariationPlacementJs = require("../utils/getOppositeVariationPlacement.js");
-var _getOppositeVariationPlacementJsDefault = parcelHelpers.interopDefault(_getOppositeVariationPlacementJs);
-var _detectOverflowJs = require("../utils/detectOverflow.js");
-var _detectOverflowJsDefault = parcelHelpers.interopDefault(_detectOverflowJs);
-var _computeAutoPlacementJs = require("../utils/computeAutoPlacement.js");
-var _computeAutoPlacementJsDefault = parcelHelpers.interopDefault(_computeAutoPlacementJs);
-var _enumsJs = require("../enums.js");
-var _getVariationJs = require("../utils/getVariation.js"); // eslint-disable-next-line import/no-unused-modules
-var _getVariationJsDefault = parcelHelpers.interopDefault(_getVariationJs);
-function getExpandedFallbackPlacements(placement) {
-    if (_getBasePlacementJsDefault.default(placement) === _enumsJs.auto) return [];
-    var oppositePlacement = _getOppositePlacementJsDefault.default(placement);
-    return [
-        _getOppositeVariationPlacementJsDefault.default(placement),
-        oppositePlacement,
-        _getOppositeVariationPlacementJsDefault.default(oppositePlacement)
-    ];
-}
-function flip(_ref) {
-    var state = _ref.state, options = _ref.options, name = _ref.name;
-    if (state.modifiersData[name]._skip) return;
-    var _options$mainAxis = options.mainAxis, checkMainAxis = _options$mainAxis === void 0 ? true : _options$mainAxis, _options$altAxis = options.altAxis, checkAltAxis = _options$altAxis === void 0 ? true : _options$altAxis, specifiedFallbackPlacements = options.fallbackPlacements, padding = options.padding, boundary = options.boundary, rootBoundary = options.rootBoundary, altBoundary = options.altBoundary, _options$flipVariatio = options.flipVariations, flipVariations = _options$flipVariatio === void 0 ? true : _options$flipVariatio, allowedAutoPlacements = options.allowedAutoPlacements;
-    var preferredPlacement = state.options.placement;
-    var basePlacement = _getBasePlacementJsDefault.default(preferredPlacement);
-    var isBasePlacement = basePlacement === preferredPlacement;
-    var fallbackPlacements = specifiedFallbackPlacements || (isBasePlacement || !flipVariations ? [
-        _getOppositePlacementJsDefault.default(preferredPlacement)
-    ] : getExpandedFallbackPlacements(preferredPlacement));
-    var placements = [
-        preferredPlacement
-    ].concat(fallbackPlacements).reduce(function(acc, placement) {
-        return acc.concat(_getBasePlacementJsDefault.default(placement) === _enumsJs.auto ? _computeAutoPlacementJsDefault.default(state, {
-            placement: placement,
-            boundary: boundary,
-            rootBoundary: rootBoundary,
-            padding: padding,
-            flipVariations: flipVariations,
-            allowedAutoPlacements: allowedAutoPlacements
-        }) : placement);
-    }, []);
-    var referenceRect = state.rects.reference;
-    var popperRect = state.rects.popper;
-    var checksMap = new Map();
-    var makeFallbackChecks = true;
-    var firstFittingPlacement = placements[0];
-    for(var i = 0; i < placements.length; i++){
-        var placement1 = placements[i];
-        var _basePlacement = _getBasePlacementJsDefault.default(placement1);
-        var isStartVariation = _getVariationJsDefault.default(placement1) === _enumsJs.start;
-        var isVertical = [
-            _enumsJs.top,
-            _enumsJs.bottom
-        ].indexOf(_basePlacement) >= 0;
-        var len = isVertical ? 'width' : 'height';
-        var overflow = _detectOverflowJsDefault.default(state, {
-            placement: placement1,
-            boundary: boundary,
-            rootBoundary: rootBoundary,
-            altBoundary: altBoundary,
-            padding: padding
-        });
-        var mainVariationSide = isVertical ? isStartVariation ? _enumsJs.right : _enumsJs.left : isStartVariation ? _enumsJs.bottom : _enumsJs.top;
-        if (referenceRect[len] > popperRect[len]) mainVariationSide = _getOppositePlacementJsDefault.default(mainVariationSide);
-        var altVariationSide = _getOppositePlacementJsDefault.default(mainVariationSide);
-        var checks = [];
-        if (checkMainAxis) checks.push(overflow[_basePlacement] <= 0);
-        if (checkAltAxis) checks.push(overflow[mainVariationSide] <= 0, overflow[altVariationSide] <= 0);
-        if (checks.every(function(check) {
-            return check;
-        })) {
-            firstFittingPlacement = placement1;
-            makeFallbackChecks = false;
-            break;
-        }
-        checksMap.set(placement1, checks);
-    }
-    if (makeFallbackChecks) {
-        // `2` may be desired in some cases – research later
-        var numberOfChecks = flipVariations ? 3 : 1;
-        var _loop = function _loop(_i) {
-            var fittingPlacement = placements.find(function(placement) {
-                var checks = checksMap.get(placement);
-                if (checks) return checks.slice(0, _i).every(function(check) {
-                    return check;
-                });
-            });
-            if (fittingPlacement) {
-                firstFittingPlacement = fittingPlacement;
-                return "break";
-            }
-        };
-        for(var _i1 = numberOfChecks; _i1 > 0; _i1--){
-            var _ret = _loop(_i1);
-            if (_ret === "break") break;
-        }
-    }
-    if (state.placement !== firstFittingPlacement) {
-        state.modifiersData[name]._skip = true;
-        state.placement = firstFittingPlacement;
-        state.reset = true;
-    }
-} // eslint-disable-next-line import/no-unused-modules
-exports.default = {
-    name: 'flip',
-    enabled: true,
-    phase: 'main',
-    fn: flip,
-    requiresIfExists: [
-        'offset'
-    ],
-    data: {
-        _skip: false
-    }
-};
-
-},{"../utils/getOppositePlacement.js":"a8CY0","../utils/getBasePlacement.js":"59Wp3","../utils/getOppositeVariationPlacement.js":"bKTLC","../utils/detectOverflow.js":"ltCuw","../utils/computeAutoPlacement.js":"gytMj","../enums.js":"lCAq5","../utils/getVariation.js":"hIo7Y","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"a8CY0":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var hash = {
-    left: 'right',
-    right: 'left',
-    bottom: 'top',
-    top: 'bottom'
-};
-function getOppositePlacement(placement) {
-    return placement.replace(/left|right|bottom|top/g, function(matched) {
-        return hash[matched];
-    });
-}
-exports.default = getOppositePlacement;
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"bKTLC":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var hash = {
-    start: 'end',
-    end: 'start'
-};
-function getOppositeVariationPlacement(placement) {
-    return placement.replace(/start|end/g, function(matched) {
-        return hash[matched];
-    });
-}
-exports.default = getOppositeVariationPlacement;
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"ltCuw":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _getClippingRectJs = require("../dom-utils/getClippingRect.js");
-var _getClippingRectJsDefault = parcelHelpers.interopDefault(_getClippingRectJs);
-var _getDocumentElementJs = require("../dom-utils/getDocumentElement.js");
-var _getDocumentElementJsDefault = parcelHelpers.interopDefault(_getDocumentElementJs);
-var _getBoundingClientRectJs = require("../dom-utils/getBoundingClientRect.js");
-var _getBoundingClientRectJsDefault = parcelHelpers.interopDefault(_getBoundingClientRectJs);
-var _computeOffsetsJs = require("./computeOffsets.js");
-var _computeOffsetsJsDefault = parcelHelpers.interopDefault(_computeOffsetsJs);
-var _rectToClientRectJs = require("./rectToClientRect.js");
-var _rectToClientRectJsDefault = parcelHelpers.interopDefault(_rectToClientRectJs);
-var _enumsJs = require("../enums.js");
-var _instanceOfJs = require("../dom-utils/instanceOf.js");
-var _mergePaddingObjectJs = require("./mergePaddingObject.js");
-var _mergePaddingObjectJsDefault = parcelHelpers.interopDefault(_mergePaddingObjectJs);
-var _expandToHashMapJs = require("./expandToHashMap.js"); // eslint-disable-next-line import/no-unused-modules
-var _expandToHashMapJsDefault = parcelHelpers.interopDefault(_expandToHashMapJs);
-function detectOverflow(state, options) {
-    if (options === void 0) options = {};
-    var _options = options, _options$placement = _options.placement, placement = _options$placement === void 0 ? state.placement : _options$placement, _options$boundary = _options.boundary, boundary = _options$boundary === void 0 ? _enumsJs.clippingParents : _options$boundary, _options$rootBoundary = _options.rootBoundary, rootBoundary = _options$rootBoundary === void 0 ? _enumsJs.viewport : _options$rootBoundary, _options$elementConte = _options.elementContext, elementContext = _options$elementConte === void 0 ? _enumsJs.popper : _options$elementConte, _options$altBoundary = _options.altBoundary, altBoundary = _options$altBoundary === void 0 ? false : _options$altBoundary, _options$padding = _options.padding, padding = _options$padding === void 0 ? 0 : _options$padding;
-    var paddingObject = _mergePaddingObjectJsDefault.default(typeof padding !== 'number' ? padding : _expandToHashMapJsDefault.default(padding, _enumsJs.basePlacements));
-    var altContext = elementContext === _enumsJs.popper ? _enumsJs.reference : _enumsJs.popper;
-    var popperRect = state.rects.popper;
-    var element = state.elements[altBoundary ? altContext : elementContext];
-    var clippingClientRect = _getClippingRectJsDefault.default(_instanceOfJs.isElement(element) ? element : element.contextElement || _getDocumentElementJsDefault.default(state.elements.popper), boundary, rootBoundary);
-    var referenceClientRect = _getBoundingClientRectJsDefault.default(state.elements.reference);
-    var popperOffsets = _computeOffsetsJsDefault.default({
-        reference: referenceClientRect,
-        element: popperRect,
-        strategy: 'absolute',
-        placement: placement
-    });
-    var popperClientRect = _rectToClientRectJsDefault.default(Object.assign({}, popperRect, popperOffsets));
-    var elementClientRect = elementContext === _enumsJs.popper ? popperClientRect : referenceClientRect; // positive = overflowing the clipping rect
-    // 0 or negative = within the clipping rect
-    var overflowOffsets = {
-        top: clippingClientRect.top - elementClientRect.top + paddingObject.top,
-        bottom: elementClientRect.bottom - clippingClientRect.bottom + paddingObject.bottom,
-        left: clippingClientRect.left - elementClientRect.left + paddingObject.left,
-        right: elementClientRect.right - clippingClientRect.right + paddingObject.right
-    };
-    var offsetData = state.modifiersData.offset; // Offsets can be applied only to the popper element
-    if (elementContext === _enumsJs.popper && offsetData) {
-        var offset = offsetData[placement];
-        Object.keys(overflowOffsets).forEach(function(key) {
-            var multiply = [
-                _enumsJs.right,
-                _enumsJs.bottom
-            ].indexOf(key) >= 0 ? 1 : -1;
-            var axis = [
-                _enumsJs.top,
-                _enumsJs.bottom
-            ].indexOf(key) >= 0 ? 'y' : 'x';
-            overflowOffsets[key] += offset[axis] * multiply;
-        });
-    }
-    return overflowOffsets;
-}
-exports.default = detectOverflow;
-
-},{"../dom-utils/getClippingRect.js":"eeg2s","../dom-utils/getDocumentElement.js":"eJ9Y1","../dom-utils/getBoundingClientRect.js":"9CFSQ","./computeOffsets.js":"7jtXk","./rectToClientRect.js":"cQ3tg","../enums.js":"lCAq5","../dom-utils/instanceOf.js":"gYFUC","./mergePaddingObject.js":"lEIf9","./expandToHashMap.js":"iQlH5","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"eeg2s":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _enumsJs = require("../enums.js");
-var _getViewportRectJs = require("./getViewportRect.js");
-var _getViewportRectJsDefault = parcelHelpers.interopDefault(_getViewportRectJs);
-var _getDocumentRectJs = require("./getDocumentRect.js");
-var _getDocumentRectJsDefault = parcelHelpers.interopDefault(_getDocumentRectJs);
-var _listScrollParentsJs = require("./listScrollParents.js");
-var _listScrollParentsJsDefault = parcelHelpers.interopDefault(_listScrollParentsJs);
-var _getOffsetParentJs = require("./getOffsetParent.js");
-var _getOffsetParentJsDefault = parcelHelpers.interopDefault(_getOffsetParentJs);
-var _getDocumentElementJs = require("./getDocumentElement.js");
-var _getDocumentElementJsDefault = parcelHelpers.interopDefault(_getDocumentElementJs);
-var _getComputedStyleJs = require("./getComputedStyle.js");
-var _getComputedStyleJsDefault = parcelHelpers.interopDefault(_getComputedStyleJs);
-var _instanceOfJs = require("./instanceOf.js");
-var _getBoundingClientRectJs = require("./getBoundingClientRect.js");
-var _getBoundingClientRectJsDefault = parcelHelpers.interopDefault(_getBoundingClientRectJs);
-var _getParentNodeJs = require("./getParentNode.js");
-var _getParentNodeJsDefault = parcelHelpers.interopDefault(_getParentNodeJs);
-var _containsJs = require("./contains.js");
-var _containsJsDefault = parcelHelpers.interopDefault(_containsJs);
-var _getNodeNameJs = require("./getNodeName.js");
-var _getNodeNameJsDefault = parcelHelpers.interopDefault(_getNodeNameJs);
-var _rectToClientRectJs = require("../utils/rectToClientRect.js");
-var _rectToClientRectJsDefault = parcelHelpers.interopDefault(_rectToClientRectJs);
-var _mathJs = require("../utils/math.js");
-function getInnerBoundingClientRect(element) {
-    var rect = _getBoundingClientRectJsDefault.default(element);
-    rect.top = rect.top + element.clientTop;
-    rect.left = rect.left + element.clientLeft;
-    rect.bottom = rect.top + element.clientHeight;
-    rect.right = rect.left + element.clientWidth;
-    rect.width = element.clientWidth;
-    rect.height = element.clientHeight;
-    rect.x = rect.left;
-    rect.y = rect.top;
-    return rect;
-}
-function getClientRectFromMixedType(element, clippingParent) {
-    return clippingParent === _enumsJs.viewport ? _rectToClientRectJsDefault.default(_getViewportRectJsDefault.default(element)) : _instanceOfJs.isElement(clippingParent) ? getInnerBoundingClientRect(clippingParent) : _rectToClientRectJsDefault.default(_getDocumentRectJsDefault.default(_getDocumentElementJsDefault.default(element)));
-} // A "clipping parent" is an overflowable container with the characteristic of
-// clipping (or hiding) overflowing elements with a position different from
-// `initial`
-function getClippingParents(element) {
-    var clippingParents = _listScrollParentsJsDefault.default(_getParentNodeJsDefault.default(element));
-    var canEscapeClipping = [
-        'absolute',
-        'fixed'
-    ].indexOf(_getComputedStyleJsDefault.default(element).position) >= 0;
-    var clipperElement = canEscapeClipping && _instanceOfJs.isHTMLElement(element) ? _getOffsetParentJsDefault.default(element) : element;
-    if (!_instanceOfJs.isElement(clipperElement)) return [];
-     // $FlowFixMe[incompatible-return]: https://github.com/facebook/flow/issues/1414
-    return clippingParents.filter(function(clippingParent) {
-        return _instanceOfJs.isElement(clippingParent) && _containsJsDefault.default(clippingParent, clipperElement) && _getNodeNameJsDefault.default(clippingParent) !== 'body';
-    });
-} // Gets the maximum area that the element is visible in due to any number of
-function getClippingRect(element, boundary, rootBoundary) {
-    var mainClippingParents = boundary === 'clippingParents' ? getClippingParents(element) : [].concat(boundary);
-    var clippingParents = [].concat(mainClippingParents, [
-        rootBoundary
-    ]);
-    var firstClippingParent = clippingParents[0];
-    var clippingRect = clippingParents.reduce(function(accRect, clippingParent) {
-        var rect = getClientRectFromMixedType(element, clippingParent);
-        accRect.top = _mathJs.max(rect.top, accRect.top);
-        accRect.right = _mathJs.min(rect.right, accRect.right);
-        accRect.bottom = _mathJs.min(rect.bottom, accRect.bottom);
-        accRect.left = _mathJs.max(rect.left, accRect.left);
-        return accRect;
-    }, getClientRectFromMixedType(element, firstClippingParent));
-    clippingRect.width = clippingRect.right - clippingRect.left;
-    clippingRect.height = clippingRect.bottom - clippingRect.top;
-    clippingRect.x = clippingRect.left;
-    clippingRect.y = clippingRect.top;
-    return clippingRect;
-}
-exports.default = getClippingRect;
-
-},{"../enums.js":"lCAq5","./getViewportRect.js":"cnH2G","./getDocumentRect.js":"d94SC","./listScrollParents.js":"2di3T","./getOffsetParent.js":"laoYw","./getDocumentElement.js":"eJ9Y1","./getComputedStyle.js":"3mZjB","./instanceOf.js":"gYFUC","./getBoundingClientRect.js":"9CFSQ","./getParentNode.js":"bIHpd","./contains.js":"4QxRR","./getNodeName.js":"a2Qom","../utils/rectToClientRect.js":"cQ3tg","../utils/math.js":"gQqVe","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"cnH2G":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _getWindowJs = require("./getWindow.js");
-var _getWindowJsDefault = parcelHelpers.interopDefault(_getWindowJs);
-var _getDocumentElementJs = require("./getDocumentElement.js");
-var _getDocumentElementJsDefault = parcelHelpers.interopDefault(_getDocumentElementJs);
-var _getWindowScrollBarXJs = require("./getWindowScrollBarX.js");
-var _getWindowScrollBarXJsDefault = parcelHelpers.interopDefault(_getWindowScrollBarXJs);
-function getViewportRect(element) {
-    var win = _getWindowJsDefault.default(element);
-    var html = _getDocumentElementJsDefault.default(element);
-    var visualViewport = win.visualViewport;
-    var width = html.clientWidth;
-    var height = html.clientHeight;
-    var x = 0;
-    var y = 0; // NB: This isn't supported on iOS <= 12. If the keyboard is open, the popper
-    // can be obscured underneath it.
-    // Also, `html.clientHeight` adds the bottom bar height in Safari iOS, even
-    // if it isn't open, so if this isn't available, the popper will be detected
-    // to overflow the bottom of the screen too early.
-    if (visualViewport) {
-        width = visualViewport.width;
-        height = visualViewport.height; // Uses Layout Viewport (like Chrome; Safari does not currently)
-        // In Chrome, it returns a value very close to 0 (+/-) but contains rounding
-        // errors due to floating point numbers, so we need to check precision.
-        // Safari returns a number <= 0, usually < -1 when pinch-zoomed
-        // Feature detection fails in mobile emulation mode in Chrome.
-        // Math.abs(win.innerWidth / visualViewport.scale - visualViewport.width) <
-        // 0.001
-        // Fallback here: "Not Safari" userAgent
-        if (!/^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
-            x = visualViewport.offsetLeft;
-            y = visualViewport.offsetTop;
-        }
-    }
-    return {
-        width: width,
-        height: height,
-        x: x + _getWindowScrollBarXJsDefault.default(element),
-        y: y
-    };
-}
-exports.default = getViewportRect;
-
-},{"./getWindow.js":"2SkOo","./getDocumentElement.js":"eJ9Y1","./getWindowScrollBarX.js":"sz4Ld","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"sz4Ld":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _getBoundingClientRectJs = require("./getBoundingClientRect.js");
-var _getBoundingClientRectJsDefault = parcelHelpers.interopDefault(_getBoundingClientRectJs);
-var _getDocumentElementJs = require("./getDocumentElement.js");
-var _getDocumentElementJsDefault = parcelHelpers.interopDefault(_getDocumentElementJs);
-var _getWindowScrollJs = require("./getWindowScroll.js");
-var _getWindowScrollJsDefault = parcelHelpers.interopDefault(_getWindowScrollJs);
-function getWindowScrollBarX(element) {
-    // If <html> has a CSS width greater than the viewport, then this will be
-    // incorrect for RTL.
-    // Popper 1 is broken in this case and never had a bug report so let's assume
-    // it's not an issue. I don't think anyone ever specifies width on <html>
-    // anyway.
-    // Browsers where the left scrollbar doesn't cause an issue report `0` for
-    // this (e.g. Edge 2019, IE11, Safari)
-    return _getBoundingClientRectJsDefault.default(_getDocumentElementJsDefault.default(element)).left + _getWindowScrollJsDefault.default(element).scrollLeft;
-}
-exports.default = getWindowScrollBarX;
-
-},{"./getBoundingClientRect.js":"9CFSQ","./getDocumentElement.js":"eJ9Y1","./getWindowScroll.js":"1XUtN","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"1XUtN":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _getWindowJs = require("./getWindow.js");
-var _getWindowJsDefault = parcelHelpers.interopDefault(_getWindowJs);
-function getWindowScroll(node) {
-    var win = _getWindowJsDefault.default(node);
-    var scrollLeft = win.pageXOffset;
-    var scrollTop = win.pageYOffset;
-    return {
-        scrollLeft: scrollLeft,
-        scrollTop: scrollTop
-    };
-}
-exports.default = getWindowScroll;
-
-},{"./getWindow.js":"2SkOo","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"d94SC":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _getDocumentElementJs = require("./getDocumentElement.js");
-var _getDocumentElementJsDefault = parcelHelpers.interopDefault(_getDocumentElementJs);
-var _getComputedStyleJs = require("./getComputedStyle.js");
-var _getComputedStyleJsDefault = parcelHelpers.interopDefault(_getComputedStyleJs);
-var _getWindowScrollBarXJs = require("./getWindowScrollBarX.js");
-var _getWindowScrollBarXJsDefault = parcelHelpers.interopDefault(_getWindowScrollBarXJs);
-var _getWindowScrollJs = require("./getWindowScroll.js");
-var _getWindowScrollJsDefault = parcelHelpers.interopDefault(_getWindowScrollJs);
-var _mathJs = require("../utils/math.js"); // Gets the entire size of the scrollable document area, even extending outside
-function getDocumentRect(element) {
-    var _element$ownerDocumen;
-    var html = _getDocumentElementJsDefault.default(element);
-    var winScroll = _getWindowScrollJsDefault.default(element);
-    var body = (_element$ownerDocumen = element.ownerDocument) == null ? void 0 : _element$ownerDocumen.body;
-    var width = _mathJs.max(html.scrollWidth, html.clientWidth, body ? body.scrollWidth : 0, body ? body.clientWidth : 0);
-    var height = _mathJs.max(html.scrollHeight, html.clientHeight, body ? body.scrollHeight : 0, body ? body.clientHeight : 0);
-    var x = -winScroll.scrollLeft + _getWindowScrollBarXJsDefault.default(element);
-    var y = -winScroll.scrollTop;
-    if (_getComputedStyleJsDefault.default(body || html).direction === 'rtl') x += _mathJs.max(html.clientWidth, body ? body.clientWidth : 0) - width;
-    return {
-        width: width,
-        height: height,
-        x: x,
-        y: y
-    };
-}
-exports.default = getDocumentRect;
-
-},{"./getDocumentElement.js":"eJ9Y1","./getComputedStyle.js":"3mZjB","./getWindowScrollBarX.js":"sz4Ld","./getWindowScroll.js":"1XUtN","../utils/math.js":"gQqVe","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"2di3T":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _getScrollParentJs = require("./getScrollParent.js");
-var _getScrollParentJsDefault = parcelHelpers.interopDefault(_getScrollParentJs);
-var _getParentNodeJs = require("./getParentNode.js");
-var _getParentNodeJsDefault = parcelHelpers.interopDefault(_getParentNodeJs);
-var _getWindowJs = require("./getWindow.js");
-var _getWindowJsDefault = parcelHelpers.interopDefault(_getWindowJs);
-var _isScrollParentJs = require("./isScrollParent.js");
-var _isScrollParentJsDefault = parcelHelpers.interopDefault(_isScrollParentJs);
-function listScrollParents(element, list) {
-    var _element$ownerDocumen;
-    if (list === void 0) list = [];
-    var scrollParent = _getScrollParentJsDefault.default(element);
-    var isBody = scrollParent === ((_element$ownerDocumen = element.ownerDocument) == null ? void 0 : _element$ownerDocumen.body);
-    var win = _getWindowJsDefault.default(scrollParent);
-    var target = isBody ? [
-        win
-    ].concat(win.visualViewport || [], _isScrollParentJsDefault.default(scrollParent) ? scrollParent : []) : scrollParent;
-    var updatedList = list.concat(target);
-    return isBody ? updatedList : updatedList.concat(listScrollParents(_getParentNodeJsDefault.default(target)));
-}
-exports.default = listScrollParents;
-
-},{"./getScrollParent.js":"jy4ZS","./getParentNode.js":"bIHpd","./getWindow.js":"2SkOo","./isScrollParent.js":"9rLGO","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"jy4ZS":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _getParentNodeJs = require("./getParentNode.js");
-var _getParentNodeJsDefault = parcelHelpers.interopDefault(_getParentNodeJs);
-var _isScrollParentJs = require("./isScrollParent.js");
-var _isScrollParentJsDefault = parcelHelpers.interopDefault(_isScrollParentJs);
-var _getNodeNameJs = require("./getNodeName.js");
-var _getNodeNameJsDefault = parcelHelpers.interopDefault(_getNodeNameJs);
-var _instanceOfJs = require("./instanceOf.js");
-function getScrollParent(node) {
-    if ([
-        'html',
-        'body',
-        '#document'
-    ].indexOf(_getNodeNameJsDefault.default(node)) >= 0) // $FlowFixMe[incompatible-return]: assume body is always available
-    return node.ownerDocument.body;
-    if (_instanceOfJs.isHTMLElement(node) && _isScrollParentJsDefault.default(node)) return node;
-    return getScrollParent(_getParentNodeJsDefault.default(node));
-}
-exports.default = getScrollParent;
-
-},{"./getParentNode.js":"bIHpd","./isScrollParent.js":"9rLGO","./getNodeName.js":"a2Qom","./instanceOf.js":"gYFUC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"9rLGO":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _getComputedStyleJs = require("./getComputedStyle.js");
-var _getComputedStyleJsDefault = parcelHelpers.interopDefault(_getComputedStyleJs);
-function isScrollParent(element) {
-    // Firefox wants us to check `-x` and `-y` variations as well
-    var _getComputedStyle = _getComputedStyleJsDefault.default(element), overflow = _getComputedStyle.overflow, overflowX = _getComputedStyle.overflowX, overflowY = _getComputedStyle.overflowY;
-    return /auto|scroll|overlay|hidden/.test(overflow + overflowY + overflowX);
-}
-exports.default = isScrollParent;
-
-},{"./getComputedStyle.js":"3mZjB","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"cQ3tg":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-function rectToClientRect(rect) {
-    return Object.assign({}, rect, {
-        left: rect.x,
-        top: rect.y,
-        right: rect.x + rect.width,
-        bottom: rect.y + rect.height
-    });
-}
-exports.default = rectToClientRect;
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"7jtXk":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _getBasePlacementJs = require("./getBasePlacement.js");
-var _getBasePlacementJsDefault = parcelHelpers.interopDefault(_getBasePlacementJs);
-var _getVariationJs = require("./getVariation.js");
-var _getVariationJsDefault = parcelHelpers.interopDefault(_getVariationJs);
-var _getMainAxisFromPlacementJs = require("./getMainAxisFromPlacement.js");
-var _getMainAxisFromPlacementJsDefault = parcelHelpers.interopDefault(_getMainAxisFromPlacementJs);
-var _enumsJs = require("../enums.js");
-function computeOffsets(_ref) {
-    var reference = _ref.reference, element = _ref.element, placement = _ref.placement;
-    var basePlacement = placement ? _getBasePlacementJsDefault.default(placement) : null;
-    var variation = placement ? _getVariationJsDefault.default(placement) : null;
-    var commonX = reference.x + reference.width / 2 - element.width / 2;
-    var commonY = reference.y + reference.height / 2 - element.height / 2;
-    var offsets;
-    switch(basePlacement){
-        case _enumsJs.top:
-            offsets = {
-                x: commonX,
-                y: reference.y - element.height
-            };
-            break;
-        case _enumsJs.bottom:
-            offsets = {
-                x: commonX,
-                y: reference.y + reference.height
-            };
-            break;
-        case _enumsJs.right:
-            offsets = {
-                x: reference.x + reference.width,
-                y: commonY
-            };
-            break;
-        case _enumsJs.left:
-            offsets = {
-                x: reference.x - element.width,
-                y: commonY
-            };
-            break;
-        default:
-            offsets = {
-                x: reference.x,
-                y: reference.y
-            };
-    }
-    var mainAxis = basePlacement ? _getMainAxisFromPlacementJsDefault.default(basePlacement) : null;
-    if (mainAxis != null) {
-        var len = mainAxis === 'y' ? 'height' : 'width';
-        switch(variation){
-            case _enumsJs.start:
-                offsets[mainAxis] = offsets[mainAxis] - (reference[len] / 2 - element[len] / 2);
-                break;
-            case _enumsJs.end:
-                offsets[mainAxis] = offsets[mainAxis] + (reference[len] / 2 - element[len] / 2);
-                break;
-            default:
-        }
-    }
-    return offsets;
-}
-exports.default = computeOffsets;
-
-},{"./getBasePlacement.js":"59Wp3","./getVariation.js":"hIo7Y","./getMainAxisFromPlacement.js":"1Xlom","../enums.js":"lCAq5","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gytMj":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _getVariationJs = require("./getVariation.js");
-var _getVariationJsDefault = parcelHelpers.interopDefault(_getVariationJs);
-var _enumsJs = require("../enums.js");
-var _detectOverflowJs = require("./detectOverflow.js");
-var _detectOverflowJsDefault = parcelHelpers.interopDefault(_detectOverflowJs);
-var _getBasePlacementJs = require("./getBasePlacement.js");
-var _getBasePlacementJsDefault = parcelHelpers.interopDefault(_getBasePlacementJs);
-function computeAutoPlacement(state, options) {
-    if (options === void 0) options = {};
-    var _options = options, placement1 = _options.placement, boundary = _options.boundary, rootBoundary = _options.rootBoundary, padding = _options.padding, flipVariations = _options.flipVariations, _options$allowedAutoP = _options.allowedAutoPlacements, allowedAutoPlacements = _options$allowedAutoP === void 0 ? _enumsJs.placements : _options$allowedAutoP;
-    var variation = _getVariationJsDefault.default(placement1);
-    var placements = variation ? flipVariations ? _enumsJs.variationPlacements : _enumsJs.variationPlacements.filter(function(placement) {
-        return _getVariationJsDefault.default(placement) === variation;
-    }) : _enumsJs.basePlacements;
-    var allowedPlacements = placements.filter(function(placement) {
-        return allowedAutoPlacements.indexOf(placement) >= 0;
-    });
-    if (allowedPlacements.length === 0) {
-        allowedPlacements = placements;
-        console.error([
-            'Popper: The `allowedAutoPlacements` option did not allow any',
-            'placements. Ensure the `placement` option matches the variation',
-            'of the allowed placements.',
-            'For example, "auto" cannot be used to allow "bottom-start".',
-            'Use "auto-start" instead.'
-        ].join(' '));
-    } // $FlowFixMe[incompatible-type]: Flow seems to have problems with two array unions...
-    var overflows = allowedPlacements.reduce(function(acc, placement) {
-        acc[placement] = _detectOverflowJsDefault.default(state, {
-            placement: placement,
-            boundary: boundary,
-            rootBoundary: rootBoundary,
-            padding: padding
-        })[_getBasePlacementJsDefault.default(placement)];
-        return acc;
-    }, {});
-    return Object.keys(overflows).sort(function(a, b) {
-        return overflows[a] - overflows[b];
-    });
-}
-exports.default = computeAutoPlacement;
-
-},{"./getVariation.js":"hIo7Y","../enums.js":"lCAq5","./detectOverflow.js":"ltCuw","./getBasePlacement.js":"59Wp3","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"2g4OF":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _enumsJs = require("../enums.js");
-var _detectOverflowJs = require("../utils/detectOverflow.js");
-var _detectOverflowJsDefault = parcelHelpers.interopDefault(_detectOverflowJs);
-function getSideOffsets(overflow, rect, preventedOffsets) {
-    if (preventedOffsets === void 0) preventedOffsets = {
-        x: 0,
-        y: 0
-    };
-    return {
-        top: overflow.top - rect.height - preventedOffsets.y,
-        right: overflow.right - rect.width + preventedOffsets.x,
-        bottom: overflow.bottom - rect.height + preventedOffsets.y,
-        left: overflow.left - rect.width - preventedOffsets.x
-    };
-}
-function isAnySideFullyClipped(overflow) {
-    return [
-        _enumsJs.top,
-        _enumsJs.right,
-        _enumsJs.bottom,
-        _enumsJs.left
-    ].some(function(side) {
-        return overflow[side] >= 0;
-    });
-}
-function hide(_ref) {
-    var state = _ref.state, name = _ref.name;
-    var referenceRect = state.rects.reference;
-    var popperRect = state.rects.popper;
-    var preventedOffsets = state.modifiersData.preventOverflow;
-    var referenceOverflow = _detectOverflowJsDefault.default(state, {
-        elementContext: 'reference'
-    });
-    var popperAltOverflow = _detectOverflowJsDefault.default(state, {
-        altBoundary: true
-    });
-    var referenceClippingOffsets = getSideOffsets(referenceOverflow, referenceRect);
-    var popperEscapeOffsets = getSideOffsets(popperAltOverflow, popperRect, preventedOffsets);
-    var isReferenceHidden = isAnySideFullyClipped(referenceClippingOffsets);
-    var hasPopperEscaped = isAnySideFullyClipped(popperEscapeOffsets);
-    state.modifiersData[name] = {
-        referenceClippingOffsets: referenceClippingOffsets,
-        popperEscapeOffsets: popperEscapeOffsets,
-        isReferenceHidden: isReferenceHidden,
-        hasPopperEscaped: hasPopperEscaped
-    };
-    state.attributes.popper = Object.assign({}, state.attributes.popper, {
-        'data-popper-reference-hidden': isReferenceHidden,
-        'data-popper-escaped': hasPopperEscaped
-    });
-} // eslint-disable-next-line import/no-unused-modules
-exports.default = {
-    name: 'hide',
-    enabled: true,
-    phase: 'main',
-    requiresIfExists: [
-        'preventOverflow'
-    ],
-    fn: hide
-};
-
-},{"../enums.js":"lCAq5","../utils/detectOverflow.js":"ltCuw","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"3GKVY":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "distanceAndSkiddingToXY", ()=>distanceAndSkiddingToXY
-);
-var _getBasePlacementJs = require("../utils/getBasePlacement.js");
-var _getBasePlacementJsDefault = parcelHelpers.interopDefault(_getBasePlacementJs);
-var _enumsJs = require("../enums.js"); // eslint-disable-next-line import/no-unused-modules
-function distanceAndSkiddingToXY(placement, rects, offset1) {
-    var basePlacement = _getBasePlacementJsDefault.default(placement);
-    var invertDistance = [
-        _enumsJs.left,
-        _enumsJs.top
-    ].indexOf(basePlacement) >= 0 ? -1 : 1;
-    var _ref = typeof offset1 === 'function' ? offset1(Object.assign({}, rects, {
-        placement: placement
-    })) : offset1, skidding = _ref[0], distance = _ref[1];
-    skidding = skidding || 0;
-    distance = (distance || 0) * invertDistance;
-    return [
-        _enumsJs.left,
-        _enumsJs.right
-    ].indexOf(basePlacement) >= 0 ? {
-        x: distance,
-        y: skidding
-    } : {
-        x: skidding,
-        y: distance
-    };
-}
-function offset(_ref2) {
-    var state = _ref2.state, options = _ref2.options, name = _ref2.name;
-    var _options$offset = options.offset, offset2 = _options$offset === void 0 ? [
-        0,
-        0
-    ] : _options$offset;
-    var data = _enumsJs.placements.reduce(function(acc, placement) {
-        acc[placement] = distanceAndSkiddingToXY(placement, state.rects, offset2);
-        return acc;
-    }, {});
-    var _data$state$placement = data[state.placement], x = _data$state$placement.x, y = _data$state$placement.y;
-    if (state.modifiersData.popperOffsets != null) {
-        state.modifiersData.popperOffsets.x += x;
-        state.modifiersData.popperOffsets.y += y;
-    }
-    state.modifiersData[name] = data;
-} // eslint-disable-next-line import/no-unused-modules
-exports.default = {
-    name: 'offset',
-    enabled: true,
-    phase: 'main',
-    requires: [
-        'popperOffsets'
-    ],
-    fn: offset
-};
-
-},{"../utils/getBasePlacement.js":"59Wp3","../enums.js":"lCAq5","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"6I679":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _computeOffsetsJs = require("../utils/computeOffsets.js");
-var _computeOffsetsJsDefault = parcelHelpers.interopDefault(_computeOffsetsJs);
-function popperOffsets(_ref) {
-    var state = _ref.state, name = _ref.name;
-    // Offsets are the actual position the popper needs to have to be
-    // properly positioned near its reference element
-    // This is the most basic placement, and will be adjusted by
-    // the modifiers in the next step
-    state.modifiersData[name] = _computeOffsetsJsDefault.default({
-        reference: state.rects.reference,
-        element: state.rects.popper,
-        strategy: 'absolute',
-        placement: state.placement
-    });
-} // eslint-disable-next-line import/no-unused-modules
-exports.default = {
-    name: 'popperOffsets',
-    enabled: true,
-    phase: 'read',
-    fn: popperOffsets,
-    data: {}
-};
-
-},{"../utils/computeOffsets.js":"7jtXk","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"1AMhb":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _enumsJs = require("../enums.js");
-var _getBasePlacementJs = require("../utils/getBasePlacement.js");
-var _getBasePlacementJsDefault = parcelHelpers.interopDefault(_getBasePlacementJs);
-var _getMainAxisFromPlacementJs = require("../utils/getMainAxisFromPlacement.js");
-var _getMainAxisFromPlacementJsDefault = parcelHelpers.interopDefault(_getMainAxisFromPlacementJs);
-var _getAltAxisJs = require("../utils/getAltAxis.js");
-var _getAltAxisJsDefault = parcelHelpers.interopDefault(_getAltAxisJs);
-var _withinJs = require("../utils/within.js");
-var _getLayoutRectJs = require("../dom-utils/getLayoutRect.js");
-var _getLayoutRectJsDefault = parcelHelpers.interopDefault(_getLayoutRectJs);
-var _getOffsetParentJs = require("../dom-utils/getOffsetParent.js");
-var _getOffsetParentJsDefault = parcelHelpers.interopDefault(_getOffsetParentJs);
-var _detectOverflowJs = require("../utils/detectOverflow.js");
-var _detectOverflowJsDefault = parcelHelpers.interopDefault(_detectOverflowJs);
-var _getVariationJs = require("../utils/getVariation.js");
-var _getVariationJsDefault = parcelHelpers.interopDefault(_getVariationJs);
-var _getFreshSideObjectJs = require("../utils/getFreshSideObject.js");
-var _getFreshSideObjectJsDefault = parcelHelpers.interopDefault(_getFreshSideObjectJs);
-var _mathJs = require("../utils/math.js");
-function preventOverflow(_ref) {
-    var state = _ref.state, options = _ref.options, name = _ref.name;
-    var _options$mainAxis = options.mainAxis, checkMainAxis = _options$mainAxis === void 0 ? true : _options$mainAxis, _options$altAxis = options.altAxis, checkAltAxis = _options$altAxis === void 0 ? false : _options$altAxis, boundary = options.boundary, rootBoundary = options.rootBoundary, altBoundary = options.altBoundary, padding = options.padding, _options$tether = options.tether, tether = _options$tether === void 0 ? true : _options$tether, _options$tetherOffset = options.tetherOffset, tetherOffset = _options$tetherOffset === void 0 ? 0 : _options$tetherOffset;
-    var overflow = _detectOverflowJsDefault.default(state, {
-        boundary: boundary,
-        rootBoundary: rootBoundary,
-        padding: padding,
-        altBoundary: altBoundary
-    });
-    var basePlacement = _getBasePlacementJsDefault.default(state.placement);
-    var variation = _getVariationJsDefault.default(state.placement);
-    var isBasePlacement = !variation;
-    var mainAxis = _getMainAxisFromPlacementJsDefault.default(basePlacement);
-    var altAxis = _getAltAxisJsDefault.default(mainAxis);
-    var popperOffsets = state.modifiersData.popperOffsets;
-    var referenceRect = state.rects.reference;
-    var popperRect = state.rects.popper;
-    var tetherOffsetValue = typeof tetherOffset === 'function' ? tetherOffset(Object.assign({}, state.rects, {
-        placement: state.placement
-    })) : tetherOffset;
-    var normalizedTetherOffsetValue = typeof tetherOffsetValue === 'number' ? {
-        mainAxis: tetherOffsetValue,
-        altAxis: tetherOffsetValue
-    } : Object.assign({
-        mainAxis: 0,
-        altAxis: 0
-    }, tetherOffsetValue);
-    var offsetModifierState = state.modifiersData.offset ? state.modifiersData.offset[state.placement] : null;
-    var data = {
-        x: 0,
-        y: 0
-    };
-    if (!popperOffsets) return;
-    if (checkMainAxis) {
-        var _offsetModifierState$;
-        var mainSide = mainAxis === 'y' ? _enumsJs.top : _enumsJs.left;
-        var altSide = mainAxis === 'y' ? _enumsJs.bottom : _enumsJs.right;
-        var len = mainAxis === 'y' ? 'height' : 'width';
-        var offset = popperOffsets[mainAxis];
-        var min = offset + overflow[mainSide];
-        var max = offset - overflow[altSide];
-        var additive = tether ? -popperRect[len] / 2 : 0;
-        var minLen = variation === _enumsJs.start ? referenceRect[len] : popperRect[len];
-        var maxLen = variation === _enumsJs.start ? -popperRect[len] : -referenceRect[len]; // We need to include the arrow in the calculation so the arrow doesn't go
-        // outside the reference bounds
-        var arrowElement = state.elements.arrow;
-        var arrowRect = tether && arrowElement ? _getLayoutRectJsDefault.default(arrowElement) : {
-            width: 0,
-            height: 0
-        };
-        var arrowPaddingObject = state.modifiersData['arrow#persistent'] ? state.modifiersData['arrow#persistent'].padding : _getFreshSideObjectJsDefault.default();
-        var arrowPaddingMin = arrowPaddingObject[mainSide];
-        var arrowPaddingMax = arrowPaddingObject[altSide]; // If the reference length is smaller than the arrow length, we don't want
-        // to include its full size in the calculation. If the reference is small
-        // and near the edge of a boundary, the popper can overflow even if the
-        // reference is not overflowing as well (e.g. virtual elements with no
-        // width or height)
-        var arrowLen = _withinJs.within(0, referenceRect[len], arrowRect[len]);
-        var minOffset = isBasePlacement ? referenceRect[len] / 2 - additive - arrowLen - arrowPaddingMin - normalizedTetherOffsetValue.mainAxis : minLen - arrowLen - arrowPaddingMin - normalizedTetherOffsetValue.mainAxis;
-        var maxOffset = isBasePlacement ? -referenceRect[len] / 2 + additive + arrowLen + arrowPaddingMax + normalizedTetherOffsetValue.mainAxis : maxLen + arrowLen + arrowPaddingMax + normalizedTetherOffsetValue.mainAxis;
-        var arrowOffsetParent = state.elements.arrow && _getOffsetParentJsDefault.default(state.elements.arrow);
-        var clientOffset = arrowOffsetParent ? mainAxis === 'y' ? arrowOffsetParent.clientTop || 0 : arrowOffsetParent.clientLeft || 0 : 0;
-        var offsetModifierValue = (_offsetModifierState$ = offsetModifierState == null ? void 0 : offsetModifierState[mainAxis]) != null ? _offsetModifierState$ : 0;
-        var tetherMin = offset + minOffset - offsetModifierValue - clientOffset;
-        var tetherMax = offset + maxOffset - offsetModifierValue;
-        var preventedOffset = _withinJs.within(tether ? _mathJs.min(min, tetherMin) : min, offset, tether ? _mathJs.max(max, tetherMax) : max);
-        popperOffsets[mainAxis] = preventedOffset;
-        data[mainAxis] = preventedOffset - offset;
-    }
-    if (checkAltAxis) {
-        var _offsetModifierState$2;
-        var _mainSide = mainAxis === 'x' ? _enumsJs.top : _enumsJs.left;
-        var _altSide = mainAxis === 'x' ? _enumsJs.bottom : _enumsJs.right;
-        var _offset = popperOffsets[altAxis];
-        var _len = altAxis === 'y' ? 'height' : 'width';
-        var _min = _offset + overflow[_mainSide];
-        var _max = _offset - overflow[_altSide];
-        var isOriginSide = [
-            _enumsJs.top,
-            _enumsJs.left
-        ].indexOf(basePlacement) !== -1;
-        var _offsetModifierValue = (_offsetModifierState$2 = offsetModifierState == null ? void 0 : offsetModifierState[altAxis]) != null ? _offsetModifierState$2 : 0;
-        var _tetherMin = isOriginSide ? _min : _offset - referenceRect[_len] - popperRect[_len] - _offsetModifierValue + normalizedTetherOffsetValue.altAxis;
-        var _tetherMax = isOriginSide ? _offset + referenceRect[_len] + popperRect[_len] - _offsetModifierValue - normalizedTetherOffsetValue.altAxis : _max;
-        var _preventedOffset = tether && isOriginSide ? _withinJs.withinMaxClamp(_tetherMin, _offset, _tetherMax) : _withinJs.within(tether ? _tetherMin : _min, _offset, tether ? _tetherMax : _max);
-        popperOffsets[altAxis] = _preventedOffset;
-        data[altAxis] = _preventedOffset - _offset;
-    }
-    state.modifiersData[name] = data;
-} // eslint-disable-next-line import/no-unused-modules
-exports.default = {
-    name: 'preventOverflow',
-    enabled: true,
-    phase: 'main',
-    fn: preventOverflow,
-    requiresIfExists: [
-        'offset'
-    ]
-};
-
-},{"../enums.js":"lCAq5","../utils/getBasePlacement.js":"59Wp3","../utils/getMainAxisFromPlacement.js":"1Xlom","../utils/getAltAxis.js":"59FWE","../utils/within.js":"3glSz","../dom-utils/getLayoutRect.js":"jvjuf","../dom-utils/getOffsetParent.js":"laoYw","../utils/detectOverflow.js":"ltCuw","../utils/getVariation.js":"hIo7Y","../utils/getFreshSideObject.js":"g4xOt","../utils/math.js":"gQqVe","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"59FWE":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-function getAltAxis(axis) {
-    return axis === 'x' ? 'y' : 'x';
-}
-exports.default = getAltAxis;
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"9X7Du":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-// eslint-disable-next-line import/no-unused-modules
-parcelHelpers.export(exports, "createPopper", ()=>_createPopperJs.createPopper
-);
-parcelHelpers.export(exports, "popperGenerator", ()=>_createPopperJs.popperGenerator
-);
-parcelHelpers.export(exports, "detectOverflow", ()=>_createPopperJs.detectOverflow
-);
-var _createPopperJs = require("./createPopper.js");
-
-},{"./createPopper.js":"cHuNp","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"cHuNp":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "popperGenerator", ()=>popperGenerator
-);
-parcelHelpers.export(exports, "createPopper", ()=>createPopper
-);
-parcelHelpers.export(exports, "detectOverflow", ()=>_detectOverflowJsDefault.default
-);
-var _getCompositeRectJs = require("./dom-utils/getCompositeRect.js");
-var _getCompositeRectJsDefault = parcelHelpers.interopDefault(_getCompositeRectJs);
-var _getLayoutRectJs = require("./dom-utils/getLayoutRect.js");
-var _getLayoutRectJsDefault = parcelHelpers.interopDefault(_getLayoutRectJs);
-var _listScrollParentsJs = require("./dom-utils/listScrollParents.js");
-var _listScrollParentsJsDefault = parcelHelpers.interopDefault(_listScrollParentsJs);
-var _getOffsetParentJs = require("./dom-utils/getOffsetParent.js");
-var _getOffsetParentJsDefault = parcelHelpers.interopDefault(_getOffsetParentJs);
-var _getComputedStyleJs = require("./dom-utils/getComputedStyle.js");
-var _getComputedStyleJsDefault = parcelHelpers.interopDefault(_getComputedStyleJs);
-var _orderModifiersJs = require("./utils/orderModifiers.js");
-var _orderModifiersJsDefault = parcelHelpers.interopDefault(_orderModifiersJs);
-var _debounceJs = require("./utils/debounce.js");
-var _debounceJsDefault = parcelHelpers.interopDefault(_debounceJs);
-var _validateModifiersJs = require("./utils/validateModifiers.js");
-var _validateModifiersJsDefault = parcelHelpers.interopDefault(_validateModifiersJs);
-var _uniqueByJs = require("./utils/uniqueBy.js");
-var _uniqueByJsDefault = parcelHelpers.interopDefault(_uniqueByJs);
-var _getBasePlacementJs = require("./utils/getBasePlacement.js");
-var _getBasePlacementJsDefault = parcelHelpers.interopDefault(_getBasePlacementJs);
-var _mergeByNameJs = require("./utils/mergeByName.js");
-var _mergeByNameJsDefault = parcelHelpers.interopDefault(_mergeByNameJs);
-var _detectOverflowJs = require("./utils/detectOverflow.js");
-var _detectOverflowJsDefault = parcelHelpers.interopDefault(_detectOverflowJs);
-var _instanceOfJs = require("./dom-utils/instanceOf.js");
-var _enumsJs = require("./enums.js");
-var INVALID_ELEMENT_ERROR = 'Popper: Invalid reference or popper argument provided. They must be either a DOM element or virtual element.';
-var INFINITE_LOOP_ERROR = 'Popper: An infinite loop in the modifiers cycle has been detected! The cycle has been interrupted to prevent a browser crash.';
-var DEFAULT_OPTIONS = {
-    placement: 'bottom',
-    modifiers: [],
-    strategy: 'absolute'
-};
-function areValidElements() {
-    for(var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++)args[_key] = arguments[_key];
-    return !args.some(function(element) {
-        return !(element && typeof element.getBoundingClientRect === 'function');
-    });
-}
-function popperGenerator(generatorOptions) {
-    if (generatorOptions === void 0) generatorOptions = {};
-    var _generatorOptions = generatorOptions, _generatorOptions$def = _generatorOptions.defaultModifiers, defaultModifiers = _generatorOptions$def === void 0 ? [] : _generatorOptions$def, _generatorOptions$def2 = _generatorOptions.defaultOptions, defaultOptions = _generatorOptions$def2 === void 0 ? DEFAULT_OPTIONS : _generatorOptions$def2;
-    return function createPopper(reference1, popper1, options1) {
-        if (options1 === void 0) options1 = defaultOptions;
-        var state1 = {
-            placement: 'bottom',
-            orderedModifiers: [],
-            options: Object.assign({}, DEFAULT_OPTIONS, defaultOptions),
-            modifiersData: {},
-            elements: {
-                reference: reference1,
-                popper: popper1
-            },
-            attributes: {},
-            styles: {}
-        };
-        var effectCleanupFns = [];
-        var isDestroyed = false;
-        var instance = {
-            state: state1,
-            setOptions: function setOptions(setOptionsAction) {
-                var options = typeof setOptionsAction === 'function' ? setOptionsAction(state1.options) : setOptionsAction;
-                cleanupModifierEffects();
-                state1.options = Object.assign({}, defaultOptions, state1.options, options);
-                state1.scrollParents = {
-                    reference: _instanceOfJs.isElement(reference1) ? _listScrollParentsJsDefault.default(reference1) : reference1.contextElement ? _listScrollParentsJsDefault.default(reference1.contextElement) : [],
-                    popper: _listScrollParentsJsDefault.default(popper1)
-                }; // Orders the modifiers based on their dependencies and `phase`
-                // properties
-                var orderedModifiers = _orderModifiersJsDefault.default(_mergeByNameJsDefault.default([].concat(defaultModifiers, state1.options.modifiers))); // Strip out disabled modifiers
-                state1.orderedModifiers = orderedModifiers.filter(function(m) {
-                    return m.enabled;
-                }); // Validate the provided modifiers so that the consumer will get warned
-                var modifiers = _uniqueByJsDefault.default([].concat(orderedModifiers, state1.options.modifiers), function(_ref) {
-                    var name = _ref.name;
-                    return name;
-                });
-                _validateModifiersJsDefault.default(modifiers);
-                if (_getBasePlacementJsDefault.default(state1.options.placement) === _enumsJs.auto) {
-                    var flipModifier = state1.orderedModifiers.find(function(_ref2) {
-                        var name = _ref2.name;
-                        return name === 'flip';
-                    });
-                    if (!flipModifier) console.error([
-                        'Popper: "auto" placements require the "flip" modifier be',
-                        'present and enabled to work.'
-                    ].join(' '));
-                }
-                var _getComputedStyle = _getComputedStyleJsDefault.default(popper1), marginTop = _getComputedStyle.marginTop, marginRight = _getComputedStyle.marginRight, marginBottom = _getComputedStyle.marginBottom, marginLeft = _getComputedStyle.marginLeft; // We no longer take into account `margins` on the popper, and it can
-                // cause bugs with positioning, so we'll warn the consumer
-                if ([
-                    marginTop,
-                    marginRight,
-                    marginBottom,
-                    marginLeft
-                ].some(function(margin) {
-                    return parseFloat(margin);
-                })) console.warn([
-                    'Popper: CSS "margin" styles cannot be used to apply padding',
-                    'between the popper and its reference element or boundary.',
-                    'To replicate margin, use the `offset` modifier, as well as',
-                    'the `padding` option in the `preventOverflow` and `flip`',
-                    'modifiers.'
-                ].join(' '));
-                runModifierEffects();
-                return instance.update();
-            },
-            // Sync update – it will always be executed, even if not necessary. This
-            // is useful for low frequency updates where sync behavior simplifies the
-            // logic.
-            // For high frequency updates (e.g. `resize` and `scroll` events), always
-            // prefer the async Popper#update method
-            forceUpdate: function forceUpdate() {
-                if (isDestroyed) return;
-                var _state$elements = state1.elements, reference = _state$elements.reference, popper = _state$elements.popper; // Don't proceed if `reference` or `popper` are not valid elements
-                // anymore
-                if (!areValidElements(reference, popper)) {
-                    console.error(INVALID_ELEMENT_ERROR);
-                    return;
-                } // Store the reference and popper rects to be read by modifiers
-                state1.rects = {
-                    reference: _getCompositeRectJsDefault.default(reference, _getOffsetParentJsDefault.default(popper), state1.options.strategy === 'fixed'),
-                    popper: _getLayoutRectJsDefault.default(popper)
-                }; // Modifiers have the ability to reset the current update cycle. The
-                // most common use case for this is the `flip` modifier changing the
-                // placement, which then needs to re-run all the modifiers, because the
-                // logic was previously ran for the previous placement and is therefore
-                // stale/incorrect
-                state1.reset = false;
-                state1.placement = state1.options.placement; // On each update cycle, the `modifiersData` property for each modifier
-                // is filled with the initial data specified by the modifier. This means
-                // it doesn't persist and is fresh on each update.
-                // To ensure persistent data, use `${name}#persistent`
-                state1.orderedModifiers.forEach(function(modifier) {
-                    return state1.modifiersData[modifier.name] = Object.assign({}, modifier.data);
-                });
-                var __debug_loops__ = 0;
-                for(var index = 0; index < state1.orderedModifiers.length; index++){
-                    __debug_loops__ += 1;
-                    if (__debug_loops__ > 100) {
-                        console.error(INFINITE_LOOP_ERROR);
-                        break;
-                    }
-                    if (state1.reset === true) {
-                        state1.reset = false;
-                        index = -1;
-                        continue;
-                    }
-                    var _state$orderedModifie = state1.orderedModifiers[index], fn = _state$orderedModifie.fn, _state$orderedModifie2 = _state$orderedModifie.options, _options = _state$orderedModifie2 === void 0 ? {} : _state$orderedModifie2, name = _state$orderedModifie.name;
-                    if (typeof fn === 'function') state1 = fn({
-                        state: state1,
-                        options: _options,
-                        name: name,
-                        instance: instance
-                    }) || state1;
-                }
-            },
-            // Async and optimistically optimized update – it will not be executed if
-            // not necessary (debounced to run at most once-per-tick)
-            update: _debounceJsDefault.default(function() {
-                return new Promise(function(resolve) {
-                    instance.forceUpdate();
-                    resolve(state1);
-                });
-            }),
-            destroy: function destroy() {
-                cleanupModifierEffects();
-                isDestroyed = true;
-            }
-        };
-        if (!areValidElements(reference1, popper1)) {
-            console.error(INVALID_ELEMENT_ERROR);
-            return instance;
-        }
-        instance.setOptions(options1).then(function(state) {
-            if (!isDestroyed && options1.onFirstUpdate) options1.onFirstUpdate(state);
-        }); // Modifiers have the ability to execute arbitrary code before the first
-        // update cycle runs. They will be executed in the same order as the update
-        // cycle. This is useful when a modifier adds some persistent data that
-        // other modifiers need to use, but the modifier is run after the dependent
-        // one.
-        function runModifierEffects() {
-            state1.orderedModifiers.forEach(function(_ref3) {
-                var name = _ref3.name, _ref3$options = _ref3.options, options = _ref3$options === void 0 ? {} : _ref3$options, effect = _ref3.effect;
-                if (typeof effect === 'function') {
-                    var cleanupFn = effect({
-                        state: state1,
-                        name: name,
-                        instance: instance,
-                        options: options
-                    });
-                    var noopFn = function noopFn() {};
-                    effectCleanupFns.push(cleanupFn || noopFn);
-                }
-            });
-        }
-        function cleanupModifierEffects() {
-            effectCleanupFns.forEach(function(fn) {
-                return fn();
-            });
-            effectCleanupFns = [];
-        }
-        return instance;
-    };
-}
-var createPopper = /*#__PURE__*/ popperGenerator(); // eslint-disable-next-line import/no-unused-modules
-
-},{"./dom-utils/getCompositeRect.js":"ijPls","./dom-utils/getLayoutRect.js":"jvjuf","./dom-utils/listScrollParents.js":"2di3T","./dom-utils/getOffsetParent.js":"laoYw","./dom-utils/getComputedStyle.js":"3mZjB","./utils/orderModifiers.js":"N0VO0","./utils/debounce.js":"g6Chr","./utils/validateModifiers.js":"1S5dQ","./utils/uniqueBy.js":"hhl2M","./utils/getBasePlacement.js":"59Wp3","./utils/mergeByName.js":"2zTVN","./utils/detectOverflow.js":"ltCuw","./dom-utils/instanceOf.js":"gYFUC","./enums.js":"lCAq5","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"ijPls":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _getBoundingClientRectJs = require("./getBoundingClientRect.js");
-var _getBoundingClientRectJsDefault = parcelHelpers.interopDefault(_getBoundingClientRectJs);
-var _getNodeScrollJs = require("./getNodeScroll.js");
-var _getNodeScrollJsDefault = parcelHelpers.interopDefault(_getNodeScrollJs);
-var _getNodeNameJs = require("./getNodeName.js");
-var _getNodeNameJsDefault = parcelHelpers.interopDefault(_getNodeNameJs);
-var _instanceOfJs = require("./instanceOf.js");
-var _getWindowScrollBarXJs = require("./getWindowScrollBarX.js");
-var _getWindowScrollBarXJsDefault = parcelHelpers.interopDefault(_getWindowScrollBarXJs);
-var _getDocumentElementJs = require("./getDocumentElement.js");
-var _getDocumentElementJsDefault = parcelHelpers.interopDefault(_getDocumentElementJs);
-var _isScrollParentJs = require("./isScrollParent.js");
-var _isScrollParentJsDefault = parcelHelpers.interopDefault(_isScrollParentJs);
-var _mathJs = require("../utils/math.js");
-function isElementScaled(element) {
-    var rect = element.getBoundingClientRect();
-    var scaleX = _mathJs.round(rect.width) / element.offsetWidth || 1;
-    var scaleY = _mathJs.round(rect.height) / element.offsetHeight || 1;
-    return scaleX !== 1 || scaleY !== 1;
-} // Returns the composite rect of an element relative to its offsetParent.
-function getCompositeRect(elementOrVirtualElement, offsetParent, isFixed) {
-    if (isFixed === void 0) isFixed = false;
-    var isOffsetParentAnElement = _instanceOfJs.isHTMLElement(offsetParent);
-    var offsetParentIsScaled = _instanceOfJs.isHTMLElement(offsetParent) && isElementScaled(offsetParent);
-    var documentElement = _getDocumentElementJsDefault.default(offsetParent);
-    var rect = _getBoundingClientRectJsDefault.default(elementOrVirtualElement, offsetParentIsScaled);
-    var scroll = {
-        scrollLeft: 0,
-        scrollTop: 0
-    };
-    var offsets = {
-        x: 0,
-        y: 0
-    };
-    if (isOffsetParentAnElement || !isOffsetParentAnElement && !isFixed) {
-        if (_getNodeNameJsDefault.default(offsetParent) !== 'body' || _isScrollParentJsDefault.default(documentElement)) scroll = _getNodeScrollJsDefault.default(offsetParent);
-        if (_instanceOfJs.isHTMLElement(offsetParent)) {
-            offsets = _getBoundingClientRectJsDefault.default(offsetParent, true);
-            offsets.x += offsetParent.clientLeft;
-            offsets.y += offsetParent.clientTop;
-        } else if (documentElement) offsets.x = _getWindowScrollBarXJsDefault.default(documentElement);
-    }
-    return {
-        x: rect.left + scroll.scrollLeft - offsets.x,
-        y: rect.top + scroll.scrollTop - offsets.y,
-        width: rect.width,
-        height: rect.height
-    };
-}
-exports.default = getCompositeRect;
-
-},{"./getBoundingClientRect.js":"9CFSQ","./getNodeScroll.js":"bBjCr","./getNodeName.js":"a2Qom","./instanceOf.js":"gYFUC","./getWindowScrollBarX.js":"sz4Ld","./getDocumentElement.js":"eJ9Y1","./isScrollParent.js":"9rLGO","../utils/math.js":"gQqVe","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"bBjCr":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _getWindowScrollJs = require("./getWindowScroll.js");
-var _getWindowScrollJsDefault = parcelHelpers.interopDefault(_getWindowScrollJs);
-var _getWindowJs = require("./getWindow.js");
-var _getWindowJsDefault = parcelHelpers.interopDefault(_getWindowJs);
-var _instanceOfJs = require("./instanceOf.js");
-var _getHTMLElementScrollJs = require("./getHTMLElementScroll.js");
-var _getHTMLElementScrollJsDefault = parcelHelpers.interopDefault(_getHTMLElementScrollJs);
-function getNodeScroll(node) {
-    if (node === _getWindowJsDefault.default(node) || !_instanceOfJs.isHTMLElement(node)) return _getWindowScrollJsDefault.default(node);
-    else return _getHTMLElementScrollJsDefault.default(node);
-}
-exports.default = getNodeScroll;
-
-},{"./getWindowScroll.js":"1XUtN","./getWindow.js":"2SkOo","./instanceOf.js":"gYFUC","./getHTMLElementScroll.js":"6pwY2","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"6pwY2":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-function getHTMLElementScroll(element) {
-    return {
-        scrollLeft: element.scrollLeft,
-        scrollTop: element.scrollTop
-    };
-}
-exports.default = getHTMLElementScroll;
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"N0VO0":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _enumsJs = require("../enums.js"); // source: https://stackoverflow.com/questions/49875255
-function order(modifiers) {
-    var map = new Map();
-    var visited = new Set();
-    var result = [];
-    modifiers.forEach(function(modifier) {
-        map.set(modifier.name, modifier);
-    }); // On visiting object, check for its dependencies and visit them recursively
-    function sort(modifier) {
-        visited.add(modifier.name);
-        var requires = [].concat(modifier.requires || [], modifier.requiresIfExists || []);
-        requires.forEach(function(dep) {
-            if (!visited.has(dep)) {
-                var depModifier = map.get(dep);
-                if (depModifier) sort(depModifier);
-            }
-        });
-        result.push(modifier);
-    }
-    modifiers.forEach(function(modifier) {
-        if (!visited.has(modifier.name)) // check for visited object
-        sort(modifier);
-    });
-    return result;
-}
-function orderModifiers(modifiers) {
-    // order based on dependencies
-    var orderedModifiers = order(modifiers); // order based on phase
-    return _enumsJs.modifierPhases.reduce(function(acc, phase) {
-        return acc.concat(orderedModifiers.filter(function(modifier) {
-            return modifier.phase === phase;
-        }));
-    }, []);
-}
-exports.default = orderModifiers;
-
-},{"../enums.js":"lCAq5","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"g6Chr":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-function debounce(fn) {
-    var pending;
-    return function() {
-        if (!pending) pending = new Promise(function(resolve) {
-            Promise.resolve().then(function() {
-                pending = undefined;
-                resolve(fn());
-            });
-        });
-        return pending;
-    };
-}
-exports.default = debounce;
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"1S5dQ":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _formatJs = require("./format.js");
-var _formatJsDefault = parcelHelpers.interopDefault(_formatJs);
-var _enumsJs = require("../enums.js");
-var INVALID_MODIFIER_ERROR = 'Popper: modifier "%s" provided an invalid %s property, expected %s but got %s';
-var MISSING_DEPENDENCY_ERROR = 'Popper: modifier "%s" requires "%s", but "%s" modifier is not available';
-var VALID_PROPERTIES = [
-    'name',
-    'enabled',
-    'phase',
-    'fn',
-    'effect',
-    'requires',
-    'options'
-];
-function validateModifiers(modifiers) {
-    modifiers.forEach(function(modifier) {
-        [].concat(Object.keys(modifier), VALID_PROPERTIES) // IE11-compatible replacement for `new Set(iterable)`
-        .filter(function(value, index, self) {
-            return self.indexOf(value) === index;
-        }).forEach(function(key) {
-            switch(key){
-                case 'name':
-                    if (typeof modifier.name !== 'string') console.error(_formatJsDefault.default(INVALID_MODIFIER_ERROR, String(modifier.name), '"name"', '"string"', "\"" + String(modifier.name) + "\""));
-                    break;
-                case 'enabled':
-                    if (typeof modifier.enabled !== 'boolean') console.error(_formatJsDefault.default(INVALID_MODIFIER_ERROR, modifier.name, '"enabled"', '"boolean"', "\"" + String(modifier.enabled) + "\""));
-                    break;
-                case 'phase':
-                    if (_enumsJs.modifierPhases.indexOf(modifier.phase) < 0) console.error(_formatJsDefault.default(INVALID_MODIFIER_ERROR, modifier.name, '"phase"', "either " + _enumsJs.modifierPhases.join(', '), "\"" + String(modifier.phase) + "\""));
-                    break;
-                case 'fn':
-                    if (typeof modifier.fn !== 'function') console.error(_formatJsDefault.default(INVALID_MODIFIER_ERROR, modifier.name, '"fn"', '"function"', "\"" + String(modifier.fn) + "\""));
-                    break;
-                case 'effect':
-                    if (modifier.effect != null && typeof modifier.effect !== 'function') console.error(_formatJsDefault.default(INVALID_MODIFIER_ERROR, modifier.name, '"effect"', '"function"', "\"" + String(modifier.fn) + "\""));
-                    break;
-                case 'requires':
-                    if (modifier.requires != null && !Array.isArray(modifier.requires)) console.error(_formatJsDefault.default(INVALID_MODIFIER_ERROR, modifier.name, '"requires"', '"array"', "\"" + String(modifier.requires) + "\""));
-                    break;
-                case 'requiresIfExists':
-                    if (!Array.isArray(modifier.requiresIfExists)) console.error(_formatJsDefault.default(INVALID_MODIFIER_ERROR, modifier.name, '"requiresIfExists"', '"array"', "\"" + String(modifier.requiresIfExists) + "\""));
-                    break;
-                case 'options':
-                case 'data':
-                    break;
-                default:
-                    console.error("PopperJS: an invalid property has been provided to the \"" + modifier.name + "\" modifier, valid properties are " + VALID_PROPERTIES.map(function(s) {
-                        return "\"" + s + "\"";
-                    }).join(', ') + "; but \"" + key + "\" was provided.");
-            }
-            modifier.requires && modifier.requires.forEach(function(requirement) {
-                if (modifiers.find(function(mod) {
-                    return mod.name === requirement;
-                }) == null) console.error(_formatJsDefault.default(MISSING_DEPENDENCY_ERROR, String(modifier.name), requirement, requirement));
-            });
-        });
-    });
-}
-exports.default = validateModifiers;
-
-},{"./format.js":"baNIW","../enums.js":"lCAq5","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"baNIW":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-function format(str) {
-    for(var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++)args[_key - 1] = arguments[_key];
-    return [].concat(args).reduce(function(p, c) {
-        return p.replace(/%s/, c);
-    }, str);
-}
-exports.default = format;
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"hhl2M":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-function uniqueBy(arr, fn) {
-    var identifiers = new Set();
-    return arr.filter(function(item) {
-        var identifier = fn(item);
-        if (!identifiers.has(identifier)) {
-            identifiers.add(identifier);
-            return true;
-        }
-    });
-}
-exports.default = uniqueBy;
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"2zTVN":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-function mergeByName(modifiers) {
-    var merged1 = modifiers.reduce(function(merged, current) {
-        var existing = merged[current.name];
-        merged[current.name] = existing ? Object.assign({}, existing, current, {
-            options: Object.assign({}, existing.options, current.options),
-            data: Object.assign({}, existing.data, current.data)
-        }) : current;
-        return merged;
-    }, {}); // IE11 does not support Object.values
-    return Object.keys(merged1).map(function(key) {
-        return merged1[key];
-    });
-}
-exports.default = mergeByName;
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"7c33z":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _contains = require("dom-helpers/contains");
-var _containsDefault = parcelHelpers.interopDefault(_contains);
-var _listen = require("dom-helpers/listen");
-var _listenDefault = parcelHelpers.interopDefault(_listen);
-var _react = require("react");
-var _useEventCallback = require("@restart/hooks/useEventCallback");
-var _useEventCallbackDefault = parcelHelpers.interopDefault(_useEventCallback);
-var _warning = require("warning");
-var _warningDefault = parcelHelpers.interopDefault(_warning);
-var _ownerDocument = require("./ownerDocument");
-var _ownerDocumentDefault = parcelHelpers.interopDefault(_ownerDocument);
-var escapeKeyCode = 27;
-var noop = function noop() {};
-function isLeftClickEvent(event) {
-    return event.button === 0;
-}
-function isModifiedEvent(event) {
-    return !!(event.metaKey || event.altKey || event.ctrlKey || event.shiftKey);
-}
-var getRefTarget = function getRefTarget(ref) {
-    return ref && ('current' in ref ? ref.current : ref);
-};
-/**
- * The `useRootClose` hook registers your callback on the document
- * when rendered. Powers the `<Overlay/>` component. This is used achieve modal
- * style behavior where your callback is triggered when the user tries to
- * interact with the rest of the document or hits the `esc` key.
- *
- * @param {Ref<HTMLElement>| HTMLElement} ref  The element boundary
- * @param {function} onRootClose
- * @param {object=}  options
- * @param {boolean=} options.disabled
- * @param {string=}  options.clickTrigger The DOM event name (click, mousedown, etc) to attach listeners on
- */ function useRootClose(ref, onRootClose, _temp) {
-    var _ref = _temp === void 0 ? {} : _temp, disabled = _ref.disabled, _ref$clickTrigger = _ref.clickTrigger, clickTrigger = _ref$clickTrigger === void 0 ? 'click' : _ref$clickTrigger;
-    var preventMouseRootCloseRef = _react.useRef(false);
-    var onClose = onRootClose || noop;
-    var handleMouseCapture = _react.useCallback(function(e) {
-        var currentTarget = getRefTarget(ref);
-        _warningDefault.default(!!currentTarget, "RootClose captured a close event but does not have a ref to compare it to. useRootClose(), should be passed a ref that resolves to a DOM node");
-        preventMouseRootCloseRef.current = !currentTarget || isModifiedEvent(e) || !isLeftClickEvent(e) || !!_containsDefault.default(currentTarget, e.target);
-    }, [
-        ref
-    ]);
-    var handleMouse = _useEventCallbackDefault.default(function(e) {
-        if (!preventMouseRootCloseRef.current) onClose(e);
-    });
-    var handleKeyUp = _useEventCallbackDefault.default(function(e) {
-        if (e.keyCode === escapeKeyCode) onClose(e);
-    });
-    _react.useEffect(function() {
-        if (disabled || ref == null) return undefined; // Store the current event to avoid triggering handlers immediately
-        // https://github.com/facebook/react/issues/20074
-        var currentEvent = window.event;
-        var doc = _ownerDocumentDefault.default(getRefTarget(ref)); // Use capture for this listener so it fires before React's listener, to
-        // avoid false positives in the contains() check below if the target DOM
-        // element is removed in the React mouse callback.
-        var removeMouseCaptureListener = _listenDefault.default(doc, clickTrigger, handleMouseCapture, true);
-        var removeMouseListener = _listenDefault.default(doc, clickTrigger, function(e) {
-            // skip if this event is the same as the one running when we added the handlers
-            if (e === currentEvent) {
-                currentEvent = undefined;
-                return;
-            }
-            handleMouse(e);
-        });
-        var removeKeyupListener = _listenDefault.default(doc, 'keyup', function(e) {
-            // skip if this event is the same as the one running when we added the handlers
-            if (e === currentEvent) {
-                currentEvent = undefined;
-                return;
-            }
-            handleKeyUp(e);
-        });
-        var mobileSafariHackListeners = [];
-        if ('ontouchstart' in doc.documentElement) mobileSafariHackListeners = [].slice.call(doc.body.children).map(function(el) {
-            return _listenDefault.default(el, 'mousemove', noop);
-        });
-        return function() {
-            removeMouseCaptureListener();
-            removeMouseListener();
-            removeKeyupListener();
-            mobileSafariHackListeners.forEach(function(remove) {
-                return remove();
-            });
-        };
-    }, [
-        ref,
-        disabled,
-        clickTrigger,
-        handleMouseCapture,
-        handleMouse,
-        handleKeyUp
-    ]);
-}
-exports.default = useRootClose;
-
-},{"dom-helpers/contains":"KpRFS","dom-helpers/listen":"1i4e7","react":"21dqq","@restart/hooks/useEventCallback":"7ONdq","warning":"eUVzU","./ownerDocument":"aTBpb","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"KpRFS":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-function contains(context, node) {
-    // HTML DOM and SVG DOM may have different support levels,
-    // so we need to check on context instead of a document root element.
-    if (context.contains) return context.contains(node);
-    if (context.compareDocumentPosition) return context === node || !!(context.compareDocumentPosition(node) & 16);
-}
-exports.default = contains;
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"aTBpb":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _ownerDocument = require("dom-helpers/ownerDocument");
-var _ownerDocumentDefault = parcelHelpers.interopDefault(_ownerDocument);
-var _safeFindDOMNode = require("./safeFindDOMNode");
-var _safeFindDOMNodeDefault = parcelHelpers.interopDefault(_safeFindDOMNode);
-exports.default = function(componentOrElement) {
-    return _ownerDocumentDefault.default(_safeFindDOMNodeDefault.default(componentOrElement));
-};
-
-},{"dom-helpers/ownerDocument":"2WpOk","./safeFindDOMNode":"lkVze","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"lkVze":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _reactDom = require("react-dom");
-var _reactDomDefault = parcelHelpers.interopDefault(_reactDom);
-function safeFindDOMNode(componentOrElement) {
-    if (componentOrElement && 'setState' in componentOrElement) return _reactDomDefault.default.findDOMNode(componentOrElement);
-    return componentOrElement != null ? componentOrElement : null;
-}
-exports.default = safeFindDOMNode;
-
-},{"react-dom":"j6uA9","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"8kgO1":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "toModifierMap", ()=>toModifierMap
-);
-parcelHelpers.export(exports, "toModifierArray", ()=>toModifierArray
-);
-var _extends = require("@babel/runtime/helpers/esm/extends");
-var _extendsDefault = parcelHelpers.interopDefault(_extends);
-function toModifierMap(modifiers) {
-    var result = {};
-    if (!Array.isArray(modifiers)) return modifiers || result;
-     // eslint-disable-next-line no-unused-expressions
-    modifiers == null || modifiers.forEach(function(m) {
-        result[m.name] = m;
-    });
-    return result;
-}
-function toModifierArray(map) {
-    if (map === void 0) map = {};
-    if (Array.isArray(map)) return map;
-    return Object.keys(map).map(function(k) {
-        map[k].name = k;
-        return map[k];
-    });
-}
-function mergeOptionsWithPopperConfig(_ref) {
-    var _modifiers$preventOve, _modifiers$preventOve2, _modifiers$offset, _modifiers$arrow;
-    var enabled = _ref.enabled, enableEvents = _ref.enableEvents, placement = _ref.placement, flip = _ref.flip, offset = _ref.offset, fixed = _ref.fixed, containerPadding = _ref.containerPadding, arrowElement = _ref.arrowElement, _ref$popperConfig = _ref.popperConfig, popperConfig = _ref$popperConfig === void 0 ? {} : _ref$popperConfig;
-    var modifiers = toModifierMap(popperConfig.modifiers);
-    return _extendsDefault.default({}, popperConfig, {
-        placement: placement,
-        enabled: enabled,
-        strategy: fixed ? 'fixed' : popperConfig.strategy,
-        modifiers: toModifierArray(_extendsDefault.default({}, modifiers, {
-            eventListeners: {
-                enabled: enableEvents
-            },
-            preventOverflow: _extendsDefault.default({}, modifiers.preventOverflow, {
-                options: containerPadding ? _extendsDefault.default({
-                    padding: containerPadding
-                }, (_modifiers$preventOve = modifiers.preventOverflow) == null ? void 0 : _modifiers$preventOve.options) : (_modifiers$preventOve2 = modifiers.preventOverflow) == null ? void 0 : _modifiers$preventOve2.options
-            }),
-            offset: {
-                options: _extendsDefault.default({
-                    offset: offset
-                }, (_modifiers$offset = modifiers.offset) == null ? void 0 : _modifiers$offset.options)
-            },
-            arrow: _extendsDefault.default({}, modifiers.arrow, {
-                enabled: !!arrowElement,
-                options: _extendsDefault.default({}, (_modifiers$arrow = modifiers.arrow) == null ? void 0 : _modifiers$arrow.options, {
-                    element: arrowElement
-                })
-            }),
-            flip: _extendsDefault.default({
-                enabled: !!flip
-            }, modifiers.flip)
-        }))
-    });
-}
-exports.default = mergeOptionsWithPopperConfig;
-
-},{"@babel/runtime/helpers/esm/extends":"fTBFS","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"bQaE1":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-/**
- * Wires up Dropdown toggle functionality, returning a set a props to attach
- * to the element that functions as the dropdown toggle (generally a button).
- *
- * @memberOf Dropdown
- */ parcelHelpers.export(exports, "useDropdownToggle", ()=>useDropdownToggle
-);
-var _propTypes = require("prop-types");
-var _propTypesDefault = parcelHelpers.interopDefault(_propTypes);
-var _react = require("react");
-var _reactDefault = parcelHelpers.interopDefault(_react);
-var _dropdownContext = require("./DropdownContext");
-var _dropdownContextDefault = parcelHelpers.interopDefault(_dropdownContext);
-var noop = function noop() {};
-function useDropdownToggle() {
-    var _ref = _react.useContext(_dropdownContextDefault.default) || {}, _ref$show = _ref.show, show = _ref$show === void 0 ? false : _ref$show, _ref$toggle = _ref.toggle, toggle = _ref$toggle === void 0 ? noop : _ref$toggle, setToggle = _ref.setToggle;
-    var handleClick = _react.useCallback(function(e) {
-        toggle(!show, e);
-    }, [
-        show,
-        toggle
-    ]);
-    return [
-        {
-            ref: setToggle || noop,
-            onClick: handleClick,
-            'aria-haspopup': true,
-            'aria-expanded': !!show
-        },
-        {
-            show: show,
-            toggle: toggle
-        }
-    ];
-}
-var propTypes = {
-    /**
-   * A render prop that returns a Toggle element. The `props`
-   * argument should spread through to **a component that can accept a ref**. Use
-   * the `onToggle` argument to toggle the menu open or closed
-   *
-   * @type {Function ({
-   *   show: boolean,
-   *   toggle: (show: boolean) => void,
-   *   props: {
-   *     ref: (?HTMLElement) => void,
-   *     aria-haspopup: true
-   *     aria-expanded: boolean
-   *   },
-   * }) => React.Element}
-   */ children: _propTypesDefault.default.func.isRequired
-};
-/**
- * Also exported as `<Dropdown.Toggle>` from `Dropdown`.
- *
- * @displayName DropdownToggle
- * @memberOf Dropdown
- */ function DropdownToggle(_ref2) {
-    var children = _ref2.children;
-    var _useDropdownToggle = useDropdownToggle(), props = _useDropdownToggle[0], meta = _useDropdownToggle[1];
-    return /*#__PURE__*/ _reactDefault.default.createElement(_reactDefault.default.Fragment, null, children(props, meta));
-}
-DropdownToggle.displayName = 'ReactOverlaysDropdownToggle';
-DropdownToggle.propTypes = propTypes;
-/** @component */ exports.default = DropdownToggle;
-
-},{"prop-types":"7wKI2","react":"21dqq","./DropdownContext":"5Z71u","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"xQ9Cw":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _extends = require("@babel/runtime/helpers/esm/extends");
-var _extendsDefault = parcelHelpers.interopDefault(_extends);
-var _objectWithoutPropertiesLoose = require("@babel/runtime/helpers/esm/objectWithoutPropertiesLoose");
-var _objectWithoutPropertiesLooseDefault = parcelHelpers.interopDefault(_objectWithoutPropertiesLoose);
-var _classnames = require("classnames");
-var _classnamesDefault = parcelHelpers.interopDefault(_classnames);
-var _react = require("react");
-var _reactDefault = parcelHelpers.interopDefault(_react);
-var _useEventCallback = require("@restart/hooks/useEventCallback");
-var _useEventCallbackDefault = parcelHelpers.interopDefault(_useEventCallback);
-var _selectableContext = require("./SelectableContext");
-var _selectableContextDefault = parcelHelpers.interopDefault(_selectableContext);
-var _themeProvider = require("./ThemeProvider");
-var _navContext = require("./NavContext");
-var _navContextDefault = parcelHelpers.interopDefault(_navContext);
-var _safeAnchor = require("./SafeAnchor");
-var _safeAnchorDefault = parcelHelpers.interopDefault(_safeAnchor);
-var _excluded = [
-    "bsPrefix",
-    "className",
-    "children",
-    "eventKey",
-    "disabled",
-    "href",
-    "onClick",
-    "onSelect",
-    "active",
-    "as"
-];
-var defaultProps = {
-    as: _safeAnchorDefault.default,
-    disabled: false
-};
-var DropdownItem = /*#__PURE__*/ _reactDefault.default.forwardRef(function(_ref, ref) {
-    var bsPrefix = _ref.bsPrefix, className = _ref.className, children = _ref.children, eventKey = _ref.eventKey, disabled = _ref.disabled, href = _ref.href, onClick = _ref.onClick, onSelect = _ref.onSelect, propActive = _ref.active, Component = _ref.as, props = _objectWithoutPropertiesLooseDefault.default(_ref, _excluded);
-    var prefix = _themeProvider.useBootstrapPrefix(bsPrefix, 'dropdown-item');
-    var onSelectCtx = _react.useContext(_selectableContextDefault.default);
-    var navContext = _react.useContext(_navContextDefault.default);
-    var _ref2 = navContext || {}, activeKey = _ref2.activeKey;
-    var key = _selectableContext.makeEventKey(eventKey, href);
-    var active = propActive == null && key != null ? _selectableContext.makeEventKey(activeKey) === key : propActive;
-    var handleClick = _useEventCallbackDefault.default(function(event) {
-        // SafeAnchor handles the disabled case, but we handle it here
-        // for other components
-        if (disabled) return;
-        if (onClick) onClick(event);
-        if (onSelectCtx) onSelectCtx(key, event);
-        if (onSelect) onSelect(key, event);
-    });
-    return(/*#__PURE__*/ // "TS2604: JSX element type 'Component' does not have any construct or call signatures."
-    // @ts-ignore
-    _reactDefault.default.createElement(Component, _extendsDefault.default({}, props, {
-        ref: ref,
-        href: href,
-        disabled: disabled,
-        className: _classnamesDefault.default(className, prefix, active && 'active', disabled && 'disabled'),
-        onClick: handleClick
-    }), children));
-});
-DropdownItem.displayName = 'DropdownItem';
-DropdownItem.defaultProps = defaultProps;
-exports.default = DropdownItem;
-
-},{"@babel/runtime/helpers/esm/extends":"fTBFS","@babel/runtime/helpers/esm/objectWithoutPropertiesLoose":"adHgr","classnames":"jocGM","react":"21dqq","@restart/hooks/useEventCallback":"7ONdq","./SelectableContext":"1LJNj","./ThemeProvider":"dVixI","./NavContext":"bXnMp","./SafeAnchor":"7vUDg","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"1LJNj":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "makeEventKey", ()=>makeEventKey
-);
-var _react = require("react"); // TODO (apparently this is a bare "onSelect"?)
-var _reactDefault = parcelHelpers.interopDefault(_react);
-var SelectableContext = /*#__PURE__*/ _reactDefault.default.createContext(null);
-var makeEventKey = function makeEventKey(eventKey, href) {
-    if (href === void 0) href = null;
-    if (eventKey != null) return String(eventKey);
-    return href || null;
-};
-exports.default = SelectableContext;
-
-},{"react":"21dqq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"bXnMp":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _react = require("react"); // TODO: check this
-var _reactDefault = parcelHelpers.interopDefault(_react);
-var NavContext = /*#__PURE__*/ _reactDefault.default.createContext(null);
-NavContext.displayName = 'NavContext';
-exports.default = NavContext;
-
-},{"react":"21dqq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"6UpAn":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "alignPropType", ()=>alignPropType
-);
-var _extends = require("@babel/runtime/helpers/esm/extends");
-var _extendsDefault = parcelHelpers.interopDefault(_extends);
-var _objectWithoutPropertiesLoose = require("@babel/runtime/helpers/esm/objectWithoutPropertiesLoose");
-var _objectWithoutPropertiesLooseDefault = parcelHelpers.interopDefault(_objectWithoutPropertiesLoose);
-var _classnames = require("classnames");
-var _classnamesDefault = parcelHelpers.interopDefault(_classnames);
-var _propTypes = require("prop-types");
-var _propTypesDefault = parcelHelpers.interopDefault(_propTypes);
-var _react = require("react");
-var _reactDefault = parcelHelpers.interopDefault(_react);
-var _dropdownMenu = require("react-overlays/DropdownMenu");
-var _useMergedRefs = require("@restart/hooks/useMergedRefs");
-var _useMergedRefsDefault = parcelHelpers.interopDefault(_useMergedRefs);
-var _warning = require("warning");
-var _warningDefault = parcelHelpers.interopDefault(_warning);
-var _navbarContext = require("./NavbarContext");
-var _navbarContextDefault = parcelHelpers.interopDefault(_navbarContext);
-var _themeProvider = require("./ThemeProvider");
-var _useWrappedRefWithWarning = require("./useWrappedRefWithWarning");
-var _useWrappedRefWithWarningDefault = parcelHelpers.interopDefault(_useWrappedRefWithWarning);
-var _usePopperMarginModifiers = require("./usePopperMarginModifiers");
-var _usePopperMarginModifiersDefault = parcelHelpers.interopDefault(_usePopperMarginModifiers);
-var _excluded = [
-    "bsPrefix",
-    "className",
-    "align",
-    "alignRight",
-    "rootCloseEvent",
-    "flip",
-    "show",
-    "renderOnMount",
-    "as",
-    "popperConfig"
-];
-var alignDirection = _propTypesDefault.default.oneOf([
-    'left',
-    'right'
-]);
-var alignPropType = _propTypesDefault.default.oneOfType([
-    alignDirection,
-    _propTypesDefault.default.shape({
-        sm: alignDirection
-    }),
-    _propTypesDefault.default.shape({
-        md: alignDirection
-    }),
-    _propTypesDefault.default.shape({
-        lg: alignDirection
-    }),
-    _propTypesDefault.default.shape({
-        xl: alignDirection
-    })
-]);
-var defaultProps = {
-    align: 'left',
-    alignRight: false,
-    flip: true
-};
-var DropdownMenu = /*#__PURE__*/ _reactDefault.default.forwardRef(function(_ref, ref) {
-    var bsPrefix = _ref.bsPrefix, className = _ref.className, align = _ref.align, alignRight = _ref.alignRight, rootCloseEvent = _ref.rootCloseEvent, flip = _ref.flip, showProps = _ref.show, renderOnMount = _ref.renderOnMount, _ref$as = _ref.as, Component = _ref$as === void 0 ? 'div' : _ref$as, popperConfig = _ref.popperConfig, props = _objectWithoutPropertiesLooseDefault.default(_ref, _excluded);
-    var isNavbar = _react.useContext(_navbarContextDefault.default);
-    var prefix = _themeProvider.useBootstrapPrefix(bsPrefix, 'dropdown-menu');
-    var _usePopperMarginModif = _usePopperMarginModifiersDefault.default(), popperRef = _usePopperMarginModif[0], marginModifiers = _usePopperMarginModif[1];
-    var alignClasses = [];
-    if (align) {
-        if (typeof align === 'object') {
-            var keys = Object.keys(align);
-            _warningDefault.default(keys.length === 1, 'There should only be 1 breakpoint when passing an object to `align`');
-            if (keys.length) {
-                var brkPoint = keys[0];
-                var direction = align[brkPoint]; // .dropdown-menu-right is required for responsively aligning
-                // left in addition to align left classes.
-                // Reuse alignRight to toggle the class below.
-                alignRight = direction === 'left';
-                alignClasses.push(prefix + "-" + brkPoint + "-" + direction);
-            }
-        } else if (align === 'right') alignRight = true;
-    }
-    var _useDropdownMenu = _dropdownMenu.useDropdownMenu({
-        flip: flip,
-        rootCloseEvent: rootCloseEvent,
-        show: showProps,
-        alignEnd: alignRight,
-        usePopper: !isNavbar && alignClasses.length === 0,
-        popperConfig: _extendsDefault.default({}, popperConfig, {
-            modifiers: marginModifiers.concat((popperConfig == null ? void 0 : popperConfig.modifiers) || [])
-        })
-    }), menuProps = _useDropdownMenu[0], _useDropdownMenu$ = _useDropdownMenu[1], hasShown = _useDropdownMenu$.hasShown, popper = _useDropdownMenu$.popper, show = _useDropdownMenu$.show, alignEnd = _useDropdownMenu$.alignEnd, toggle = _useDropdownMenu$.toggle;
-    menuProps.ref = _useMergedRefsDefault.default(popperRef, _useMergedRefsDefault.default(_useWrappedRefWithWarningDefault.default(ref, 'DropdownMenu'), menuProps.ref));
-    if (!hasShown && !renderOnMount) return null; // For custom components provide additional, non-DOM, props;
-    if (typeof Component !== 'string') {
-        menuProps.show = show;
-        menuProps.close = function() {
-            return toggle == null ? void 0 : toggle(false);
-        };
-        menuProps.alignRight = alignEnd;
-    }
-    var style = props.style;
-    if (popper != null && popper.placement) {
-        // we don't need the default popper style,
-        // menus are display: none when not shown.
-        style = _extendsDefault.default({}, props.style, menuProps.style);
-        props['x-placement'] = popper.placement;
-    }
-    return /*#__PURE__*/ _reactDefault.default.createElement(Component, _extendsDefault.default({}, props, menuProps, {
-        style: style,
-        className: _classnamesDefault.default.apply(void 0, [
-            className,
-            prefix,
-            show && 'show',
-            alignEnd && prefix + "-right"
-        ].concat(alignClasses))
-    }));
-});
-DropdownMenu.displayName = 'DropdownMenu';
-DropdownMenu.defaultProps = defaultProps;
-exports.default = DropdownMenu;
-
-},{"@babel/runtime/helpers/esm/extends":"fTBFS","@babel/runtime/helpers/esm/objectWithoutPropertiesLoose":"adHgr","classnames":"jocGM","prop-types":"7wKI2","react":"21dqq","react-overlays/DropdownMenu":"9BXyB","@restart/hooks/useMergedRefs":"6hhuo","warning":"eUVzU","./NavbarContext":"dpn1g","./ThemeProvider":"dVixI","./useWrappedRefWithWarning":"a7ejw","./usePopperMarginModifiers":"1Dr1a","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"6hhuo":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "mergeRefs", ()=>mergeRefs
-);
-var _react = require("react");
-var toFnRef = function toFnRef(ref) {
-    return !ref || typeof ref === 'function' ? ref : function(value) {
-        ref.current = value;
-    };
-};
-function mergeRefs(refA, refB) {
-    var a = toFnRef(refA);
-    var b = toFnRef(refB);
-    return function(value) {
-        if (a) a(value);
-        if (b) b(value);
-    };
-}
-/**
- * Create and returns a single callback ref composed from two other Refs.
- *
- * ```tsx
- * const Button = React.forwardRef((props, ref) => {
- *   const [element, attachRef] = useCallbackRef<HTMLButtonElement>();
- *   const mergedRef = useMergedRefs(ref, attachRef);
- *
- *   return <button ref={mergedRef} {...props}/>
- * })
- * ```
- *
- * @param refA A Callback or mutable Ref
- * @param refB A Callback or mutable Ref
- * @category refs
- */ function useMergedRefs(refA, refB) {
-    return _react.useMemo(function() {
-        return mergeRefs(refA, refB);
-    }, [
-        refA,
-        refB
-    ]);
-}
-exports.default = useMergedRefs;
-
-},{"react":"21dqq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"dpn1g":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"dpn1g":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _react = require("react"); // TODO: check
@@ -36728,317 +37175,7 @@ var context = /*#__PURE__*/ _reactDefault.default.createContext(null);
 context.displayName = 'NavbarContext';
 exports.default = context;
 
-},{"react":"21dqq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"a7ejw":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _invariant = require("invariant");
-var _invariantDefault = parcelHelpers.interopDefault(_invariant);
-var _react = require("react");
-var _useMergedRefs = require("@restart/hooks/useMergedRefs");
-var _useMergedRefsDefault = parcelHelpers.interopDefault(_useMergedRefs);
-function useWrappedRefWithWarning(ref, componentName) {
-    var warningRef = _react.useCallback(function(refValue) {
-        !(refValue == null || !refValue.isReactComponent) && _invariantDefault.default(false, componentName + " injected a ref to a provided `as` component that resolved to a component instance instead of a DOM element. " + 'Use `React.forwardRef` to provide the injected ref to the class component as a prop in order to pass it directly to a DOM element');
-    }, [
-        componentName
-    ]); // eslint-disable-next-line react-hooks/rules-of-hooks
-    return _useMergedRefsDefault.default(warningRef, ref);
-}
-exports.default = useWrappedRefWithWarning;
-
-},{"invariant":"d1QgR","react":"21dqq","@restart/hooks/useMergedRefs":"6hhuo","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"1Dr1a":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _react = require("react");
-var _hasClass = require("dom-helpers/hasClass");
-var _hasClassDefault = parcelHelpers.interopDefault(_hasClass);
-var _themeProvider = require("./ThemeProvider");
-function getMargins(element) {
-    var styles = window.getComputedStyle(element);
-    var top = parseFloat(styles.marginTop) || 0;
-    var right = parseFloat(styles.marginRight) || 0;
-    var bottom = parseFloat(styles.marginBottom) || 0;
-    var left = parseFloat(styles.marginLeft) || 0;
-    return {
-        top: top,
-        right: right,
-        bottom: bottom,
-        left: left
-    };
-}
-function usePopperMarginModifiers() {
-    var overlayRef = _react.useRef(null);
-    var margins = _react.useRef(null);
-    var arrowMargins = _react.useRef(null);
-    var popoverClass = _themeProvider.useBootstrapPrefix(undefined, 'popover');
-    var dropdownMenuClass = _themeProvider.useBootstrapPrefix(undefined, 'dropdown-menu');
-    var callback = _react.useCallback(function(overlay) {
-        if (!overlay || !(_hasClassDefault.default(overlay, popoverClass) || _hasClassDefault.default(overlay, dropdownMenuClass))) return;
-        margins.current = getMargins(overlay);
-        overlay.style.margin = '0';
-        overlayRef.current = overlay;
-    }, [
-        popoverClass,
-        dropdownMenuClass
-    ]);
-    var offset = _react.useMemo(function() {
-        return {
-            name: 'offset',
-            options: {
-                offset: function offset(_ref) {
-                    var placement = _ref.placement;
-                    if (!margins.current) return [
-                        0,
-                        0
-                    ];
-                    var _margins$current = margins.current, top = _margins$current.top, left = _margins$current.left, bottom = _margins$current.bottom, right = _margins$current.right;
-                    switch(placement.split('-')[0]){
-                        case 'top':
-                            return [
-                                0,
-                                bottom
-                            ];
-                        case 'left':
-                            return [
-                                0,
-                                right
-                            ];
-                        case 'bottom':
-                            return [
-                                0,
-                                top
-                            ];
-                        case 'right':
-                            return [
-                                0,
-                                left
-                            ];
-                        default:
-                            return [
-                                0,
-                                0
-                            ];
-                    }
-                }
-            }
-        };
-    }, [
-        margins
-    ]);
-    var arrow = _react.useMemo(function() {
-        return {
-            name: 'arrow',
-            options: {
-                padding: function padding() {
-                    // The options here are used for Popper 2.8.4 and up.
-                    // For earlier version, padding is handled in popoverArrowMargins below.
-                    if (!arrowMargins.current) return 0;
-                    var _arrowMargins$current = arrowMargins.current, top = _arrowMargins$current.top, right = _arrowMargins$current.right;
-                    var padding = top || right;
-                    return {
-                        top: padding,
-                        left: padding,
-                        right: padding,
-                        bottom: padding
-                    };
-                }
-            }
-        };
-    }, [
-        arrowMargins
-    ]); // Converts popover arrow margin to arrow modifier padding
-    var popoverArrowMargins = _react.useMemo(function() {
-        return {
-            name: 'popoverArrowMargins',
-            enabled: true,
-            phase: 'main',
-            fn: function fn() {
-                return undefined;
-            },
-            requiresIfExists: [
-                'arrow'
-            ],
-            effect: function effect(_ref2) {
-                var state = _ref2.state;
-                if (!overlayRef.current || !state.elements.arrow || !_hasClassDefault.default(overlayRef.current, popoverClass)) return undefined;
-                if (state.modifiersData['arrow#persistent']) {
-                    // @popperjs/core <= 2.8.3 uses arrow#persistent to pass padding to arrow modifier.
-                    var _getMargins = getMargins(state.elements.arrow), top = _getMargins.top, right = _getMargins.right;
-                    var padding = top || right;
-                    state.modifiersData['arrow#persistent'].padding = {
-                        top: padding,
-                        left: padding,
-                        right: padding,
-                        bottom: padding
-                    };
-                } else // @popperjs/core >= 2.8.4 gets the padding from the arrow modifier options,
-                // so we'll get the margins here, and let the arrow modifier above pass
-                // it to popper.
-                arrowMargins.current = getMargins(state.elements.arrow);
-                state.elements.arrow.style.margin = '0';
-                return function() {
-                    if (state.elements.arrow) state.elements.arrow.style.margin = '';
-                };
-            }
-        };
-    }, [
-        popoverClass
-    ]);
-    return [
-        callback,
-        [
-            offset,
-            arrow,
-            popoverArrowMargins
-        ]
-    ];
-}
-exports.default = usePopperMarginModifiers;
-
-},{"react":"21dqq","dom-helpers/hasClass":"6sJz4","./ThemeProvider":"dVixI","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"6sJz4":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-function hasClass(element, className) {
-    if (element.classList) return !!className && element.classList.contains(className);
-    return (" " + (element.className.baseVal || element.className) + " ").indexOf(" " + className + " ") !== -1;
-}
-exports.default = hasClass;
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gCRNt":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _extends = require("@babel/runtime/helpers/esm/extends");
-var _extendsDefault = parcelHelpers.interopDefault(_extends);
-var _objectWithoutPropertiesLoose = require("@babel/runtime/helpers/esm/objectWithoutPropertiesLoose");
-var _objectWithoutPropertiesLooseDefault = parcelHelpers.interopDefault(_objectWithoutPropertiesLoose);
-var _classnames = require("classnames");
-var _classnamesDefault = parcelHelpers.interopDefault(_classnames);
-var _isRequiredForA11Y = require("prop-types-extra/lib/isRequiredForA11y");
-var _isRequiredForA11YDefault = parcelHelpers.interopDefault(_isRequiredForA11Y);
-var _react = require("react");
-var _reactDefault = parcelHelpers.interopDefault(_react);
-var _dropdownToggle = require("react-overlays/DropdownToggle");
-var _useMergedRefs = require("@restart/hooks/useMergedRefs");
-var _useMergedRefsDefault = parcelHelpers.interopDefault(_useMergedRefs);
-var _button = require("./Button");
-var _buttonDefault = parcelHelpers.interopDefault(_button);
-var _themeProvider = require("./ThemeProvider");
-var _useWrappedRefWithWarning = require("./useWrappedRefWithWarning");
-var _useWrappedRefWithWarningDefault = parcelHelpers.interopDefault(_useWrappedRefWithWarning);
-var _excluded = [
-    "bsPrefix",
-    "split",
-    "className",
-    "childBsPrefix",
-    "as"
-];
-var DropdownToggle = /*#__PURE__*/ _reactDefault.default.forwardRef(function(_ref, ref) {
-    var bsPrefix = _ref.bsPrefix, split = _ref.split, className = _ref.className, childBsPrefix = _ref.childBsPrefix, _ref$as = _ref.as, Component = _ref$as === void 0 ? _buttonDefault.default : _ref$as, props = _objectWithoutPropertiesLooseDefault.default(_ref, _excluded);
-    var prefix = _themeProvider.useBootstrapPrefix(bsPrefix, 'dropdown-toggle');
-    if (childBsPrefix !== undefined) props.bsPrefix = childBsPrefix;
-    var _useDropdownToggle = _dropdownToggle.useDropdownToggle(), toggleProps = _useDropdownToggle[0];
-    toggleProps.ref = _useMergedRefsDefault.default(toggleProps.ref, _useWrappedRefWithWarningDefault.default(ref, 'DropdownToggle')); // This intentionally forwards size and variant (if set) to the
-    // underlying component, to allow it to render size and style variants.
-    return /*#__PURE__*/ _reactDefault.default.createElement(Component, _extendsDefault.default({
-        className: _classnamesDefault.default(className, prefix, split && prefix + "-split")
-    }, toggleProps, props));
-});
-DropdownToggle.displayName = 'DropdownToggle';
-exports.default = DropdownToggle;
-
-},{"@babel/runtime/helpers/esm/extends":"fTBFS","@babel/runtime/helpers/esm/objectWithoutPropertiesLoose":"adHgr","classnames":"jocGM","prop-types-extra/lib/isRequiredForA11y":"lI2zZ","react":"21dqq","react-overlays/DropdownToggle":"bQaE1","@restart/hooks/useMergedRefs":"6hhuo","./Button":"aPzUt","./ThemeProvider":"dVixI","./useWrappedRefWithWarning":"a7ejw","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"lI2zZ":[function(require,module,exports) {
-'use strict';
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.default = isRequiredForA11y;
-function isRequiredForA11y(validator) {
-    return function validate(props, propName, componentName, location, propFullName) {
-        var componentNameSafe = componentName || '<<anonymous>>';
-        var propFullNameSafe = propFullName || propName;
-        if (props[propName] == null) return new Error('The ' + location + ' `' + propFullNameSafe + '` is required to make ' + ('`' + componentNameSafe + '` accessible for users of assistive ') + 'technologies such as screen readers.');
-        for(var _len = arguments.length, args = Array(_len > 5 ? _len - 5 : 0), _key = 5; _key < _len; _key++)args[_key - 5] = arguments[_key];
-        return validator.apply(undefined, [
-            props,
-            propName,
-            componentName,
-            location,
-            propFullName
-        ].concat(args));
-    };
-}
-module.exports = exports['default'];
-
-},{}],"cXyL2":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _extends = require("@babel/runtime/helpers/esm/extends");
-var _extendsDefault = parcelHelpers.interopDefault(_extends);
-var _objectWithoutPropertiesLoose = require("@babel/runtime/helpers/esm/objectWithoutPropertiesLoose");
-var _objectWithoutPropertiesLooseDefault = parcelHelpers.interopDefault(_objectWithoutPropertiesLoose);
-var _classnames = require("classnames");
-var _classnamesDefault = parcelHelpers.interopDefault(_classnames);
-var _all = require("prop-types-extra/lib/all");
-var _allDefault = parcelHelpers.interopDefault(_all);
-var _react = require("react");
-var _reactDefault = parcelHelpers.interopDefault(_react);
-var _uncontrollable = require("uncontrollable");
-var _themeProvider = require("./ThemeProvider");
-var _navbarContext = require("./NavbarContext");
-var _navbarContextDefault = parcelHelpers.interopDefault(_navbarContext);
-var _cardContext = require("./CardContext");
-var _cardContextDefault = parcelHelpers.interopDefault(_cardContext);
-var _abstractNav = require("./AbstractNav");
-var _abstractNavDefault = parcelHelpers.interopDefault(_abstractNav);
-var _navItem = require("./NavItem");
-var _navItemDefault = parcelHelpers.interopDefault(_navItem);
-var _navLink = require("./NavLink");
-var _navLinkDefault = parcelHelpers.interopDefault(_navLink);
-var _excluded = [
-    "as",
-    "bsPrefix",
-    "variant",
-    "fill",
-    "justify",
-    "navbar",
-    "navbarScroll",
-    "className",
-    "children",
-    "activeKey"
-];
-var defaultProps = {
-    justify: false,
-    fill: false
-};
-var Nav = /*#__PURE__*/ _reactDefault.default.forwardRef(function(uncontrolledProps, ref) {
-    var _classNames;
-    var _useUncontrolled = _uncontrollable.useUncontrolled(uncontrolledProps, {
-        activeKey: 'onSelect'
-    }), _useUncontrolled$as = _useUncontrolled.as, as = _useUncontrolled$as === void 0 ? 'div' : _useUncontrolled$as, initialBsPrefix = _useUncontrolled.bsPrefix, variant = _useUncontrolled.variant, fill = _useUncontrolled.fill, justify = _useUncontrolled.justify, navbar = _useUncontrolled.navbar, navbarScroll = _useUncontrolled.navbarScroll, className = _useUncontrolled.className, children = _useUncontrolled.children, activeKey = _useUncontrolled.activeKey, props = _objectWithoutPropertiesLooseDefault.default(_useUncontrolled, _excluded);
-    var bsPrefix = _themeProvider.useBootstrapPrefix(initialBsPrefix, 'nav');
-    var navbarBsPrefix;
-    var cardHeaderBsPrefix;
-    var isNavbar = false;
-    var navbarContext = _react.useContext(_navbarContextDefault.default);
-    var cardContext = _react.useContext(_cardContextDefault.default);
-    if (navbarContext) {
-        navbarBsPrefix = navbarContext.bsPrefix;
-        isNavbar = navbar == null ? true : navbar;
-    } else if (cardContext) cardHeaderBsPrefix = cardContext.cardHeaderBsPrefix;
-    return /*#__PURE__*/ _reactDefault.default.createElement(_abstractNavDefault.default, _extendsDefault.default({
-        as: as,
-        ref: ref,
-        activeKey: activeKey,
-        className: _classnamesDefault.default(className, (_classNames = {}, _classNames[bsPrefix] = !isNavbar, _classNames[navbarBsPrefix + "-nav"] = isNavbar, _classNames[navbarBsPrefix + "-nav-scroll"] = isNavbar && navbarScroll, _classNames[cardHeaderBsPrefix + "-" + variant] = !!cardHeaderBsPrefix, _classNames[bsPrefix + "-" + variant] = !!variant, _classNames[bsPrefix + "-fill"] = fill, _classNames[bsPrefix + "-justified"] = justify, _classNames))
-    }, props), children);
-});
-Nav.displayName = 'Nav';
-Nav.defaultProps = defaultProps;
-Nav.Item = _navItemDefault.default;
-Nav.Link = _navLinkDefault.default;
-exports.default = Nav;
-
-},{"@babel/runtime/helpers/esm/extends":"fTBFS","@babel/runtime/helpers/esm/objectWithoutPropertiesLoose":"adHgr","classnames":"jocGM","prop-types-extra/lib/all":"37Ank","react":"21dqq","uncontrollable":"b3yWY","./ThemeProvider":"dVixI","./NavbarContext":"dpn1g","./CardContext":"2ltzW","./AbstractNav":"8S2zj","./NavItem":"ew05W","./NavLink":"7geL8","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"8S2zj":[function(require,module,exports) {
+},{"react":"21dqq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"8S2zj":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _extends = require("@babel/runtime/helpers/esm/extends");
@@ -37149,7 +37286,98 @@ var AbstractNav = /*#__PURE__*/ _reactDefault.default.forwardRef(function(_ref, 
 });
 exports.default = AbstractNav;
 
-},{"@babel/runtime/helpers/esm/extends":"fTBFS","@babel/runtime/helpers/esm/objectWithoutPropertiesLoose":"adHgr","dom-helpers/querySelectorAll":"g5Sx6","react":"21dqq","@restart/hooks/useForceUpdate":"3Y4bz","@restart/hooks/useMergedRefs":"6hhuo","./NavContext":"bXnMp","./SelectableContext":"1LJNj","./TabContext":"ixUmk","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"ixUmk":[function(require,module,exports) {
+},{"@babel/runtime/helpers/esm/extends":"fTBFS","@babel/runtime/helpers/esm/objectWithoutPropertiesLoose":"adHgr","dom-helpers/querySelectorAll":"g5Sx6","react":"21dqq","@restart/hooks/useForceUpdate":"3Y4bz","@restart/hooks/useMergedRefs":"6hhuo","./NavContext":"bXnMp","./SelectableContext":"1LJNj","./TabContext":"ixUmk","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"g5Sx6":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var toArray = Function.prototype.bind.call(Function.prototype.call, [].slice);
+function qsa(element, selector) {
+    return toArray(element.querySelectorAll(selector));
+}
+exports.default = qsa;
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"3Y4bz":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _react = require("react");
+function useForceUpdate() {
+    // The toggling state value is designed to defeat React optimizations for skipping
+    // updates when they are stricting equal to the last state value
+    var _useReducer = _react.useReducer(function(state) {
+        return !state;
+    }, false), dispatch = _useReducer[1];
+    return dispatch;
+}
+exports.default = useForceUpdate;
+
+},{"react":"21dqq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"6hhuo":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "mergeRefs", ()=>mergeRefs
+);
+var _react = require("react");
+var toFnRef = function toFnRef(ref) {
+    return !ref || typeof ref === 'function' ? ref : function(value) {
+        ref.current = value;
+    };
+};
+function mergeRefs(refA, refB) {
+    var a = toFnRef(refA);
+    var b = toFnRef(refB);
+    return function(value) {
+        if (a) a(value);
+        if (b) b(value);
+    };
+}
+/**
+ * Create and returns a single callback ref composed from two other Refs.
+ *
+ * ```tsx
+ * const Button = React.forwardRef((props, ref) => {
+ *   const [element, attachRef] = useCallbackRef<HTMLButtonElement>();
+ *   const mergedRef = useMergedRefs(ref, attachRef);
+ *
+ *   return <button ref={mergedRef} {...props}/>
+ * })
+ * ```
+ *
+ * @param refA A Callback or mutable Ref
+ * @param refB A Callback or mutable Ref
+ * @category refs
+ */ function useMergedRefs(refA, refB) {
+    return _react.useMemo(function() {
+        return mergeRefs(refA, refB);
+    }, [
+        refA,
+        refB
+    ]);
+}
+exports.default = useMergedRefs;
+
+},{"react":"21dqq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"bXnMp":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _react = require("react"); // TODO: check this
+var _reactDefault = parcelHelpers.interopDefault(_react);
+var NavContext = /*#__PURE__*/ _reactDefault.default.createContext(null);
+NavContext.displayName = 'NavContext';
+exports.default = NavContext;
+
+},{"react":"21dqq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"1LJNj":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "makeEventKey", ()=>makeEventKey
+);
+var _react = require("react"); // TODO (apparently this is a bare "onSelect"?)
+var _reactDefault = parcelHelpers.interopDefault(_react);
+var SelectableContext = /*#__PURE__*/ _reactDefault.default.createContext(null);
+var makeEventKey = function makeEventKey(eventKey, href) {
+    if (href === void 0) href = null;
+    if (eventKey != null) return String(eventKey);
+    return href || null;
+};
+exports.default = SelectableContext;
+
+},{"react":"21dqq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"ixUmk":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _react = require("react");
@@ -37301,7 +37529,46 @@ var AbstractNavItem = /*#__PURE__*/ _reactDefault.default.forwardRef(function(_r
 AbstractNavItem.defaultProps = defaultProps;
 exports.default = AbstractNavItem;
 
-},{"@babel/runtime/helpers/esm/extends":"fTBFS","@babel/runtime/helpers/esm/objectWithoutPropertiesLoose":"adHgr","classnames":"jocGM","react":"21dqq","@restart/hooks/useEventCallback":"7ONdq","warning":"eUVzU","./NavContext":"bXnMp","./SelectableContext":"1LJNj","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"1mHjo":[function(require,module,exports) {
+},{"@babel/runtime/helpers/esm/extends":"fTBFS","@babel/runtime/helpers/esm/objectWithoutPropertiesLoose":"adHgr","classnames":"jocGM","react":"21dqq","@restart/hooks/useEventCallback":"7ONdq","warning":"eUVzU","./NavContext":"bXnMp","./SelectableContext":"1LJNj","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"7ONdq":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _react = require("react");
+var _useCommittedRef = require("./useCommittedRef");
+var _useCommittedRefDefault = parcelHelpers.interopDefault(_useCommittedRef);
+function useEventCallback(fn) {
+    var ref = _useCommittedRefDefault.default(fn);
+    return _react.useCallback(function() {
+        return ref.current && ref.current.apply(ref, arguments);
+    }, [
+        ref
+    ]);
+}
+exports.default = useEventCallback;
+
+},{"react":"21dqq","./useCommittedRef":"g5BYG","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"g5BYG":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _react = require("react");
+/**
+ * Creates a `Ref` whose value is updated in an effect, ensuring the most recent
+ * value is the one rendered with. Generally only required for Concurrent mode usage
+ * where previous work in `render()` may be discarded befor being used.
+ *
+ * This is safe to access in an event handler.
+ *
+ * @param value The `Ref` value
+ */ function useCommittedRef(value) {
+    var ref = _react.useRef(value);
+    _react.useEffect(function() {
+        ref.current = value;
+    }, [
+        value
+    ]);
+    return ref;
+}
+exports.default = useCommittedRef;
+
+},{"react":"21dqq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"1mHjo":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _extends = require("@babel/runtime/helpers/esm/extends");
@@ -37512,7 +37779,7 @@ NavbarToggle.displayName = 'NavbarToggle';
 NavbarToggle.defaultProps = defaultProps;
 exports.default = NavbarToggle;
 
-},{"@babel/runtime/helpers/esm/extends":"fTBFS","@babel/runtime/helpers/esm/objectWithoutPropertiesLoose":"adHgr","classnames":"jocGM","react":"21dqq","@restart/hooks/useEventCallback":"7ONdq","./ThemeProvider":"dVixI","./NavbarContext":"dpn1g","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"8e6QB":[function(require,module,exports) {
+},{"@babel/runtime/helpers/esm/extends":"fTBFS","@babel/runtime/helpers/esm/objectWithoutPropertiesLoose":"adHgr","classnames":"jocGM","react":"21dqq","@restart/hooks/useEventCallback":"7ONdq","./ThemeProvider":"dVixI","./NavbarContext":"dpn1g","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"cMC39":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _extends = require("@babel/runtime/helpers/esm/extends");
@@ -37524,50 +37791,51 @@ var _classnamesDefault = parcelHelpers.interopDefault(_classnames);
 var _react = require("react");
 var _reactDefault = parcelHelpers.interopDefault(_react);
 var _themeProvider = require("./ThemeProvider");
-var _dropdown = require("./Dropdown");
-var _dropdownDefault = parcelHelpers.interopDefault(_dropdown);
-var _navLink = require("./NavLink");
-var _navLinkDefault = parcelHelpers.interopDefault(_navLink);
 var _excluded = [
-    "id",
-    "title",
-    "children",
     "bsPrefix",
     "className",
-    "rootCloseEvent",
-    "menuRole",
-    "disabled",
-    "active",
-    "renderMenuOnMount"
+    "noGutters",
+    "as"
 ];
-var NavDropdown = /*#__PURE__*/ _reactDefault.default.forwardRef(function(_ref, ref) {
-    var id = _ref.id, title = _ref.title, children = _ref.children, bsPrefix = _ref.bsPrefix, className = _ref.className, rootCloseEvent = _ref.rootCloseEvent, menuRole = _ref.menuRole, disabled = _ref.disabled, active = _ref.active, renderMenuOnMount = _ref.renderMenuOnMount, props = _objectWithoutPropertiesLooseDefault.default(_ref, _excluded);
-    /* NavItem has no additional logic, it's purely presentational. Can set nav item class here to support "as" */ var navItemPrefix = _themeProvider.useBootstrapPrefix(undefined, 'nav-item');
-    return /*#__PURE__*/ _reactDefault.default.createElement(_dropdownDefault.default, _extendsDefault.default({
+var DEVICE_SIZES = [
+    'xl',
+    'lg',
+    'md',
+    'sm',
+    'xs'
+];
+var defaultProps = {
+    noGutters: false
+};
+var Row = /*#__PURE__*/ _reactDefault.default.forwardRef(function(_ref, ref) {
+    var bsPrefix = _ref.bsPrefix, className = _ref.className, noGutters = _ref.noGutters, _ref$as = _ref.as, Component = _ref$as === void 0 ? 'div' : _ref$as, props = _objectWithoutPropertiesLooseDefault.default(_ref, _excluded);
+    var decoratedBsPrefix = _themeProvider.useBootstrapPrefix(bsPrefix, 'row');
+    var sizePrefix = decoratedBsPrefix + "-cols";
+    var classes = [];
+    DEVICE_SIZES.forEach(function(brkPoint) {
+        var propValue = props[brkPoint];
+        delete props[brkPoint];
+        var cols;
+        if (propValue != null && typeof propValue === 'object') cols = propValue.cols;
+        else cols = propValue;
+        var infix = brkPoint !== 'xs' ? "-" + brkPoint : '';
+        if (cols != null) classes.push("" + sizePrefix + infix + "-" + cols);
+    });
+    return /*#__PURE__*/ _reactDefault.default.createElement(Component, _extendsDefault.default({
         ref: ref
     }, props, {
-        className: _classnamesDefault.default(className, navItemPrefix)
-    }), /*#__PURE__*/ _reactDefault.default.createElement(_dropdownDefault.default.Toggle, {
-        id: id,
-        eventKey: null,
-        active: active,
-        disabled: disabled,
-        childBsPrefix: bsPrefix,
-        as: _navLinkDefault.default
-    }, title), /*#__PURE__*/ _reactDefault.default.createElement(_dropdownDefault.default.Menu, {
-        role: menuRole,
-        renderOnMount: renderMenuOnMount,
-        rootCloseEvent: rootCloseEvent
-    }, children));
+        className: _classnamesDefault.default.apply(void 0, [
+            className,
+            decoratedBsPrefix,
+            noGutters && 'no-gutters'
+        ].concat(classes))
+    }));
 });
-NavDropdown.displayName = 'NavDropdown';
-NavDropdown.Item = _dropdownDefault.default.Item;
-NavDropdown.ItemText = _dropdownDefault.default.ItemText;
-NavDropdown.Divider = _dropdownDefault.default.Divider;
-NavDropdown.Header = _dropdownDefault.default.Header;
-exports.default = NavDropdown;
+Row.displayName = 'Row';
+Row.defaultProps = defaultProps;
+exports.default = Row;
 
-},{"@babel/runtime/helpers/esm/extends":"fTBFS","@babel/runtime/helpers/esm/objectWithoutPropertiesLoose":"adHgr","classnames":"jocGM","react":"21dqq","./ThemeProvider":"dVixI","./Dropdown":"88m2L","./NavLink":"7geL8","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gEkAm":[function(require,module,exports) {
+},{"@babel/runtime/helpers/esm/extends":"fTBFS","@babel/runtime/helpers/esm/objectWithoutPropertiesLoose":"adHgr","classnames":"jocGM","react":"21dqq","./ThemeProvider":"dVixI","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gEkAm":[function(require,module,exports) {
 var $parcel$ReactRefreshHelpers$e54a = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 var prevRefreshReg = window.$RefreshReg$;
 var prevRefreshSig = window.$RefreshSig$;
@@ -37659,7 +37927,7 @@ $RefreshReg$(_c, "NavView");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","react-bootstrap":"3AD9A","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","./login-view/login-view":"9YtA0","react-router-dom":"cHIiW"}],"4tuA0":[function(require,module,exports) {
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","react-bootstrap":"3AD9A","./login-view/login-view":"9YtA0","react-router-dom":"cHIiW","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"4tuA0":[function(require,module,exports) {
 var $parcel$ReactRefreshHelpers$377f = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 var prevRefreshReg = window.$RefreshReg$;
 var prevRefreshSig = window.$RefreshSig$;
@@ -37732,7 +38000,7 @@ class GenreView extends _reactDefault.default.Component {
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","react-bootstrap/Button":"aPzUt","react-bootstrap/Card":"lAynp","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","../navbar":"gEkAm"}],"9tpci":[function(require,module,exports) {
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","react-bootstrap/Button":"aPzUt","react-bootstrap/Card":"lAynp","../navbar":"gEkAm","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"9tpci":[function(require,module,exports) {
 var $parcel$ReactRefreshHelpers$ad4a = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 var prevRefreshReg = window.$RefreshReg$;
 var prevRefreshSig = window.$RefreshSig$;
@@ -37824,7 +38092,7 @@ class DirectorView extends _reactDefault.default.Component {
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","react-bootstrap/Card":"lAynp","react-bootstrap/Button":"aPzUt","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","../navbar":"gEkAm"}],"2vVqf":[function(require,module,exports) {
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","react-bootstrap/Card":"lAynp","react-bootstrap/Button":"aPzUt","../navbar":"gEkAm","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"2vVqf":[function(require,module,exports) {
 var $parcel$ReactRefreshHelpers$3c12 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 var prevRefreshReg = window.$RefreshReg$;
 var prevRefreshSig = window.$RefreshSig$;
@@ -38352,3705 +38620,6 @@ ProfileView.propTypes = {
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","axios":"jo6P5","prop-types":"7wKI2","react-bootstrap/Form":"iBZ80","react-bootstrap/Button":"aPzUt","react-bootstrap/Col":"2L2I6","react-router-dom":"cHIiW","react-bootstrap":"3AD9A","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"lJZlQ":[function() {},{}],"dc9eP":[function(require,module,exports) {
-var global = arguments[3];
-var process = require("process");
-/*! AtatusJs - v4.4.1 - 2022-03-15
-* Copyright (c) 2022 Atatus */ !function(a1) {
-    function b1(a, b) {
-        return Object.prototype.hasOwnProperty.call(a, b);
-    }
-    function c1(a) {
-        return "undefined" == typeof a;
-    }
-    if (a1) {
-        var d1 = {}, e1 = a1.TraceKit, f1 = [].slice, g1 = "?";
-        d1.noConflict = function() {
-            return a1.TraceKit = e1, d1;
-        }, d1.wrap = function(a) {
-            function b2() {
-                try {
-                    return a.apply(this, arguments);
-                } catch (b) {
-                    throw d1.report(b), b;
-                }
-            }
-            return b2;
-        }, d1.report = function() {
-            function c2(a) {
-                h1(), m.push(a);
-            }
-            function e3(a) {
-                for(var b = m.length - 1; b >= 0; --b)m[b] === a && m.splice(b, 1);
-            }
-            function f3(a, c, e) {
-                var f = null;
-                if (!c || d1.collectWindowErrors) {
-                    for(var g in m)if (b1(m, g)) try {
-                        m[g](a, c, e);
-                    } catch (h) {
-                        f = h;
-                    }
-                    if (f) throw f;
-                }
-            }
-            function g3(a, b, c, e, g) {
-                var h = null;
-                if (o) d1.computeStackTrace.augmentStackTraceWithInitialElement(o, b, c, a), i();
-                else if (g) h = d1.computeStackTrace(g), f3(h, !0, g);
-                else {
-                    var j = {
-                        url: b,
-                        line: c,
-                        column: e
-                    };
-                    j.func = d1.computeStackTrace.guessFunctionName(j.url, j.line), j.context = d1.computeStackTrace.gatherContext(j.url, j.line), h = {
-                        mode: "onerror",
-                        message: a,
-                        stack: [
-                            j
-                        ]
-                    }, f3(h, !0, null);
-                }
-                return k ? k.apply(this, arguments) : !1;
-            }
-            function h1() {
-                l !== !0 && (k = a1.onerror, a1.onerror = g3, l = !0);
-            }
-            function i() {
-                var a = o, b = n;
-                o = null, n = null, f3(a, !1, b);
-            }
-            function j1(b) {
-                if (o) {
-                    if (n === b) return;
-                    i();
-                }
-                var c = d1.computeStackTrace(b);
-                throw o = c, n = b, a1.setTimeout(function() {
-                    n === b && i();
-                }, c.incomplete ? 2000 : 0), b;
-            }
-            var k, l, m = [], n = null, o = null;
-            return j1.subscribe = c2, j1.unsubscribe = e3, j1;
-        }(), d1.computeStackTrace = function() {
-            function e4(a) {
-                return "string" != typeof a ? [] : "";
-            }
-            function f4(c) {
-                if ("string" != typeof c) return [];
-                if (!b1(w1, c)) {
-                    var d = "", f = "";
-                    try {
-                        f = a1.document.domain;
-                    } catch (g) {}
-                    var h = /(.*)\:\/\/([^:\/]+)([:\d]*)\/{0,1}([\s\S]*)/.exec(c);
-                    h && h[2] === f && (d = e4(c)), w1[c] = d ? d.split("\n") : [];
-                }
-                return w1[c];
-            }
-            function h2(a, b) {
-                var d, e = /function ([^(]*)\(([^)]*)\)/, h = /['"]?([0-9A-Za-z$_]+)['"]?\s*[:=]\s*(function|eval|new Function)/, i = "", j = 10, k = f4(a);
-                if (!k.length) return g1;
-                for(var l = 0; j > l; ++l)if (i = k[b - l] + i, !c1(i)) {
-                    if (d = h.exec(i)) return d[1];
-                    if (d = e.exec(i)) return d[1];
-                }
-                return g1;
-            }
-            function i1(a, b) {
-                var e = f4(a);
-                if (!e.length) return null;
-                var g = [], h = Math.floor(d1.linesOfContext / 2), i = h + d1.linesOfContext % 2, j = Math.max(0, b - h - 1), k = Math.min(e.length, b + i - 1);
-                b -= 1;
-                for(var l = j; k > l; ++l)c1(e[l]) || g.push(e[l]);
-                return g.length > 0 ? g : null;
-            }
-            function j2(a) {
-                return a.replace(/[\-\[\]{}()*+?.,\\\^$|#]/g, "\\$&");
-            }
-            function k1(a) {
-                return j2(a).replace("<", "(?:<|&lt;)").replace(">", "(?:>|&gt;)").replace("&", "(?:&|&amp;)").replace('"', '(?:"|&quot;)').replace(/\s+/g, "\\s+");
-            }
-            function l1(a, b) {
-                for(var c, d, e = 0, g = b.length; g > e; ++e)if ((c = f4(b[e])).length && (c = c.join("\n"), d = a.exec(c))) return {
-                    url: b[e],
-                    line: c.substring(0, d.index).split("\n").length,
-                    column: d.index - c.lastIndexOf("\n", d.index) - 1
-                };
-                return null;
-            }
-            function m1(a, b, c) {
-                var d, e = f4(b), g = new RegExp("\\b" + j2(a) + "\\b");
-                return c -= 1, e && e.length > c && (d = g.exec(e[c])) ? d.index : null;
-            }
-            function n1(b) {
-                if (!c1(a1 && a1.document)) {
-                    for(var d, e, f, g, h = [
-                        a1.location.href
-                    ], i = a1.document.getElementsByTagName("script"), m = "" + b, n = /^function(?:\s+([\w$]+))?\s*\(([\w\s,]*)\)\s*\{\s*(\S[\s\S]*\S)\s*\}\s*$/, o = /^function on([\w$]+)\s*\(event\)\s*\{\s*(\S[\s\S]*\S)\s*\}\s*$/, p = 0; p < i.length; ++p){
-                        var q = i[p];
-                        q.src && h.push(q.src);
-                    }
-                    if (f = n.exec(m)) {
-                        var r = f[1] ? "\\s+" + f[1] : "", s = f[2].split(",").join("\\s*,\\s*");
-                        d = j2(f[3]).replace(/;$/, ";?"), e = new RegExp("function" + r + "\\s*\\(\\s*" + s + "\\s*\\)\\s*{\\s*" + d + "\\s*}");
-                    } else e = new RegExp(j2(m).replace(/\s+/g, "\\s+"));
-                    if (g = l1(e, h)) return g;
-                    if (f = o.exec(m)) {
-                        var t = f[1];
-                        if (d = k1(f[2]), e = new RegExp("on" + t + "=[\\'\"]\\s*" + d + "\\s*[\\'\"]", "i"), g = l1(e, h[0])) return g;
-                        if (e = new RegExp(d), g = l1(e, h)) return g;
-                    }
-                    return null;
-                }
-            }
-            function o1(a) {
-                if (!a.stack) return null;
-                for(var b, d, e = /^\s*at (.*?) ?\(((?:file|https?|blob|chrome-extension|native|webpack|eval).*?)(?::(\d+))?(?::(\d+))?\)?\s*$/i, f = /^\s*(.*?)(?:\((.*?)\))?(?:^|@)((?:file|https?|blob|chrome|webpack|\[native).*?)(?::(\d+))?(?::(\d+))?\s*$/i, j = /^\s*at (?:((?:\[object object\])?.+) )?\(?((?:ms-appx|https?|webpack|blob):.*?):(\d+)(?::(\d+))?\)?\s*$/i, k = a.stack.split("\n"), l = [], n = /^(.*) is undefined$/.exec(a.message), o = 0, p = k.length; p > o; ++o){
-                    if (b = e.exec(k[o])) {
-                        var q = b[2] && -1 !== b[2].indexOf("native");
-                        d = {
-                            url: q ? null : b[2],
-                            func: b[1] || g1,
-                            args: q ? [
-                                b[2]
-                            ] : [],
-                            line: b[3] ? +b[3] : null,
-                            column: b[4] ? +b[4] : null
-                        };
-                    } else if (b = j.exec(k[o])) d = {
-                        url: b[2],
-                        func: b[1] || g1,
-                        args: [],
-                        line: +b[3],
-                        column: b[4] ? +b[4] : null
-                    };
-                    else {
-                        if (!(b = f.exec(k[o]))) continue;
-                        d = {
-                            url: b[3],
-                            func: b[1] || g1,
-                            args: b[2] ? b[2].split(",") : [],
-                            line: b[4] ? +b[4] : null,
-                            column: b[5] ? +b[5] : null
-                        };
-                    }
-                    !d.func && d.line && (d.func = h2(d.url, d.line)), d.line && (d.context = i1(d.url, d.line)), l.push(d);
-                }
-                return l.length ? (l[0] && l[0].line && !l[0].column && n ? l[0].column = m1(n[1], l[0].url, l[0].line) : l[0].column || c1(a.columnNumber) || (l[0].column = a.columnNumber + 1), {
-                    mode: "stack",
-                    name: a.name,
-                    message: a.message,
-                    stack: l
-                }) : null;
-            }
-            function p1(a) {
-                var b = a.stacktrace;
-                if (b) {
-                    for(var c, d = / line (\d+).*script (?:in )?(\S+)(?:: in function (\S+))?$/i, e = / line (\d+), column (\d+)\s*(?:in (?:<anonymous function: ([^>]+)>|([^\)]+))\((.*)\))? in (.*):\s*$/i, f = b.split("\n"), g = [], j = 0; j < f.length; j += 2){
-                        var k = null;
-                        if ((c = d.exec(f[j])) ? k = {
-                            url: c[2],
-                            line: +c[1],
-                            column: null,
-                            func: c[3],
-                            args: []
-                        } : (c = e.exec(f[j])) && (k = {
-                            url: c[6],
-                            line: +c[1],
-                            column: +c[2],
-                            func: c[3] || c[4],
-                            args: c[5] ? c[5].split(",") : []
-                        }), k) {
-                            if (!k.func && k.line && (k.func = h2(k.url, k.line)), k.line) try {
-                                k.context = i1(k.url, k.line);
-                            } catch (l) {}
-                            k.context || (k.context = [
-                                f[j + 1]
-                            ]), g.push(k);
-                        }
-                    }
-                    return g.length ? {
-                        mode: "stacktrace",
-                        name: a.name,
-                        message: a.message,
-                        stack: g
-                    } : null;
-                }
-            }
-            function q1(c) {
-                var d = c.message.split("\n");
-                if (d.length < 4) return null;
-                var e, g = /^\s*Line (\d+) of linked script ((?:file|https?|blob)\S+)(?:: in function (\S+))?\s*$/i, j = /^\s*Line (\d+) of inline#(\d+) script in ((?:file|https?|blob)\S+)(?:: in function (\S+))?\s*$/i, m = /^\s*Line (\d+) of function script\s*$/i, n = [], o = a1 && a1.document && a1.document.getElementsByTagName("script"), p = [];
-                for(var q in o)b1(o, q) && !o[q].src && p.push(o[q]);
-                for(var r = 2; r < d.length; r += 2){
-                    var s = null;
-                    if (e = g.exec(d[r])) s = {
-                        url: e[2],
-                        func: e[3],
-                        args: [],
-                        line: +e[1],
-                        column: null
-                    };
-                    else if (e = j.exec(d[r])) {
-                        s = {
-                            url: e[3],
-                            func: e[4],
-                            args: [],
-                            line: +e[1],
-                            column: null
-                        };
-                        var t = +e[1], u = p[e[2] - 1];
-                        if (u) {
-                            var v = f4(s.url);
-                            if (v) {
-                                v = v.join("\n");
-                                var w = v.indexOf(u.innerText);
-                                w >= 0 && (s.line = t + v.substring(0, w).split("\n").length);
-                            }
-                        }
-                    } else if (e = m.exec(d[r])) {
-                        var x = a1.location.href.replace(/#.*$/, ""), y = new RegExp(k1(d[r + 1])), z = l1(y, [
-                            x
-                        ]);
-                        s = {
-                            url: x,
-                            func: "",
-                            args: [],
-                            line: z ? z.line : e[1],
-                            column: null
-                        };
-                    }
-                    if (s) {
-                        s.func || (s.func = h2(s.url, s.line));
-                        var A = i1(s.url, s.line), B = A ? A[Math.floor(A.length / 2)] : null;
-                        s.context = A && B.replace(/^\s*/, "") === d[r + 1].replace(/^\s*/, "") ? A : [
-                            d[r + 1]
-                        ], n.push(s);
-                    }
-                }
-                return n.length ? {
-                    mode: "multiline",
-                    name: c.name,
-                    message: d[0],
-                    stack: n
-                } : null;
-            }
-            function r1(a, b, c, d) {
-                var e = {
-                    url: b,
-                    line: c
-                };
-                if (e.url && e.line) {
-                    a.incomplete = !1, e.func || (e.func = h2(e.url, e.line)), e.context || (e.context = i1(e.url, e.line));
-                    var f = / '([^']+)' /.exec(d);
-                    if (f && (e.column = m1(f[1], e.url, e.line)), a.stack.length > 0 && a.stack[0].url === e.url) {
-                        if (a.stack[0].line === e.line) return !1;
-                        if (!a.stack[0].line && a.stack[0].func === e.func) return a.stack[0].line = e.line, a.stack[0].context = e.context, !1;
-                    }
-                    return a.stack.unshift(e), a.partial = !0, !0;
-                }
-                return a.incomplete = !0, !1;
-            }
-            function s1(a, b) {
-                for(var c, e, f, i = /function\s+([_$a-zA-Z\xA0-\uFFFF][_$a-zA-Z0-9\xA0-\uFFFF]*)?\s*\(/i, j = [], k = {}, l = !1, o = s1.caller; o && !l; o = o.caller)if (o !== t1 && o !== d1.report) {
-                    if (e = {
-                        url: null,
-                        func: g1,
-                        args: [],
-                        line: null,
-                        column: null
-                    }, o.name ? e.func = o.name : (c = i.exec(o.toString())) && (e.func = c[1]), "undefined" == typeof e.func) try {
-                        e.func = c.input.substring(0, c.input.indexOf("{"));
-                    } catch (p) {}
-                    if (f = n1(o)) {
-                        e.url = f.url, e.line = f.line, e.func === g1 && (e.func = h2(e.url, e.line));
-                        var q = / '([^']+)' /.exec(a.message || a.description);
-                        q && (e.column = m1(q[1], f.url, f.line));
-                    }
-                    k["" + o] ? l = !0 : k["" + o] = !0, j.push(e);
-                }
-                b && j.splice(0, b);
-                var u = {
-                    mode: "callers",
-                    name: a.name,
-                    message: a.message,
-                    stack: j
-                };
-                return r1(u, a.sourceURL || a.fileName, a.line || a.lineNumber, a.message || a.description), u;
-            }
-            function t1(a, b) {
-                var c = null;
-                b = null == b ? 0 : +b;
-                try {
-                    if (c = p1(a)) return c;
-                } catch (d) {
-                    if (v1) throw d;
-                }
-                try {
-                    if (c = o1(a)) return c;
-                } catch (d3) {
-                    if (v1) throw d3;
-                }
-                try {
-                    if (c = q1(a)) return c;
-                } catch (d4) {
-                    if (v1) throw d4;
-                }
-                try {
-                    if (c = s1(a, b + 1)) return c;
-                } catch (d5) {
-                    if (v1) throw d5;
-                }
-                return {
-                    mode: "failed"
-                };
-            }
-            function u1(a) {
-                a = (null == a ? 0 : +a) + 1;
-                try {
-                    throw new Error;
-                } catch (b) {
-                    return t1(b, a + 1);
-                }
-            }
-            var v1 = !1, w1 = {};
-            return t1.augmentStackTraceWithInitialElement = r1, t1.guessFunctionName = h2, t1.gatherContext = i1, t1.ofCaller = u1, t1.getSource = f4, t1;
-        }(), d1.extendToAsynchronousCallbacks = function() {
-            var b3 = function(b4) {
-                var c = a1[b4];
-                a1[b4] = function() {
-                    var a = f1.call(arguments), b = a[0];
-                    return "function" == typeof b && (a[0] = d1.wrap(b)), c.apply ? c.apply(this, a) : c(a[0], a[1]);
-                };
-            };
-            b3("setTimeout"), b3("setInterval");
-        }, d1.remoteFetching || (d1.remoteFetching = !0), d1.collectWindowErrors || (d1.collectWindowErrors = !0), (!d1.linesOfContext || d1.linesOfContext < 1) && (d1.linesOfContext = 11), a1.TraceKit = d1;
-    }
-}("undefined" != typeof window ? window : global), function(a2, b) {
-    "use strict";
-    if (a2 && a2.event && a2.event.add) {
-        var c3 = a2.event.add;
-        a2.event.add = function(d, e, f, g, h) {
-            if ("function" != typeof f && "function" != typeof f.handler) return c3.call(this, d, e, f, g, h);
-            var i;
-            return f.handler ? (i = f.handler, f.handler = b.wrap(f.handler)) : (i = f, f = b.wrap(f)), f.guid = i.guid ? i.guid : i.guid = a2.guid++, c3.call(this, d, e, f, g, h);
-        };
-        var d6 = a2.fn.ready;
-        a2.fn.ready = function(a) {
-            return d6.call(this, b.wrap(a));
-        };
-        var e5 = a2.ajax;
-        a2.ajax = function(c, d) {
-            "object" == typeof c && (d = c, c = void 0), d = d || {};
-            for(var f, g = [
-                "complete",
-                "error",
-                "success"
-            ]; f = g.pop();)a2.isFunction(d[f]) && (d[f] = b.wrap(d[f]));
-            try {
-                return c ? e5.call(this, c, d) : e5.call(this, d);
-            } catch (h) {
-                throw b.report(h), h;
-            }
-        };
-    }
-}(window.jQuery, window.TraceKit), window.webVitals = function(a3) {
-    "use strict";
-    var b5, c5, d8, e7, f = function(a, b) {
-        return {
-            name: a,
-            value: void 0 === b ? -1 : b,
-            delta: 0,
-            entries: [],
-            id: "v2-".concat(Date.now(), "-").concat(Math.floor(8999999999999 * Math.random()) + 1000000000000)
-        };
-    }, g4 = function(a4, b) {
-        try {
-            if (PerformanceObserver.supportedEntryTypes.includes(a4)) {
-                if ("first-input" === a4 && !("PerformanceEventTiming" in self)) return;
-                var c = new PerformanceObserver(function(a) {
-                    return a.getEntries().map(b);
-                });
-                return c.observe({
-                    type: a4,
-                    buffered: !0
-                }), c;
-            }
-        } catch (a) {}
-    }, h3 = function(a, b) {
-        var c6 = function d(c) {
-            "pagehide" !== c.type && "hidden" !== document.visibilityState || (a(c), b && (removeEventListener("visibilitychange", d, !0), removeEventListener("pagehide", d, !0)));
-        };
-        addEventListener("visibilitychange", c6, !0), addEventListener("pagehide", c6, !0);
-    }, i = function(a) {
-        addEventListener("pageshow", function(b) {
-            b.persisted && a(b);
-        }, !0);
-    }, j = function(a, b, c) {
-        var d;
-        return function(e) {
-            b.value >= 0 && (e || c) && (b.delta = b.value - (d || 0), (b.delta || void 0 === d) && (d = b.value, a(b)));
-        };
-    }, k2 = -1, l2 = function() {
-        return "hidden" === document.visibilityState ? 0 : 1 / 0;
-    }, m2 = function() {
-        h3(function(a) {
-            var b = a.timeStamp;
-            k2 = b;
-        }, !0);
-    }, n2 = function() {
-        return 0 > k2 && (k2 = l2(), m2(), i(function() {
-            setTimeout(function() {
-                k2 = l2(), m2();
-            }, 0);
-        })), {
-            get firstHiddenTime () {
-                return k2;
-            }
-        };
-    }, o2 = function(a5, b) {
-        var c, d9 = n2(), e = f("FCP"), h = function(a) {
-            "first-contentful-paint" === a.name && (l && l.disconnect(), a.startTime < d9.firstHiddenTime && (e.value = a.startTime, e.entries.push(a), c(!0)));
-        }, k = window.performance && performance.getEntriesByName && performance.getEntriesByName("first-contentful-paint")[0], l = k ? null : g4("paint", h);
-        (k || l) && (c = j(a5, e, b), k && h(k), i(function(d) {
-            e = f("FCP"), c = j(a5, e, b), requestAnimationFrame(function() {
-                requestAnimationFrame(function() {
-                    e.value = performance.now() - d.timeStamp, c(!0);
-                });
-            });
-        }));
-    }, p2 = !1, q = -1, r = {
-        passive: !0,
-        capture: !0
-    }, s = new Date, t = function(a, e) {
-        b5 || (b5 = e, c5 = a, d8 = new Date, w(removeEventListener), u());
-    }, u = function() {
-        if (c5 >= 0 && d8 - s > c5) {
-            var a = {
-                entryType: "first-input",
-                name: b5.type,
-                target: b5.target,
-                cancelable: b5.cancelable,
-                startTime: b5.timeStamp,
-                processingStart: b5.timeStamp + c5
-            };
-            e7.forEach(function(b) {
-                b(a);
-            }), e7 = [];
-        }
-    }, v = function(a6) {
-        if (a6.cancelable) {
-            var b6 = (a6.timeStamp > 1000000000000 ? new Date : performance.now()) - a6.timeStamp;
-            "pointerdown" == a6.type ? function(a, b) {
-                var c = function() {
-                    t(a, b), e();
-                }, d = function() {
-                    e();
-                }, e = function() {
-                    removeEventListener("pointerup", c, r), removeEventListener("pointercancel", d, r);
-                };
-                addEventListener("pointerup", c, r), addEventListener("pointercancel", d, r);
-            }(b6, a6) : t(b6, a6);
-        }
-    }, w = function(a) {
-        [
-            "mousedown",
-            "keydown",
-            "touchstart",
-            "pointerdown"
-        ].forEach(function(b) {
-            return a(b, v, r);
-        });
-    }, x = {};
-    return a3.getCLS = function(a7, b8) {
-        p2 || (o2(function(a) {
-            q = a.value;
-        }), p2 = !0);
-        var c, d10 = function(b) {
-            q > -1 && a7(b);
-        }, e = f("CLS", 0), k = 0, l = [], m = function(a) {
-            if (!a.hadRecentInput) {
-                var b = l[0], d = l[l.length - 1];
-                k && a.startTime - d.startTime < 1000 && a.startTime - b.startTime < 5000 ? (k += a.value, l.push(a)) : (k = a.value, l = [
-                    a
-                ]), k > e.value && (e.value = k, e.entries = l, c());
-            }
-        }, n = g4("layout-shift", m);
-        n && (c = j(d10, e, b8), h3(function() {
-            n.takeRecords().map(m), c(!0);
-        }), i(function() {
-            k = 0, q = -1, e = f("CLS", 0), c = j(d10, e, b8);
-        }));
-    }, a3.getFCP = o2, a3.getFID = function(a8, d) {
-        var k, l = n2(), m = f("FID"), o = function(a) {
-            a.startTime < l.firstHiddenTime && (m.value = a.processingStart - a.startTime, m.entries.push(a), k(!0));
-        }, p = g4("first-input", o);
-        k = j(a8, m, d), p && h3(function() {
-            p.takeRecords().map(o), p.disconnect();
-        }, !0), p && i(function() {
-            var g;
-            m = f("FID"), k = j(a8, m, d), e7 = [], c5 = -1, b5 = null, w(addEventListener), g = o, e7.push(g), u();
-        });
-    }, a3.getLCP = function(a9, b9) {
-        var c, d11 = n2(), e = f("LCP"), k = function(a) {
-            var b = a.startTime;
-            b < d11.firstHiddenTime && (e.value = b, e.entries.push(a)), c();
-        }, l = g4("largest-contentful-paint", k);
-        if (l) {
-            c = j(a9, e, b9);
-            var m = function() {
-                x[e.id] || (l.takeRecords().map(k), l.disconnect(), x[e.id] = !0, c(!0));
-            };
-            [
-                "keydown",
-                "click"
-            ].forEach(function(a) {
-                addEventListener(a, m, {
-                    once: !0,
-                    capture: !0
-                });
-            }), h3(m, !0), i(function(d) {
-                e = f("LCP"), c = j(a9, e, b9), requestAnimationFrame(function() {
-                    requestAnimationFrame(function() {
-                        e.value = performance.now() - d.timeStamp, x[e.id] = !0, c(!0);
-                    });
-                });
-            });
-        }
-    }, a3.getTTFB = function() {
-        var a10, b10 = f("TTFB");
-        a10 = function() {
-            try {
-                var a11 = performance.getEntriesByType("navigation")[0] || function() {
-                    var a = performance.timing, b = {
-                        entryType: "navigation",
-                        startTime: 0
-                    };
-                    for(var c in a)"navigationStart" !== c && "toJSON" !== c && (b[c] = Math.max(a[c] - a.navigationStart, 0));
-                    return b;
-                }();
-                if (b10.value = b10.delta = a11.responseStart, b10.value < 0 || b10.value > performance.now()) return;
-                b10.entries = [
-                    a11
-                ], c5(b10);
-            } catch (c) {}
-        }, "complete" === document.readyState ? setTimeout(a10, 0) : addEventListener("pageshow", a10);
-    }, Object.defineProperty(a3, "__esModule", {
-        value: !0
-    }), a3;
-}({}), function(a13, b11, c7, d12) {
-    function e8() {
-        try {
-            C = null, o3() && localStorage.removeItem(ha), D = null, Ea.createCookie(ia, "", -1);
-        } catch (a) {
-            Ea.log("Atatus Reset User", a);
-        }
-    }
-    function f5(a, b, c, d) {
-        if (a) {
-            C = {}, a && (C.id = "" + a), b && (C.email = "" + b), c && (C.name = "" + c), d && (C.anonymous = d);
-            try {
-                o3() && localStorage.setItem(ha, JSON.stringify(C)), D = null, Ea.createCookie(ia, "", -1);
-            } catch (e) {
-                Ea.log("Atatus Set User: Invalid JSON object in LocalStorage", e);
-            }
-        }
-    }
-    function g5() {
-        try {
-            var a;
-            if (o3() && (a = localStorage.getItem(ha)), a) C = JSON.parse(a), D = null;
-            else {
-                var b, c = Ea.readCookie(ia);
-                c && (b = Ea.readCookieElement(c, "id")), b && "undefined" !== b ? D = b : (D = Ea.uuid4(), Ea.createCookie(ia, D));
-            }
-        } catch (d) {
-            Ea.log("Atatus Get User: Invalid JSON object in LocalStorage", d);
-        }
-    }
-    function h4(a) {
-        var b = a, c = a.split("//")[1];
-        if (c) {
-            var d = c.indexOf("?"), e = c.toString().substring(0, d), f = e.split("/").slice(0, 4).join("/"), g = e.substring(0, 48);
-            b = f.length < g.length ? f : g, b !== e && (b += "..");
-        }
-        return b;
-    }
-    function i2(a, b, c, e) {
-        if (0 !== b.status && b.getAllResponseHeaders()) {
-            var f = "AJAX Error: " + (b.statusText || "unknown") + " " + (c.type || "unknown") + " " + (h4(c.url) || "unknown");
-            Ia.send(e || a.type, {
-                status: b.status,
-                statusText: b.statusText,
-                type: c.type,
-                url: c.url,
-                ajaxErrorMessage: f,
-                contentType: c.contentType,
-                requestData: c.data && c.data.slice ? c.data.slice(0, 10240) : d12,
-                responseData: b.responseText && b.responseText.slice ? b.responseText.slice(0, 10240) : d12,
-                activeTarget: a.target && a.target.activeElement && a.target.activeElement.outerHTML && a.target.activeElement.outerHTML.slice ? a.target.activeElement.outerHTML.slice(0, 10240) : d12
-            });
-        }
-    }
-    function j3(a) {
-        if (Ea.log("Atatus: Caught unhandled promise rejection:", a), a) {
-            var b = a.reason;
-            Ia.notify(b && (b instanceof Error || b.message) ? b : new Error("UnhandledRejection: " + b));
-        }
-    }
-    function k3() {
-        "addEventListener" in a13 && a13.addEventListener("unhandledrejection", j3);
-    }
-    function l3() {
-        "removeEventListener" in a13 && a13.removeEventListener("unhandledrejection", j3);
-    }
-    function m3() {
-        return A && "" !== A ? !0 : (Ea.log("Atatus API key has not been configured, make sure you call atatus.config(yourApiKey)"), !1);
-    }
-    function n3() {
-        var c = b11.documentElement, d = b11.getElementsByTagName("body")[0], e = a13.innerWidth || c.clientWidth || d.clientWidth, f = a13.innerHeight || c.clientHeight || d.clientHeight;
-        return {
-            width: e,
-            height: f
-        };
-    }
-    function o3() {
-        try {
-            return "localStorage" in a13 && null !== a13.localStorage;
-        } catch (b) {
-            return !1;
-        }
-    }
-    function p(a) {
-        try {
-            if (o3() && localStorage.length < 50) {
-                var b = (new Date).toJSON(), c = "atatusjs=" + b + "=" + Ea.getRandomInt();
-                "undefined" == typeof localStorage[c] && (localStorage[c] = a);
-            } else Ea.log("Atatus: Reached local storage limit.");
-        } catch (d) {
-            Ea.log("Atatus: LocalStorage full, cannot save exception");
-        }
-    }
-    function q() {
-        try {
-            if (o3() && localStorage.length > 0) {
-                for(var a in localStorage)if ("atatusjs=" === a.substring(0, 9)) {
-                    try {
-                        var b = JSON.parse(localStorage[a]);
-                        "apikey" in b && t(ka, b);
-                    } catch (c) {
-                        Ea.log("Atatus: Invalid JSON object in LocalStorage");
-                    }
-                    localStorage.removeItem(a);
-                }
-            }
-        } catch (c) {
-            Ea.log("Atatus sendSavedErrors: LocalStorage read failed!", c);
-        }
-    }
-    function r(a, c) {
-        if (c = Ea.isObject(c) ? c : {}, !a.stack || !a.stack.length) return void Ea.log("Atatus: Canceling send due to no stacktrace.");
-        Ea.isObject(c.customData) || (c.customData = d12), Ea.isArray(c.tags) || (c.tags = d12);
-        var e = c.customData && c.customData.ajaxErrorMessage || a.message;
-        if (e && 0 === e.indexOf("Uncaught ") && (e = a.message.substring(9)), e = e || c.status || "Script error.", N && N.test(e)) return void Ea.log("Atatus: canceling send due to Script error or ignored errors.");
-        e = e.substr(0, ua);
-        var f = [];
-        a.stack && a.stack.length && Ea.forEach(a.stack, function(a, b) {
-            Ea.endsWith(b.url, "/atatus.js") || Ea.endsWith(b.url, "/atatus-spa.js") || Ea.endsWith(b.url, "/atatus-spa.min.js") || Ea.endsWith(b.url, "/atatus.min.js") || f.push({
-                ln: parseInt(b.line || 0),
-                cn: parseInt(b.column || 0),
-                f: b.url || "anonymous",
-                m: b.func || "[anonymous]"
-            });
-        });
-        var g = [
-            a.name,
-            e,
-            JSON.stringify(f)
-        ].join("|");
-        if (g === O) return void Ea.log("Atatus: canceling send due to duplicate errors");
-        O = g;
-        var h = c.customData;
-        try {
-            JSON.stringify(h);
-        } catch (i) {
-            var j = "Cannot add custom data; may contain circular reference";
-            h = {
-                error: j
-            }, Ea.log("Atatus: " + j);
-        }
-        var k = Ha.getAllEvents();
-        Fa.clear();
-        var l = {
-            "class": a.name,
-            url: b11.location.href,
-            message: e,
-            name: e,
-            backTraces: f,
-            breadCrumbs: k,
-            customData: h || null,
-            tags: c.tags,
-            ts: (new Date).getTime()
-        };
-        if ("function" == typeof Q && (l.groupingKey = Q(l)), "function" == typeof S) {
-            var m = S(l);
-            m && (delete l.name, s(l));
-        } else delete l.name, s(l);
-    }
-    function s(a) {
-        return G ? void Ea.log("Error Tracking is disabled.") : void t(ka, {
-            customData: B || null,
-            errors: [
-                a
-            ]
-        });
-    }
-    function t(c, d) {
-        if (m3()) {
-            if (!Ia._isAllowedUrl(location.href)) return void Ea.log("Atatus: canceling send due to not an allowed domain/url.");
-            if (!d.ts) {
-                var e = a13.screen || n3();
-                d.ts = (new Date).getTime(), d.apikey = A, d.request = {
-                    url: b11.location.href,
-                    ua: navigator.userAgent,
-                    w: e.width,
-                    h: e.height
-                }, d.connection = Ca, d.tags = d.tags || Z, d.user = C && C.id ? C : null, d.aid = D || null, d.sid = Ia.sessionId || "", d.v = E || "", d._v = Ia.VERSION || W || "";
-            }
-            if (R) {
-                var f = R(d);
-                if (!f) return void Ea.log("Atatus: canceling send due to false from beforeSend callback.");
-            }
-            if (P && P(d), Ea.log("Sending data to Atatus Receiver:", d), c === la) w(c, d);
-            else if (c === na) {
-                if (!d.sid) return void Ea.log("Atatus: canceling session send due to empty session id.");
-                if (Ba.session >= xa) return void Ea.log("Atatus: Canceling session send. Reached maximum number of requests!");
-                Ba.session += 1, y(c, d);
-            } else if (c === oa) {
-                if (Ba.spa >= za) return void Ea.log("Atatus: Canceling SPA send. Reached maximum number of requests!");
-                Ba.spa += 1, Ba.ajax = 0, y(c, d);
-            } else if (c === qa) {
-                if (Ba.webvitals >= Aa) return void Ea.log("Atatus: Canceling web vitals send. Reached maximum number of requests!");
-                Ba.webvitals += 1, z(c, d);
-            } else {
-                if (c === ka) {
-                    if (Ba.error >= va) return void Ea.log("Atatus: Canceling error send. Reached maximum number of requests!");
-                    Ba.error += 1;
-                } else if (c === ma) {
-                    if (Ba.ajax >= wa) return void Ea.log("Atatus: Canceling AJAX send. Reached maximum number of requests!");
-                    Ba.ajax += 1;
-                } else if (c === pa) {
-                    if (Ba.txn >= ya) return void Ea.log("Atatus: Canceling transaction send. Reached maximum number of requests!");
-                    Ba.txn += 1;
-                }
-                v(c, d);
-            }
-        }
-    }
-    function u(a) {
-        return "apikey=" + a.apikey + "&v=" + a._v;
-    }
-    function v(a, b) {
-        var c = ja + a + "?data=" + encodeURIComponent(JSON.stringify(b)) + "&" + u(b);
-        if (c.length > ra) return void Ea.log("Atatus: Canceling request send due to large payload size.");
-        var d = new Image;
-        d.crossOrigin = "anonymous", d.onload = function() {
-            q();
-        }, d.onerror = d.onabort = function() {
-            da && a === ka && p(JSON.stringify(b));
-        }, d.src = c;
-    }
-    function w(a, c) {
-        var d = b11.createElement("script"), e = ja + a + "?data=" + encodeURIComponent(JSON.stringify(c)) + "&callback=atatus._setFeatures&" + u(c);
-        d.type = "text/javascript", d.src = e;
-        var f = b11.getElementsByTagName("script")[0];
-        f.parentNode.insertBefore(d, f);
-    }
-    function x(b, c) {
-        var d;
-        return d = new a13.XMLHttpRequest, "withCredentials" in d ? d.open(b, c, !0) : a13.XDomainRequest && (c = Ea.getTargetUrl(c), d = new a13.XDomainRequest, d.open(b, c)), d.timeout = 10000, d;
-    }
-    function y(b, c) {
-        var d = ja + b + "?" + u(c), e = x("POST", d);
-        return e ? ("function" == typeof e.setRequestHeader && e.setRequestHeader("Content-Type", "application/json;charset=UTF-8"), "withCredentials" in e ? (e.onreadystatechange = function() {
-            e.readyState;
-        }, e.onload = function() {
-            Ea.log("Sent data to Atatus. Status - " + e.status);
-        }) : a13.XDomainRequest && (e.ontimeout = function() {}, e.onload = function() {
-            Ea.log("Sent data to Atatus. Status - " + e.status);
-        }), e.onerror = function() {
-            Ea.log("Failed to send to Atatus. Status - " + e.status);
-        }, void e.send(JSON.stringify(c))) : void Ea.log("XHR is not supported!");
-    }
-    function z(b, c) {
-        var d = "[object Navigator]" === Object.prototype.toString.call(a13 && a13.navigator), e = d && "function" == typeof a13.navigator.sendBeacon;
-        if (e) {
-            var f = a13.navigator.sendBeacon.bind(a13.navigator), g = ja + b;
-            return f(g, JSON.stringify(c));
-        }
-        v(b, c);
-    }
-    var A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W = "4.4.1", X = a13.TraceKit.noConflict(), Y = a13.atatus, Z = [], $ = !1, _ = [], aa = [], ba = [], ca = !1, da = !1, ea = !1, fa = !1, ga = !1, ha = "atatus-user", ia = "atatus-aid", ja = "https://bm-rx.atatus.com", ka = "/track/browser/errors", la = "/track/browser/perf/pageload", ma = "/track/browser/perf/ajax", na = "/track/browser/perf/session", oa = "/track/browser/perf/spa", pa = "/track/browser/perf/txn", qa = "/track/browser/perf/webvitals", ra = 40000, sa = 10, ta = 500, ua = 1000, va = 20, wa = 5, xa = 10, ya = 100, za = 100, Aa = 3, Ba = {
-        error: 0,
-        ajax: 0,
-        session: 0,
-        txn: 0,
-        spa: 0,
-        webvitals: 0
-    }, Ca = null, Da = [
-        "google-analytics.com",
-        "mixpanel.com",
-        "bam.nr-data.net",
-        "br-rx.atatus.com",
-        "bm-rx.atatus.com",
-        "segment.io",
-        "hotjar.io",
-        "hotjar.com",
-        "amplitude.com",
-        "fullstory.com",
-        "autopilothq.com",
-        "smartlook.com",
-        "charmerly.com",
-        "googleapis.com",
-        "logrocket.io",
-        "taboola.com",
-        "sentry.io",
-        "doubleclick.net",
-        "logentries.com",
-        "rb-collector.com",
-        "js.hs-banner.com",
-        "clarity.ms",
-        "lr-ingest.io"
-    ];
-    c7 && (V = c7(b11));
-    var Ea = {
-        isBoolean: function(a) {
-            return "undefined" != typeof a && "boolean" == typeof a;
-        },
-        isString: function(a) {
-            return "string" == typeof a;
-        },
-        isNumber: function(a) {
-            return "number" == typeof a;
-        },
-        isFunction: function(a) {
-            return "function" == typeof a;
-        },
-        isArray: function(a) {
-            return "[object Array]" === Object.prototype.toString.call(a);
-        },
-        isObject: function(a) {
-            return "[object Object]" === Object.prototype.toString.call(a);
-        },
-        serialize: function(a) {
-            if (!a) return "";
-            if (Ea.isString(a) || Ea.isNumber(a) || Ea.isBoolean(a) || Ea.isFunction(a)) return "" + a;
-            if ("object" == typeof a) try {
-                return JSON.stringify(a);
-            } catch (b) {
-                return "Unserializable Object";
-            }
-            return "";
-        },
-        endsWith: function(a, b) {
-            return a && b ? -1 !== a.indexOf(b, a.length - b.length) : !1;
-        },
-        joinRegExp: function(a) {
-            if (0 === a.length) return null;
-            for(var b, c = [], d = 0, e = a.length; e > d; d++)b = a[d], Ea.isString(b) ? c.push(b.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1")) : b && b.source && c.push(b.source);
-            return new RegExp(c.join("|"), "i");
-        },
-        getTargetUrl: function(b) {
-            return a13.XDomainRequest && ca && (b = b.slice(6)), b;
-        },
-        now: function() {
-            return (new Date).getTime();
-        },
-        pad: function(a) {
-            return a = String(a), 1 === a.length && (a = "0" + a), a;
-        },
-        merge: function(a, b) {
-            var c, d = {};
-            for(c in a)d[c] = a[c];
-            for(c in b)d[c] = b[c];
-            return d;
-        },
-        mergeArray: function(a, b) {
-            return null != b ? a.concat(b) : a;
-        },
-        forEach: function(a, b) {
-            for(var c = 0; c < a.length; c++)b.call(null, c, a[c]);
-        },
-        isEmpty: function(a) {
-            for(var b in a)if (a.hasOwnProperty(b)) return !1;
-            return !0;
-        },
-        getRandomInt: function() {
-            return Math.floor(9007199254740992 * Math.random());
-        },
-        log: function(b, c) {
-            $ && a13.console && a13.console.log && (a13.console.log(b), c && a13.console.log(c));
-        },
-        bind: function(a, b) {
-            return function() {
-                return a.apply(b, Array.prototype.slice.call(arguments));
-            };
-        },
-        canAllowInsecureSubmissions: function() {
-            var b = a13.navigator.userAgent, c = b.match(/Trident\/([\d.]+)/), d = c && "7.0" === c[1] ? 11 : (b = b.match(/MSIE ([\d.]+)/)) ? parseInt(b[1], 10) : !1;
-            return d && 9 >= d;
-        },
-        uuid4: function() {
-            return "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx".replace(/[xy]/g, function(a) {
-                var b = 16 * Math.random() | 0, c = "x" === a ? b : 3 & b | 8;
-                return c.toString(16);
-            });
-        },
-        addEventListener: function(b, c, d) {
-            return "undefined" != typeof a13.attachEvent ? a13.attachEvent("on" + b, c) : a13.addEventListener ? a13.addEventListener(b, c, d) : void 0;
-        },
-        arrayFromObject: function(a) {
-            var b = [];
-            for(var c in a)a.hasOwnProperty(c) && b.push(a[c]);
-            return b;
-        },
-        createCookie: function(a, c, d, e, f) {
-            try {
-                var g, h;
-                if (d) {
-                    var i = new Date;
-                    i.setTime(i.getTime() + 60 * d * 60000), g = "; expires=" + i.toGMTString();
-                } else g = "";
-                var j = e ? "; SameSite=Lax; secure" : "; SameSite=Lax", k = /[a-z0-9][a-z0-9-]+\.[a-z.]{2,6}$/i, l = "";
-                if (f) {
-                    var m = b11.location.hostname.match(k), n = m ? m[0] : "";
-                    l = n ? "; domain=." + n : "";
-                }
-                return h = (new Date).toISOString(), b11.cookie = a + "=id|" + c + "&timestamp|" + h + g + "; path=/" + l + j, h;
-            } catch (o) {
-                Ea.log("Creating cookie failed.", o);
-            }
-        },
-        clearCookie: function(a) {
-            this.createCookie(a, "", -1);
-        },
-        readCookieElement: function(a, b) {
-            var c = a.split(/[|&]/);
-            return "id" === b ? c[1] : "timestamp" === b ? c[3] : void 0;
-        },
-        readCookie: function(a) {
-            try {
-                for(var c = a + "=", d = b11.cookie.split(";"), e = 0; e < d.length; e++){
-                    for(var f = d[e]; " " === f.charAt(0);)f = f.substring(1, f.length);
-                    if (0 === f.indexOf(c)) return f.substring(c.length, f.length);
-                }
-                return null;
-            } catch (g) {
-                Ea.log("Reading cookie failed.", g);
-            }
-        }
-    }, Fa = {
-        eventObject: {},
-        all: function(a) {
-            for(var b = this.getEventObject(a), c = [], d = 0; d < b.length; d++)c.push(b[d].value);
-            return c;
-        },
-        clear: function() {
-            for(var a in this.eventObject)this.eventObject.hasOwnProperty(a) && (this.eventObject[a].length = 0);
-        },
-        add: function(a, b) {
-            var c = this.getEventObject(a), d = Ea.uuid4();
-            return b.m ? b.m = b.m.length <= ta ? b.m : b.m.substr(0, ta) : b.e && (b.e = b.e.length <= ta ? b.e : b.e.substr(0, ta)), c.push({
-                key: d,
-                value: b
-            }), this.truncateEventObject(a, sa), d;
-        },
-        get: function(a, b) {
-            for(var c = this.getEventObject(a), d = 0; d < c.length; d++)if (c[d].key === b) return c[d].value;
-            return !1;
-        },
-        getEventObject: function(a) {
-            return this.eventObject[a] || (this.eventObject[a] = []), this.eventObject[a];
-        },
-        truncateEventObject: function(a, b) {
-            var c = this.getEventObject(a);
-            c.length > b && (this.eventObject[a] = c.slice(c.length - b));
-        }
-    }, Ga = {
-        attach: function(b12, c, d13, e, f) {
-            b12 = b12 || a13.console || {};
-            for(var g = f || [
-                "log",
-                "debug",
-                "info",
-                "warn",
-                "error"
-            ], h = g.pop(), i = function(a, b, d) {
-                c && Fa.add("timeline", {
-                    ts: Ea.now(),
-                    c: "console",
-                    l: a,
-                    m: Ea.serialize(b)
-                }), "error" === a && e && Ia.notify(new Error(b), d);
-            }; h;)this.wrapConsoleMethod(b12, h, d13, i), h = g.pop();
-        },
-        wrapConsoleMethod: function(a14, b, c, d) {
-            var e = a14[b], f = a14;
-            b in a14 && (a14[b] = function() {
-                var a = [].slice.call(arguments), g = "" + a.join(" "), h = {
-                    level: b,
-                    logger: "console"
-                };
-                d && d(b, g, h), e && c && Function.prototype.apply.call(e, f, a);
-            });
-        }
-    }, Ha = {
-        attach: function() {
-            var a = Ea.bind(this.onDocumentClicked, this), c = Ea.bind(this.onInputChanged, this);
-            b11.addEventListener ? (b11.addEventListener("click", a, !0), b11.addEventListener("blur", c, !0)) : b11.attachEvent && (b11.attachEvent("onclick", a), b11.attachEvent("onfocusout", c));
-        },
-        writeUserEvent: function(a, b, c, d) {
-            "password" === this.getElementType(a) && (c = void 0), Fa.add("timeline", {
-                ts: Ea.now(),
-                a: b,
-                e: this.getOuterHTML(a),
-                v: this.getValueKind(c, d)
-            });
-        },
-        onDocumentClicked: function(a) {
-            var b = this.getElementFromEvent(a);
-            b && b.tagName && (this.isTarget(b, "a") || this.isTarget(b, "button") || this.isTarget(b, "input", [
-                "button",
-                "submit"
-            ]) ? this.writeUserEvent(b, "click") : this.isTarget(b, "input", [
-                "checkbox",
-                "radio"
-            ]) && this.writeUserEvent(b, "check", b.value, b.checked));
-        },
-        onInputChanged: function(a) {
-            var b = this.getElementFromEvent(a);
-            b && b.tagName && (this.isTarget(b, "textarea") ? this.writeUserEvent(b, "input", b.value) : this.isTarget(b, "select") && b.options && b.options.length ? this.onSelectInputChanged(b) : this.isTarget(b, "input") && !this.isTarget(b, "input", [
-                "button",
-                "submit",
-                "hidden",
-                "checkbox",
-                "radio"
-            ]) && this.writeUserEvent(b, "input", b.value));
-        },
-        onSelectInputChanged: function(a) {
-            if (a.multiple) {
-                for(var b = 0; b < a.options.length; b++)if (a.options[b].selected) {
-                    this.writeUserEvent(a, "select", a.options[b].value);
-                    break;
-                }
-            } else 0 <= a.selectedIndex && a.options[a.selectedIndex] && this.writeUserEvent(a, "select", a.options[a.selectedIndex].value);
-        },
-        getElementFromEvent: function(a) {
-            return a.target || b11.elementFromPoint(a.clientX, a.clientY);
-        },
-        isTarget: function(a, b, c) {
-            if (a.tagName.toLowerCase() !== b.toLowerCase()) return !1;
-            if (!c) return !0;
-            for(var d = this.getElementType(a), e = 0; e < c.length; e++)if (c[e] === d) return !0;
-            return !1;
-        },
-        getElementType: function(a) {
-            return (a.getAttribute("type") || "").toLowerCase();
-        },
-        getOuterHTML: function(a) {
-            for(var b = "<" + a.tagName.toLowerCase(), c = a.attributes, d = 0, e = c.length; e > d; d++){
-                var f = c[d].name;
-                "value" !== f.toLowerCase() && (b += " " + f + '="' + c[d].value + '"');
-            }
-            return b += " >";
-        },
-        getValueKind: function(a, b) {
-            return null == a ? null : {
-                length: a.length,
-                checked: b,
-                pattern: this.matchInputPattern(a)
-            };
-        },
-        matchInputPattern: function(a) {
-            return "" === a ? "empty" : /^[a-z0-9!#$%&'*+=?\^_`{|}~\-]+(?:\.[a-z0-9!#$%&'*+=?\^_`{|}~\-]+)*@(?:[a-z0-9](?:[a-z0-9\-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9\-]*[a-z0-9])?$/.test(a) ? "email" : /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/.test(a) || /^(\d{4}[\/\-](0?[1-9]|1[012])[\/\-]0?[1-9]|[12][0-9]|3[01])$/.test(a) ? "date" : /^(?:(?:\+?1\s*(?:[.\-]\s*)?)?(?:\(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\s*\)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.\-]\s*)?)?([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.\-]\s*)?([0-9]{4})(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+))?$/.test(a) ? "phone" : /^\s*$/.test(a) ? "whitespace" : /^\d*$/.test(a) ? "numeric" : "character";
-        },
-        getAllEvents: function() {
-            return Fa.all("timeline");
-        }
-    }, Ia = {
-        VERSION: W,
-        paintPerformance: {},
-        noConflict: function() {
-            return a13.atatus = Y, Ia;
-        },
-        isConfigured: function() {
-            return !!A;
-        },
-        config: function(b, c) {
-            c = c || {}, A = b, X.remoteFetching = !1, N = [], Ia.setCustomData(c.customData), Ia.setTags(c.tags), $ = !!c.debugMode, ea = !!c.reportAjaxErrors, fa = !!c.reportUnhandledRejections, ga = !!c.allowChromeExtension, F = !!c.disableBreadcrumbs, G = !!c.disableErrorTracking, L = !!c.disableRUM, I = !!c.disableAjaxMonitoring, J = c.disableSession === d12 ? !1 : c.disableSession, K = c.disableSPA === d12 ? !1 : c.disableSPA, U = c.urlMaxLength, ca = Ea.canAllowInsecureSubmissions(), Ia.setIgnoreUrls(c.ignoreUrls), Ia.setWhitelistUrls(c.whitelistUrls), Ia.setAllowedDomains(c.allowedDomains), Ia.setVersion(c.version), Ia.enableOffline(c.enableOffline || c.offline), Ia.onBeforeSend(c.beforeSend), Ia.onBeforeErrorSend(c.beforeErrorSend), Ia.setGroupingKeyCallback(c.groupingKeyCallback), c.ignoreErrors && Ea.isArray(c.ignoreErrors) && (N = c.ignoreErrors), N.push(/^Script error\.?$/), N.push(/^Javascript error: Script error\.? on line 0$/), N = Ea.joinRegExp(N), q(), M = {
-                enabled: !1,
-                timeline: !0,
-                display: !0,
-                error: !0,
-                levels: null
-            }, Ea.isBoolean(c.console) && (M.enabled = c.console), Ea.isBoolean(c.consoleTimeline) && (M.timeline = c.consoleTimeline), Ea.isBoolean(c.consoleDisplay) && (M.display = c.consoleDisplay), Ea.isBoolean(c.consoleErrorNotify) && (M.error = c.consoleErrorNotify), Ea.isArray(c.consoleTimelineLevels) && (M.levels = c.consoleTimelineLevels), M.enabled && "console" in a13 && a13.console.log && Ga.attach(a13.console, M.timeline, M.display, M.error, M.levels), Ia.setHashRoutes(c.hashRoutes);
-            var e = a13.navigator.connection || a13.navigator.mozConnection || a13.navigator.webkitConnection;
-            return e && (Ca = {}, Ca.dlk = e.downlink, Ca.eft = e.effectiveType, Ca.rtt = e.rtt, Ca.type = e.type), Ia;
-        },
-        install: function() {
-            if (!m3()) return Ia;
-            if (!ga && -1 !== b11.location.href.indexOf("chrome-extension://")) return Ia;
-            if (g5(), F || Ha.attach(), G || (X.report.subscribe(r), X.extendToAsynchronousCallbacks(), V && ea && V.ajaxError(i2), fa && k3()), I || L || Ia.__attachAjaxHooks(), !J && !L && Ia.SessionTracking) {
-                var c = function() {
-                    T = new Ia.SessionTracking, T.attach();
-                };
-                a13.addEventListener ? a13.addEventListener("load", c) : a13.attachEvent("onload", c);
-            }
-            return K || L || !Ia.spa || Ia.spa.init({
-                logLevel: $ ? "debug" : "warn",
-                urlMaxLength: U
-            }), Ia;
-        },
-        uninstall: function() {
-            return A = null, G || (X.report.unsubscribe(r), V && ea && V.unbind("ajaxError", i2), fa && l3()), Ia;
-        },
-        setCustomData: function(a) {
-            return a ? Ea.isObject(a) ? B = a : Ea.log("Custom data must be an object.") : B = null, Ia;
-        },
-        setTags: function(a) {
-            return a ? Ea.isArray(a) ? Z = a : Ea.log("Tags must be an array of string.") : Z = [], Ia;
-        },
-        setHashRoutes: function(a15) {
-            return a15 ? (P = function(a) {
-                if (a && a.request && a.request.url && (a.request.url = a.request.url.replace("/#/", "/").replace("#/", "/")), a && a.data && a.data[0] && a.data[0].spans) for(var b = 0; b < a.data.length; b++)a.data[b].n = (a.data[b].n || "").replace("/#/", "/").replace("#", "");
-                if (a && a.slowestRoutes && a.slowestRoutes[0]) for(var c = 0; c < a.slowestRoutes.length; c++)a.slowestRoutes[c].n = (a.slowestRoutes[c].n || "").replace("/#/", "/").replace("#", "");
-            }, Ia) : (P = null, Ia);
-        },
-        setIgnoreUrls: function(a) {
-            return a && Ea.isArray(a) ? Array.prototype.push.apply(a, Da) : a = Da, aa = Ea.joinRegExp(a), Ia;
-        },
-        getIgnoreUrls: function() {
-            return aa;
-        },
-        setWhitelistUrls: function(a) {
-            return a && Ea.isArray(a) && (ba = Ea.joinRegExp(a)), Ia;
-        },
-        getWhitelistUrls: function() {
-            return ba;
-        },
-        setAllowedDomains: function(a) {
-            return a && Ea.isArray(a) && (_ = Ea.joinRegExp(a)), Ia;
-        },
-        getAllowedDomains: function() {
-            return _;
-        },
-        setUser: function(a, b, c, d) {
-            return f5(a, b, c, d), Ia;
-        },
-        resetUser: function() {
-            return e8(), Ia;
-        },
-        setVersion: function(a) {
-            return a && (E = "" + a), Ia;
-        },
-        enableOffline: function(a) {
-            return Ea.isBoolean(a) && (da = a), Ia;
-        },
-        onBeforeSend: function(a) {
-            return Ea.isFunction(a) && (R = a), Ia;
-        },
-        onBeforeErrorSend: function(a) {
-            return Ea.isFunction(a) && (S = a), Ia;
-        },
-        setGroupingKeyCallback: function(a) {
-            return Ea.isFunction(a) && (Q = a), Ia;
-        },
-        setAPIEndpoint: function(a) {
-            return ja = a, Ia;
-        },
-        getAPIEndpoint: function() {
-            return ja;
-        },
-        init: function(a, b, c) {
-            return c && (b = b || {}, b.customData = c), Ia.config(a, b);
-        },
-        withCustomData: function(a) {
-            return Ia.setCustomData(a);
-        },
-        withTags: function(a) {
-            return Ia.setTags(a);
-        },
-        attach: function() {
-            return Ia.install();
-        },
-        detach: function() {
-            return Ia.uninstall();
-        },
-        endSession: function() {
-            return T && T.endSession(), Ia;
-        },
-        _setFeatures: function(a) {
-            Ea.isObject(a) && (I = !!a.daj, J = !!a.dss, K = !!a.dspa, L = !!a.drum, G = !!a.derror, H = !!a.dtxn, a.error && Ea.log("Error in sending data to Atatus", a.error));
-        },
-        measureRoute: function(a) {
-            return T && a && T.virtualPageLoaded(a), Ia;
-        },
-        leaveBreadcrumb: function(a, b) {
-            return a ? (Fa.add("timeline", {
-                ts: Ea.now(),
-                c: "breadcrumb",
-                l: b || "info",
-                m: Ea.serialize(a)
-            }), Ia) : void 0;
-        },
-        notify: function(a, b, c) {
-            return "string" == typeof a ? void Ea.log("atatus.notify() was called with a string. Expected instance of Error.") : Ia.send(a, b, c);
-        },
-        sendPerf: function(a) {
-            return L ? void Ea.log("RUM is disabled.") : t(la, a);
-        },
-        sendAjaxPerf: function(a) {
-            return L || I ? void Ea.log("AJAX monitoring is disabled.") : t(ma, a);
-        },
-        sendSessionPerf: function(a) {
-            return L || J ? void Ea.log("Session Tracking is disabled.") : t(na, a);
-        },
-        sendSPAPerf: function(a) {
-            return L || K ? void Ea.log("SPA Tracking is disabled.") : t(oa, a);
-        },
-        sendTxnPerf: function(a) {
-            return L || H ? void Ea.log("Transaction monitoring is disabled.") : t(pa, a);
-        },
-        sendWebVitals: function(a) {
-            return L ? void Ea.log("Web vitals is disabled.") : t(qa, a);
-        },
-        send: function(a, b, c) {
-            try {
-                r(X.computeStackTrace(a), {
-                    customData: b,
-                    tags: c
-                });
-            } catch (d) {
-                if (a !== d) throw d;
-            }
-            return Ia;
-        },
-        _isAllowedUrl: function(a) {
-            return a = a || "", aa && aa.test && aa.test(a) ? !1 : ba && ba.test ? ba.test(a) ? !0 : !1 : _ && _.test ? _.test(a) ? !0 : !1 : !0;
-        },
-        _helper: Ea
-    };
-    a13.atatus = Ia, module.exports = Ia, "undefined" != typeof global && (global.atatus = Ia);
-}(window, document, window.jQuery), function(a16, b13, c8, d14) {
-    function e9(a) {
-        a.pl <= 0 || (a.nt = a.nt > 0 ? a.nt : 0, a.dp = a.dp > 0 ? a.dp : 0, a.pr = a.pr > 0 ? a.pr : 0, c8.sendPerf(a));
-    }
-    function f6(b, c) {
-        return "object" == typeof a16.performance && (!b || b && typeof a16.performance[b] === c);
-    }
-    function g6(b) {
-        if (!f6("getEntriesByName", "function")) return b;
-        var d = a16.performance.getEntriesByName("first-paint");
-        d.length > 0 && d[0].startTime > 0 ? b.fp = +d[0].startTime.toFixed(0) : a16.performance.timing && a16.performance.timing.msFirstPaint && (b.fp = +(a16.performance.timing.msFirstPaint - a16.performance.timing.fetchStart).toFixed(0));
-        var e = a16.performance.getEntriesByName("first-contentful-paint");
-        return e.length > 0 && e[0].startTime > 0 && (b.fcp = +e[0].startTime.toFixed(0)), c8.paintPerformance = {
-            fp: b.fp,
-            fcp: b.fcp
-        }, b;
-    }
-    function h5() {
-        var b = a16.performance || a16.mozPerformance || a16.msPerformance || a16.webkitPerformance, c = b.timing;
-        if (0 === c.loadEventEnd) return !1;
-        clearInterval(l), l = null;
-        var d = c.navigationStart;
-        0 >= d && (d = c.fetchStart);
-        var f = {};
-        for(var h in m)f[m[h]] = -1, h in c && (c[h] <= 0 || (f[m[h]] = c[h] - d));
-        var i = {
-            nt: f.rps - f.ns,
-            dp: f.dce - f.rps,
-            pr: f.le - f.dce,
-            pl: f.le - f.ns,
-            timing: f
-        };
-        try {
-            g6(i);
-        } catch (j) {}
-        e9(i);
-    }
-    function i3() {
-        if (!k || !k.bDone) return !1;
-        clearInterval(l), l = !1;
-        var a = k.getMeasures();
-        if (null != a && null != a.backend && null != a.frontend && null != a["page load time"] && null != a["total load time"]) {
-            var b = a.backend, c = a.backend + a.frontend, d = {
-                nt: b,
-                dp: c - b,
-                pr: a["total load time"] - c,
-                fe: a["total load time"] - b,
-                pl: a["total load time"]
-            };
-            e9(d);
-        }
-    }
-    var j4 = (new Date).getTime(), k = k || {};
-    k.q = k.q || [], k.version = "0.3", k.targetOrigin = b13.location.protocol + "//" + b13.location.hostname, k.bPostMessage = !1, k.beaconUrl = k.beaconUrl || "/images/beacon.gif", k.autorun = !1, k.init = function() {
-        if (k.bDone = !1, k.bUnloaded = !1, k.marks = {}, k.measures = {}, k.starts = {}, k.findStartTime(), k.addEventListener("beforeunload", k.beforeUnload, !1), k.addEventListener("pagehide", k.beforeUnload, !1), k.addEventListener("unload", k.beforeUnload, !1), k.processQ(), "complete" === b13.readyState) {
-            var c = a16.performance || a16.mozPerformance || a16.msPerformance || a16.webkitPerformance;
-            c && "undefined" != typeof c.timing && "undefined" != typeof c.timing.loadEventEnd && (k.mark("firstbyte", c.timing.responseStart), k.mark("onload", c.timing.loadEventEnd)), k.done();
-        } else k.addEventListener("load", k.onload, !1);
-    }, k.processQ = function() {
-        for(var a = k.q.length, b = 0; a > b; b++){
-            var c = k.q[b], d = c[0];
-            "mark" === d ? k.mark(c[1], c[2]) : "measure" === d ? k.measure(c[1], c[2], c[3]) : "done" === d && k.done(c[1]);
-        }
-    }, k.mark = function(b, c) {
-        return k.dprint("RUM_EPISODES.mark: " + b + ", " + c), b ? (k.marks[b] = parseInt(c || (new Date).getTime()), k.bPostMessage && a16.postMessage("RUM_EPISODES:mark:" + b + ":" + c, k.targetOrigin), void ("firstbyte" === b ? k.measure("backend", "starttime", "firstbyte") : "onload" === b ? (k.measure("frontend", "firstbyte", "onload"), k.measure("page load time", "starttime", "onload")) : "done" === b && k.measure("total load time", "starttime", "done"))) : void k.dprint("Error: markName is undefined in RUM_EPISODES.mark.");
-    }, k.measure = function(b, c, d) {
-        if (k.dprint("RUM_EPISODES.measure: " + b + ", " + c + ", " + d), !b) return void k.dprint("Error: episodeName is undefined in RUM_EPISODES.measure.");
-        var e;
-        if ("undefined" == typeof c) e = "number" == typeof k.marks[b] ? k.marks[b] : (new Date).getTime();
-        else if ("number" == typeof k.marks[c]) e = k.marks[c];
-        else {
-            if ("number" != typeof c) return void k.dprint("Error: unexpected startNameOrTime in RUM_EPISODES.measure: " + c);
-            e = c;
-        }
-        var f;
-        if ("undefined" == typeof d) f = (new Date).getTime();
-        else if ("number" == typeof k.marks[d]) f = k.marks[d];
-        else {
-            if ("number" != typeof d) return void k.dprint("Error: unexpected endNameOrTime in RUM_EPISODES.measure: " + d);
-            f = d;
-        }
-        k.starts[b] = parseInt(e), k.measures[b] = parseInt(f - e), k.bPostMessage && a16.postMessage("RUM_EPISODES:measure:" + b + ":" + e + ":" + f, k.targetOrigin);
-    }, k.done = function(b) {
-        k.bDone = !0, k.mark("done"), k.bPostMessage && a16.postMessage("RUM_EPISODES:done", k.targetOrigin), "function" == typeof b && b();
-    }, k.getMarks = function() {
-        return k.marks;
-    }, k.getMeasures = function() {
-        return k.measures;
-    }, k.getStarts = function() {
-        return k.starts;
-    }, k.findStartTime = function() {
-        var a = k.findStartWebTiming() || k.findStartCookie();
-        a && k.mark("starttime", a);
-    }, k.findStartWebTiming = function() {
-        var b, c = a16.performance || a16.mozPerformance || a16.msPerformance || a16.webkitPerformance;
-        return c && "undefined" != typeof c.timing && "undefined" != typeof c.timing.navigationStart && (b = c.timing.navigationStart, k.dprint("RUM_EPISODES.findStartWebTiming: startTime = " + b)), b;
-    }, k.findStartCookie = function() {
-        try {
-            for(var c = b13.cookie.split(" "), e = 0; e < c.length; e++)if (0 === c[e].indexOf("RUM_EPISODES=")) {
-                for(var f, g, h = c[e].substring(13).split("&"), i = 0; i < h.length; i++)if (0 === h[i].indexOf("s=")) f = h[i].substring(2);
-                else if (0 === h[i].indexOf("r=")) {
-                    var j = h[i].substring(2);
-                    j = j.replace(/;$/, ""), g = a16.escape(b13.referrer) === j;
-                }
-                if (g && f) return k.dprint("RUM_EPISODES.findStartCookie: startTime = " + f), f;
-            }
-        } catch (l) {}
-        return d14;
-    }, k.beforeUnload = function() {
-        try {
-            if (k.bUnloaded) return;
-            b13.cookie = "RUM_EPISODES=s=" + Number(new Date) + "&r=" + a16.escape(b13.location) + "; path=/", k.bUnloaded = !0;
-        } catch (c) {}
-    }, k.onload = function() {
-        k.mark("onload"), k.done();
-    }, k.addEventListener = function(b, c, d) {
-        return "undefined" != typeof a16.attachEvent ? a16.attachEvent("on" + b, c) : a16.addEventListener ? a16.addEventListener(b, c, d) : void 0;
-    }, k.dprint = function() {}, k.init();
-    var l = null, m = {
-        navigationStart: "ns",
-        redirectStart: "rds",
-        redirectEnd: "rde",
-        unloadEventStart: "us",
-        unloadEventEnd: "ue",
-        fetchStart: "fs",
-        domainLookupStart: "dls",
-        domainLookupEnd: "dle",
-        connectStart: "cs",
-        secureConnectionStart: "scs",
-        connectEnd: "ce",
-        handshakeStart: "hs",
-        requestStart: "rqs",
-        responseStart: "rps",
-        responseEnd: "rpe",
-        domLoading: "dl",
-        domInteractive: "di",
-        domContentLoadedEventStart: "dcs",
-        domContentLoadedEventEnd: "dce",
-        domComplete: "dc",
-        loadEventStart: "ls",
-        loadEventEnd: "le"
-    }, n = a16.performance || a16.mozPerformance || a16.msPerformance || a16.webkitPerformance;
-    n && "undefined" != typeof n.timing && "undefined" != typeof n.navigation ? l = setInterval(h5, 100) : (k.mark("firstbyte", j4), l = setInterval(i3, 100));
-}(window, document, window.atatus), function(a17, b14, c9) {
-    b14.SessionTracking = function() {
-        function d15(a) {
-            b14.sessionId = p.uuid4(), q.existingTimestamp = p.createCookie(q.cookieName, b14.sessionId), a(!0);
-        }
-        function e10() {
-            var a;
-            if (q.existingTimestamp) {
-                var b = new Date(new Date - s);
-                a = q.existingTimestamp < b;
-            }
-            a && (q.stopSession = !0);
-        }
-        function f7(a) {
-            return Math.min(a, 300000);
-        }
-        function g7(a) {
-            for(var b in a)isNaN(a[b]) && "string" != typeof a[b] ? a[b] = 0 : a[b] < 0 && (a[b] = 0);
-            return a;
-        }
-        function h6(b, c) {
-            var d;
-            return d = "object" == typeof a17.performance && "function" == typeof a17.performance.now ? a17.performance.now() : 0, {
-                du: Math.min(q.maxVirtualPageDuration, d - (b || c)),
-                o: Math.min(q.maxVirtualPageDuration, d - c)
-            };
-        }
-        function i(a) {
-            var c = {
-                du: a.loadEventEnd - a.navigationStart,
-                s: a.fetchStart
-            };
-            return a.domainLookupStart && a.domainLookupStart > 0 && (c.dls = a.domainLookupStart - a.fetchStart), a.domainLookupEnd && a.domainLookupEnd > 0 && (c.dle = a.domainLookupEnd - a.fetchStart), a.connectStart && a.connectStart > 0 && (c.cs = a.connectStart - a.fetchStart), a.connectEnd && a.connectEnd > 0 && (c.ce = a.connectEnd - a.fetchStart), a.responseStart && a.responseStart > 0 && (c.rps = a.responseStart - a.fetchStart), a.responseEnd && a.responseEnd > 0 && (c.rpe = a.responseEnd - a.fetchStart), a.domLoading && a.domLoading > 0 && (c.dl = a.domLoading - a.fetchStart), a.domInteractive && a.domInteractive > 0 && (c.di = a.domInteractive - a.fetchStart), a.domContentLoadedEventEnd && a.domContentLoadedEventEnd > 0 && (c.dce = a.domContentLoadedEventEnd - a.fetchStart), a.domComplete && a.domComplete > 0 && (c.dc = f7(a.domComplete - a.fetchStart)), a.loadEventStart && a.loadEventStart > 0 && (c.ls = a.loadEventStart - a.fetchStart), a.loadEventEnd && a.loadEventEnd > 0 && (c.le = a.loadEventEnd - a.fetchStart), a.secureConnectionStart && a.secureConnectionStart > 0 && (c.scs = a.secureConnectionStart - a.connectStart - a.fetchStart, c.scs = c.scs > 0 ? c.scs : 0), c = g7(c), b14.paintPerformance && b14.paintPerformance.fp && (c.fp = b14.paintPerformance.fp, c.fcp = b14.paintPerformance.fcp), c;
-        }
-        function j(a, b) {
-            var c = {
-                du: f7(a.duration),
-                s: b + a.fetchStart
-            };
-            return a.domainLookupStart && a.domainLookupStart > 0 && (c.dls = a.domainLookupStart - a.fetchStart), a.domainLookupEnd && a.domainLookupEnd > 0 && (c.dle = a.domainLookupEnd - a.fetchStart), a.connectStart && a.connectStart > 0 && (c.cs = a.connectStart - a.fetchStart), a.connectEnd && a.connectEnd > 0 && (c.ce = a.connectEnd - a.fetchStart), a.responseStart && a.responseStart > 0 && (c.rps = a.responseStart - a.fetchStart), a.responseEnd && a.responseEnd > 0 && (c.rpe = a.responseEnd - a.fetchStart), a.secureConnectionStart && a.secureConnectionStart > 0 && (c.scs = a.secureConnectionStart - a.connectStart - a.fetchStart, c.scs = c.scs > 0 ? c.scs : 0), c = g7(c);
-        }
-        function k() {
-            var b = a17.location.pathname, c = a17.location.protocol + "//" + a17.location.host + b;
-            return c.length > 800 && (c = c.substring(0, 800)), {
-                u: c,
-                t: i(a17.performance.timing),
-                g: "p"
-            };
-        }
-        function l(b, c, d) {
-            var e = a17.location.protocol + "//" + a17.location.host + b;
-            return e.length > 800 && (e = e.substring(0, 800)), {
-                u: e,
-                t: h6(c, d),
-                g: "r"
-            };
-        }
-        function m(b, c) {
-            var d = b.name.split("?")[0];
-            return d.length > 800 && (d = d.substring(0, 800)), {
-                u: d,
-                t: j(b, c ? 0 : a17.performance.timing.navigationStart),
-                g: "xmlhttprequest" === b.initiatorType || "fetch" === b.initiatorType ? "x" : "s",
-                z: b.decodedBodySize || b.transferSize || 0
-            };
-        }
-        function n(b, d) {
-            if (a17.performance !== c9 && a17.performance.getEntriesByType) try {
-                for(var e = a17.performance.getEntriesByType("resource"), f = q.offset; f < e.length; f++){
-                    var g = e[f].name.split("?")[0];
-                    0 !== g.indexOf(q.atatusHost) && (g.indexOf("favicon.ico") > 0 || 0 !== g.indexOf("about:blank") && ("j" !== g[0] || 1 !== g.indexOf("avascript:")) && 0 !== g.indexOf("chrome-extension://") && 0 !== g.indexOf("res://") && 0 !== g.indexOf("file://") && e[f].name && b.push(m(e[f], d)));
-                }
-                q.offset = e.length;
-            } catch (h) {}
-        }
-        function o(b, d, e, f) {
-            if (a17.performance === c9 || a17.performance.timing === c9 || a17.performance.timing.fetchStart === c9 || isNaN(a17.performance.timing.fetchStart)) return null;
-            var g = [
-                {
-                    rs: []
-                }
-            ];
-            if (d && (e && (f ? g[0].p = k() : g[0].rs.push(k())), n(g[0].rs)), b) {
-                q.pendingVirtualPage && (g[0].r = q.pendingVirtualPage);
-                var h = null == q.pendingVirtualPage;
-                if (q.pendingVirtualPage = l(b, q.previousVirtualPageLoadTimestamp, q.initalStaticPageLoadTimestamp), !h && g.length > 0) return g;
-            }
-            return g;
-        }
-        var p = b14._helper, q = this, r = {};
-        b14.sessionId = null, this.cookieName = "atatus-sid", this.virtualPage = null, this.heartBeatInterval = null, this.offset = 0, this.atatusHost = b14.getAPIEndpoint(), this.maxVirtualPageDuration = 1800000;
-        var s = 300000;
-        this.existingTimestamp = null, this.stopSession = !1, this.sendSessionPayload = function(a) {
-            q.stopSession || b14.sendSessionPerf(a);
-        }, this.sendSPAPayload = function() {}, this.attach = function() {
-            d15(function(a) {
-                setTimeout(function() {
-                    q.pageLoaded(a);
-                }, 5000);
-            });
-            var b15 = function() {
-                var a = [
-                    {
-                        rs: []
-                    }
-                ];
-                if (n(a[0].rs), a[0].rs.length > 0) {
-                    var b = {
-                        data: a
-                    };
-                    q.sendSessionPayload(b);
-                }
-            }, c = (function() {
-                this.watchCookieTimestamp();
-            }).bind(r), e = (function() {
-                "visible" === document.visibilityState && this.watchCookieTimestamp();
-            }).bind(r);
-            a17.addEventListener ? (a17.addEventListener("click", c), document.addEventListener("visibilitychange", e), a17.addEventListener("beforeunload", b15)) : a17.attachEvent && document.attachEvent("onclick", c);
-        }, this.pageLoaded = function(b) {
-            q.sendPerformance(!0, !0, b), q.heartBeat(), q.initalStaticPageLoadTimestamp = "object" == typeof a17.performance && "function" == typeof a17.performance.now ? a17.performance.now() : 0;
-        }, this.endSession = function() {
-            q.stopSession = !0, p.createCookie(q.cookieName, b14.sessionId, -1);
-        }, this.heartBeat = function() {
-            q.heartBeatInterval = setInterval(function() {
-                var a = [
-                    {
-                        rs: []
-                    }
-                ];
-                if (n(a[0].rs, q.virtualPage), a[0].rs.length > 0) {
-                    var b = {
-                        data: a
-                    };
-                    q.sendSessionPayload(b);
-                }
-            }, 30000);
-        }, this.virtualPageLoaded = function(b) {
-            var c = null == this.virtualPage;
-            "string" == typeof b && (b.length > 0 && "/" !== b[0] && (b += "/"), b.length > 800 && (b = b.substring(0, 800)), this.virtualPage = b), c ? this.sendPerformance(!0, !1, !1) : this.sendPerformance(!1, !1, !1), "string" == typeof b && (this.previousVirtualPageLoadTimestamp = "object" == typeof a17.performance && "function" == typeof a17.performance.now ? a17.performance.now() : 0);
-        }, this.sendPerformance = function(a, b, c) {
-            var d = o(this.virtualPage, a, b, c);
-            if (d) {
-                var e = {
-                    data: d
-                };
-                d[0].r ? q.sendSPAPayload(e) : d[0].rs.length > 0 && q.sendSessionPayload(e);
-            }
-        }, r.watchCookieTimestamp = e10;
-    };
-}(window, window.atatus), function(a18, b16, c10) {
-    c10.__attachAjaxHooks = function() {
-        var d16 = c10._helper, e11 = {
-            queue: [],
-            batchSize: 25,
-            processing: !1,
-            bUnloaded: !1,
-            push: function(a) {
-                "string" == typeof a.url && (a.url.indexOf(".html") > 0 || -1 === a.url.indexOf("://") || !c10._isAllowedUrl(a.url) || (this.queue.push(a), this.queue.length >= this.batchSize && this._processQueue()));
-            },
-            _processQueue: function() {
-                if (!this.processing && this.queue.length) {
-                    this.processing = !0;
-                    try {
-                        for(var a = {}, b = {}, e = 0; e < this.queue.length; e++){
-                            var f, g = this.queue[e], h = g.status;
-                            if (400 > h) {
-                                f = g.method + g.url;
-                                var i = g.respAvailTime - g.sendTime, j = g.respProcTime - g.respAvailTime, k = g.receivedSize ? +g.receivedSize : 0, l = g.sendSize ? +g.sendSize : 0;
-                                0 > i && (i = 0), 0 > j && (j = 0), isNaN(k) && (k = 0), isNaN(l) && (l = 0);
-                                var m = a[f];
-                                m ? (m.rt.push(i), m.ct.push(j), m.rz.push(k), m.sz.push(l)) : a[f] = {
-                                    m: g.method,
-                                    u: g.url,
-                                    rt: [
-                                        i
-                                    ],
-                                    ct: [
-                                        j
-                                    ],
-                                    rz: [
-                                        k
-                                    ],
-                                    sz: [
-                                        l
-                                    ]
-                                };
-                            } else {
-                                f = g.method + h + g.url;
-                                var n = b[f];
-                                n && n.sc ? n.sc[h] ? n.sc[h]++ : n.sc[h] = 1 : (b[f] = {
-                                    m: g.method,
-                                    u: g.url,
-                                    sc: {}
-                                }, b[f].sc[h] = 1);
-                            }
-                        }
-                        var o = {
-                            xhr: d16.arrayFromObject(a),
-                            xhrError: d16.arrayFromObject(b)
-                        };
-                        c10.sendAjaxPerf(o);
-                    } catch (p) {
-                        d16.log("Error while processing queue: ", p);
-                    } finally{
-                        this.queue = [], this.processing = !1;
-                    }
-                }
-            },
-            beforeUnload: function() {
-                e11.bUnloaded || (e11._processQueue(), e11.bUnloaded = !0);
-            }
-        };
-        d16.addEventListener("beforeunload", e11.beforeUnload, !1);
-        var f8 = {
-            support: function(a) {
-                return !a || "apply" in a;
-            },
-            around: function(a, b, c, e) {
-                return a = a || function() {}, function() {
-                    var f, g = Array.prototype.slice.call(arguments);
-                    try {
-                        b && (f = b.apply(this, g));
-                    } catch (h) {
-                        d16.log(e, h);
-                    }
-                    var i;
-                    try {
-                        i = a.apply(this, f || g);
-                    } finally{
-                        try {
-                            c && c.apply(this, g);
-                        } catch (h) {
-                            d16.log(e, h);
-                        }
-                    }
-                    return i;
-                };
-            },
-            before: function(a, b) {
-                return f8.around(a, b);
-            },
-            after: function(a, b) {
-                return f8.around(a, null, b);
-            },
-            timeout: function(a) {
-                setTimeout(a, 0);
-            },
-            wrapAddEventListener: function() {
-                return function(a, b) {
-                    if (("load" === a || "error" === a) && b && this._atrumXhrData) {
-                        var c;
-                        b.__atrumInterceptor ? c = b.__atrumInterceptor : f8.support(b) ? (c = h7.wrapXHR(b, this, "XHR.invokeEventListener"), b.__atrumInterceptor = c) : c = null;
-                        var d;
-                        return c && (d = Array.prototype.slice.call(arguments), d[1] = c), d;
-                    }
-                };
-            },
-            wrapRemoveEventListener: function() {
-                return function(a, b) {
-                    if (this._atrumXhrData) {
-                        var c = Array.prototype.slice.call(arguments);
-                        return b.__atrumInterceptor && (c[1] = b.__atrumInterceptor), c;
-                    }
-                };
-            },
-            aroundWithHandleEvent: function(a, b, c, d) {
-                var e = a;
-                return a && "object" == typeof a && "toString" in a && "[xpconnect wrapped nsIDOMEventListener]" === a.toString() && "handleEvent" in a && (e = function() {
-                    a.handleEvent.apply(this, Array.prototype.slice.call(arguments));
-                }), f8.around(e, b, c, d);
-            },
-            getFullyQualifiedUrl: function(a) {
-                var c = b16.createElement("a");
-                return c.href = a, c.href;
-            }
-        };
-        if (a18.XMLHttpRequest && a18.XMLHttpRequest.prototype) {
-            var g8 = a18.XMLHttpRequest.prototype;
-            if (!("open" in g8 && "send" in g8)) return;
-            if (!f8.support(g8.open) || !f8.support(g8.send)) return;
-            var h7 = {};
-            h7.captureAjaxTimings = function(a) {
-                var b = a._atrumXhrData;
-                if (b) {
-                    var c = (new Date).getTime();
-                    2 === a.readyState ? b.firstByteTime = b.firstByteTime || c : 4 === a.readyState && (b.respAvailTime = b.respAvailTime || c, b.firstByteTime = b.firstByteTime || c);
-                }
-            }, h7.sendPayload = function(a, b) {
-                b.receivedSize = 0, a.responseType && "text" !== a.responseType || "string" == typeof a.responseText && (b.receivedSize = a.responseText.length), b.status = a.status, e11.push(b);
-            }, h7.wrapXHR = function(a19, b, c11) {
-                return f8.aroundWithHandleEvent(a19, function() {
-                    h7.captureAjaxTimings(this);
-                }, function() {
-                    var a = b._atrumXhrData;
-                    if (a && 4 === b.readyState) {
-                        var c = (new Date).getTime();
-                        a.respProcTime = a.respProcTime || c, h7.sendPayload(b, a), delete b._atrumXhrData;
-                    }
-                }, c11);
-            }, h7.ajaxDone = function(a) {
-                if (a._atrumXhrData) {
-                    var b = (new Date).getTime() + 150000, c = function() {
-                        h7.captureAjaxTimings(a);
-                        var d = a._atrumXhrData;
-                        if (d) {
-                            var e = (new Date).getTime();
-                            4 === a.readyState ? (d.respProcTime = d.respProcTime || e, h7.sendPayload(a, d), delete a._atrumXhrData) : b > e ? setTimeout(c, 50) : delete a._atrumXhrData;
-                        }
-                    };
-                    c();
-                }
-            }, g8.open = f8.around(g8.open, function() {
-                var a = 1 <= arguments.length ? String(arguments[0]) : "", b = 2 <= arguments.length ? String(arguments[1]) : "";
-                b = f8.getFullyQualifiedUrl(b);
-                var d = c10._isAllowedUrl(b);
-                d && (b = b && b.split("?")[0], this._atrumXhrData = {
-                    method: a,
-                    url: b,
-                    sendTime: null,
-                    sendSize: null,
-                    firstByteTime: null,
-                    respAvailTime: null,
-                    respProcTime: null,
-                    receivedSize: null,
-                    parentPhase: null
-                });
-            }, null, "XHR.open"), g8.send = f8.around(g8.send, function() {
-                var a = this, b17 = a._atrumXhrData;
-                if (b17) {
-                    var c = (new Date).getTime();
-                    if (b17.sendTime = b17.sendTime || c, b17.sendSize = 1 <= arguments.length && arguments[0] ? arguments[0].length || 0 : 0, a.onreadystatechange && "function" == typeof a.onreadystatechange) {
-                        var d = 0, e = function() {
-                            if (4 === a.readyState) h7.ajaxDone(a);
-                            else {
-                                var b = null;
-                                try {
-                                    b = a.onreadystatechange;
-                                } catch (c) {
-                                    return void h7.ajaxDone(a);
-                                }
-                                d++, b ? f8.support(b) ? a.onreadystatechange = h7.wrapXHR(b, a, "XHR.onReadyStateChange") : h7.ajaxDone(a) : 5 > d ? f8.timeout(e) : h7.ajaxDone(a);
-                            }
-                        };
-                        e();
-                    } else a.addEventListener("readystatechange", function() {
-                        4 === a.readyState && h7.ajaxDone(a);
-                    });
-                }
-            }, null, "XHR.send"), "addEventListener" in g8 && "removeEventListener" in g8 && f8.support(g8.addEventListener) && f8.support(g8.removeEventListener) && (g8.addEventListener = f8.around(g8.addEventListener, f8.wrapAddEventListener(), null, "XHR.addEventListener"), g8.removeEventListener = f8.around(g8.removeEventListener, f8.wrapRemoveEventListener(), null, "XHR.removeEventListener"));
-        }
-        if ("fetch" in a18 && !a18.fetch.polyfill) {
-            var i4 = a18.fetch;
-            a18.fetch = function(a20) {
-                return function() {
-                    for(var b = new Array(arguments.length), d = 0; d < b.length; ++d)b[d] = arguments[d];
-                    var f = "GET", g = 0;
-                    b[1] && (b[1].method && (f = b[1].method), "string" == typeof b[1].body && (g = b[1].body.length));
-                    var h = {
-                        url: b[0],
-                        method: f,
-                        sendSize: g,
-                        receivedSize: 0,
-                        sendTime: (new Date).getTime(),
-                        respAvailTime: 0,
-                        respProcTime: 0
-                    };
-                    return a20.apply(this, b).then(function(a) {
-                        return h.respAvailTime = (new Date).getTime(), c10._isAllowedUrl(h.url) && (h.respProcTime = h.respAvailTime, h.status = a.status, a.headers && a.headers.get && (h.receivedSize = a.headers.get("Content-Length")), e11.push(h)), a;
-                    });
-                };
-            }(i4);
-        }
-    };
-}(window, document, window.atatus), function(a21, b18) {
-    function c12(a, c, d) {
-        if (!(0 >= c)) {
-            var e = {
-                data: [
-                    {
-                        t: {
-                            n: a,
-                            s: d,
-                            t: {
-                                du: c
-                            }
-                        }
-                    }
-                ]
-            };
-            b18.sendTxnPerf(e);
-        }
-    }
-    function d17(a) {
-        return i + " " + a;
-    }
-    function e12() {
-        try {
-            return "localStorage" in a21 && null !== a21.localStorage;
-        } catch (b) {
-            return !1;
-        }
-    }
-    function f9(a) {
-        var b = j.now();
-        try {
-            localStorage.setItem(d17(a), b);
-        } catch (c) {}
-    }
-    function g(a) {
-        var b = null, c = d17(a);
-        try {
-            b = localStorage.getItem(c), localStorage.removeItem(c);
-        } catch (e) {}
-        var f = 0;
-        return b && (f = j.now() - b), f;
-    }
-    function h(a) {
-        try {
-            var b = d17(a);
-            localStorage.removeItem(b);
-        } catch (c) {}
-    }
-    var i = "atatus.com/", j = b18._helper, k = 1, l = 0;
-    b18.beginTransaction = function(a) {
-        e12() && f9(a);
-    }, b18.endTransaction = function(a) {
-        if (e12()) {
-            var b = g(a);
-            c12(a, b, k);
-        }
-    }, b18.failTransaction = function(a) {
-        if (e12()) {
-            var b = g(a);
-            c12(a, b, l);
-        }
-    }, b18.cancelTransaction = function(a) {
-        e12() && h(a);
-    }, b18.recordTransaction = function(a, b, d) {
-        e12() && a && b && c12(a, b, d === !1 ? l : k);
-    };
-}(window, window.atatus), function(a22, b19) {
-    function c(a) {
-        a = a || {};
-        var b = a.name && a.name.toLowerCase();
-        b && a.value && (e[b] || f++, e[b] = a.value);
-    }
-    function d() {
-        if (a22.webVitals) {
-            a22.webVitals.getFID(c), a22.webVitals.getFCP(c), a22.webVitals.getTTFB(c), a22.webVitals.getCLS(c, !0), a22.webVitals.getLCP(c, !0);
-            var b = a22.performance && a22.performance.timing;
-            !e.ttfb && b && (e.ttfb = b.responseStart - b.navigationStart, e.ttfb && f++);
-        }
-    }
-    var e = {}, f = 0, g = !1, h = function() {
-        !g && f > 0 && (g = !0, b19.sendWebVitals(e));
-    };
-    "loading" !== document.readyState ? d() : document.addEventListener("DOMContentLoaded", function() {
-        d();
-    }), a22.addEventListener("beforeunload", function() {
-        h();
-    });
-}(window, window.atatus), function(a, b) {
-    a._atatusConfig && a._atatusConfig.apikey && b.config(a._atatusConfig.apikey, a._atatusConfig).install();
-}(window, window.atatus);
-!function(n4) {
-    var r2 = {};
-    function i(t) {
-        if (r2[t]) return r2[t].exports;
-        var e = r2[t] = {
-            i: t,
-            l: !1,
-            exports: {}
-        };
-        return n4[t].call(e.exports, e, e.exports, i), e.l = !0, e.exports;
-    }
-    i.m = n4, i.c = r2, i.d = function(t, e, n) {
-        i.o(t, e) || Object.defineProperty(t, e, {
-            enumerable: !0,
-            get: n
-        });
-    }, i.r = function(t) {
-        "undefined" != typeof Symbol && Symbol.toStringTag && Object.defineProperty(t, Symbol.toStringTag, {
-            value: "Module"
-        }), Object.defineProperty(t, "__esModule", {
-            value: !0
-        });
-    }, i.t = function(e, t2) {
-        if (1 & t2 && (e = i(e)), 8 & t2) return e;
-        if (4 & t2 && "object" == typeof e && e && e.__esModule) return e;
-        var n = Object.create(null);
-        if (i.r(n), Object.defineProperty(n, "default", {
-            enumerable: !0,
-            value: e
-        }), 2 & t2 && "string" != typeof e) for(var r in e)i.d(n, r, (function(t) {
-            return e[t];
-        }).bind(null, r));
-        return n;
-    }, i.n = function(t) {
-        var e = t && t.__esModule ? function() {
-            return t.default;
-        } : function() {
-            return t;
-        };
-        return i.d(e, "a", e), e;
-    }, i.o = function(t, e) {
-        return Object.prototype.hasOwnProperty.call(t, e);
-    }, i.p = "", i(i.s = 2);
-}([
-    function(t3, e13, n5) {
-        t3.exports = function() {
-            function c(t) {
-                return "function" == typeof t;
-            }
-            var n6 = Array.isArray ? Array.isArray : function(t) {
-                return "[object Array]" === Object.prototype.toString.call(t);
-            }, r3 = 0, e14 = void 0, i5 = void 0, a23 = function(t, e) {
-                h[r3] = t, h[r3 + 1] = e, 2 === (r3 += 2) && (i5 ? i5(v) : y());
-            }, t4 = "undefined" != typeof window ? window : void 0, o4 = t4 || {}, s2 = o4.MutationObserver || o4.WebKitMutationObserver, u = "undefined" == typeof self && "undefined" != typeof process && "[object process]" === ({}).toString.call(process), d = "undefined" != typeof Uint8ClampedArray && "undefined" != typeof importScripts && "undefined" != typeof MessageChannel;
-            function f() {
-                var t = setTimeout;
-                return function() {
-                    return t(v, 1);
-                };
-            }
-            var h = new Array(1000);
-            function v() {
-                for(var t = 0; t < r3; t += 2){
-                    var e = h[t], n = h[t + 1];
-                    e(n), h[t] = void 0, h[t + 1] = void 0;
-                }
-                r3 = 0;
-            }
-            var l, p, g, m, y = void 0;
-            function _(t, e) {
-                var n = this, r = new this.constructor(T);
-                void 0 === r[w] && j(r);
-                var i = n._state;
-                if (i) {
-                    var o = arguments[i - 1];
-                    a23(function() {
-                        return F(i, r, o, n._result);
-                    });
-                } else A(n, r, t, e);
-                return r;
-            }
-            function S(t) {
-                if (t && "object" == typeof t && t.constructor === this) return t;
-                var e = new this(T);
-                return I(e, t), e;
-            }
-            y = u ? function() {
-                return process.nextTick(v);
-            } : s2 ? (p = 0, g = new s2(v), m = document.createTextNode(""), g.observe(m, {
-                characterData: !0
-            }), function() {
-                m.data = p = ++p % 2;
-            }) : d ? ((l = new MessageChannel).port1.onmessage = v, function() {
-                return l.port2.postMessage(0);
-            }) : void 0 === t4 ? function() {
-                try {
-                    var t = Function("return this")().require("vertx");
-                    return void 0 === (e14 = t.runOnLoop || t.runOnContext) ? f() : function() {
-                        e14(v);
-                    };
-                } catch (t) {
-                    return f();
-                }
-            }() : f();
-            var w = Math.random().toString(36).substring(2);
-            function T() {}
-            var b = void 0, x = 1, L = 2;
-            function C(t, e, n, r) {
-                try {
-                    t.call(e, n, r);
-                } catch (t5) {
-                    return t5;
-                }
-            }
-            function E(t6, e15, n7) {
-                var r, i, o, s;
-                e15.constructor === t6.constructor && n7 === _ && e15.constructor.resolve === S ? (o = t6, (s = e15)._state === x ? O(o, s._result) : s._state === L ? R(o, s._result) : A(s, void 0, function(t) {
-                    return I(o, t);
-                }, function(t) {
-                    return R(o, t);
-                })) : void 0 === n7 ? O(t6, e15) : c(n7) ? (r = e15, i = n7, a23(function(e) {
-                    var n = !1, t7 = C(i, r, function(t) {
-                        n || (n = !0, r !== t ? I(e, t) : O(e, t));
-                    }, function(t) {
-                        n || (n = !0, R(e, t));
-                    }, e._label);
-                    !n && t7 && (n = !0, R(e, t7));
-                }, t6)) : O(t6, e15);
-            }
-            function I(e, t) {
-                if (e === t) R(e, new TypeError("You cannot resolve a promise with itself"));
-                else if (i = typeof (r = t), null === r || "object" !== i && "function" !== i) O(e, t);
-                else {
-                    var n = void 0;
-                    try {
-                        n = t.then;
-                    } catch (t8) {
-                        return void R(e, t8);
-                    }
-                    E(e, t, n);
-                }
-                var r, i;
-            }
-            function k(t) {
-                t._onerror && t._onerror(t._result), P(t);
-            }
-            function O(t, e) {
-                t._state === b && (t._result = e, t._state = x, 0 !== t._subscribers.length && a23(P, t));
-            }
-            function R(t, e) {
-                t._state === b && (t._state = L, t._result = e, a23(k, t));
-            }
-            function A(t, e, n, r) {
-                var i = t._subscribers, o = i.length;
-                t._onerror = null, i[o] = e, i[o + x] = n, i[o + L] = r, 0 === o && t._state && a23(P, t);
-            }
-            function P(t) {
-                var e = t._subscribers, n = t._state;
-                if (0 !== e.length) {
-                    for(var r = void 0, i = void 0, o = t._result, s = 0; s < e.length; s += 3)r = e[s], i = e[s + n], r ? F(n, r, i, o) : i(o);
-                    t._subscribers.length = 0;
-                }
-            }
-            function F(t, e, n, r) {
-                var i = c(n), o = void 0, s = void 0, a = !0;
-                if (i) {
-                    try {
-                        o = n(r);
-                    } catch (t) {
-                        a = !1, s = t;
-                    }
-                    if (e === o) return void R(e, new TypeError("A promises callback cannot return that same promise."));
-                } else o = r;
-                e._state !== b || (i && a ? I(e, o) : !1 === a ? R(e, s) : t === x ? O(e, o) : t === L && R(e, o));
-            }
-            var M = 0;
-            function j(t) {
-                t[w] = M++, t._state = void 0, t._result = void 0, t._subscribers = [];
-            }
-            var q = function() {
-                function t9(t, e) {
-                    this._instanceConstructor = t, this.promise = new t(T), this.promise[w] || j(this.promise), n6(e) ? (this.length = e.length, this._remaining = e.length, this._result = new Array(this.length), 0 === this.length ? O(this.promise, this._result) : (this.length = this.length || 0, this._enumerate(e), 0 === this._remaining && O(this.promise, this._result))) : R(this.promise, new Error("Array Methods must be provided an Array"));
-                }
-                return t9.prototype._enumerate = function(t) {
-                    for(var e = 0; this._state === b && e < t.length; e++)this._eachEntry(t[e], e);
-                }, t9.prototype._eachEntry = function(e, t11) {
-                    var n = this._instanceConstructor, r = n.resolve;
-                    if (r === S) {
-                        var i = void 0, o = void 0, s = !1;
-                        try {
-                            i = e.then;
-                        } catch (t10) {
-                            s = !0, o = t10;
-                        }
-                        if (i === _ && e._state !== b) this._settledAt(e._state, t11, e._result);
-                        else if ("function" != typeof i) this._remaining--, this._result[t11] = e;
-                        else if (n === N) {
-                            var a = new n(T);
-                            s ? R(a, o) : E(a, e, i), this._willSettleAt(a, t11);
-                        } else this._willSettleAt(new n(function(t) {
-                            return t(e);
-                        }), t11);
-                    } else this._willSettleAt(r(e), t11);
-                }, t9.prototype._settledAt = function(t, e, n) {
-                    var r = this.promise;
-                    r._state === b && (this._remaining--, t === L ? R(r, n) : this._result[e] = n), 0 === this._remaining && O(r, this._result);
-                }, t9.prototype._willSettleAt = function(t12, e) {
-                    var n = this;
-                    A(t12, void 0, function(t) {
-                        return n._settledAt(x, e, t);
-                    }, function(t) {
-                        return n._settledAt(L, e, t);
-                    });
-                }, t9;
-            }(), N = function() {
-                function e16(t13) {
-                    this[w] = M++, this._result = this._state = void 0, this._subscribers = [], T !== t13 && ("function" != typeof t13 && function() {
-                        throw new TypeError("You must pass a resolver function as the first argument to the promise constructor");
-                    }(), this instanceof e16 ? function(e, t14) {
-                        try {
-                            t14(function(t) {
-                                I(e, t);
-                            }, function(t) {
-                                R(e, t);
-                            });
-                        } catch (t) {
-                            R(e, t);
-                        }
-                    }(this, t13) : function() {
-                        throw new TypeError("Failed to construct 'Promise': Please use the 'new' operator, this object constructor cannot be called as a function.");
-                    }());
-                }
-                return e16.prototype.catch = function(t) {
-                    return this.then(null, t);
-                }, e16.prototype.finally = function(e) {
-                    var n = this.constructor;
-                    return c(e) ? this.then(function(t) {
-                        return n.resolve(e()).then(function() {
-                            return t;
-                        });
-                    }, function(t) {
-                        return n.resolve(e()).then(function() {
-                            throw t;
-                        });
-                    }) : this.then(e, e);
-                }, e16;
-            }();
-            return N.prototype.then = _, N.all = function(t) {
-                return new q(this, t).promise;
-            }, N.race = function(i) {
-                var o = this;
-                return n6(i) ? new o(function(t, e) {
-                    for(var n = i.length, r = 0; r < n; r++)o.resolve(i[r]).then(t, e);
-                }) : new o(function(t, e) {
-                    return e(new TypeError("You must pass an array to race."));
-                });
-            }, N.resolve = S, N.reject = function(t) {
-                var e = new this(T);
-                return R(e, t), e;
-            }, N._setScheduler = function(t) {
-                i5 = t;
-            }, N._setAsap = function(t) {
-                a23 = t;
-            }, N._asap = a23, N.polyfill = function() {
-                var t = void 0;
-                if ("undefined" != typeof global) t = global;
-                else if ("undefined" != typeof self) t = self;
-                else try {
-                    t = Function("return this")();
-                } catch (t15) {
-                    throw new Error("polyfill failed because global object is unavailable in this environment");
-                }
-                var e = t.Promise;
-                if (e) {
-                    var n = null;
-                    try {
-                        n = Object.prototype.toString.call(e.resolve());
-                    } catch (t) {}
-                    if ("[object Promise]" === n && !e.cast) return;
-                }
-                t.Promise = N;
-            }, N.Promise = N;
-        }();
-    },
-    function(t16, e17) {
-        var n = "undefined" != typeof crypto && crypto.getRandomValues && crypto.getRandomValues.bind(crypto) || "undefined" != typeof msCrypto && "function" == typeof window.msCrypto.getRandomValues && msCrypto.getRandomValues.bind(msCrypto);
-        if (n) {
-            var r = new Uint8Array(16);
-            t16.exports = function() {
-                return n(r), r;
-            };
-        } else {
-            var i = new Array(16);
-            t16.exports = function() {
-                for(var t, e = 0; e < 16; e++)0 == (3 & e) && (t = 4294967296 * Math.random()), i[e] = t >>> ((3 & e) << 3) & 255;
-                return i;
-            };
-        }
-    },
-    function(t17, e18, n8) {
-        "use strict";
-        n8.r(e18);
-        var r4 = n8(1), o5 = n8.n(r4), i6 = [].slice;
-        for(var s3 = [], a24 = 0; a24 < 256; ++a24)s3[a24] = (a24 + 256).toString(16).substr(1);
-        function c13(t) {
-            if (t && t.traceId && t.id && t.parentId) {
-                var e = t.sampled ? "01" : "00", n = t.sampled ? t.id : t.parentId;
-                return "00-" + t.traceId + "-" + n + "-" + e;
-            }
-        }
-        function l4(e, t18) {
-            var n = !1;
-            return "string" == typeof t18 ? n = e === t18 : Array.isArray(t18) && t18.forEach(function(t) {
-                n || (n = l4(e, t));
-            }), n;
-        }
-        function u2(t) {
-            var e, n, r, i;
-            return (e = o5()(), r = n || 0, [
-                (i = s3)[e[r++]],
-                i[e[r++]],
-                i[e[r++]],
-                i[e[r++]],
-                i[e[r++]],
-                i[e[r++]],
-                i[e[r++]],
-                i[e[r++]],
-                i[e[r++]],
-                i[e[r++]],
-                i[e[r++]],
-                i[e[r++]],
-                i[e[r++]],
-                i[e[r++]],
-                i[e[r++]],
-                i[e[r++]]
-            ].join("")).substr(0, t);
-        }
-        function d18() {
-            return "undefined" != typeof window && "function" == typeof Array.prototype.forEach && "function" == typeof JSON.stringify && "function" == typeof Function.bind && window.performance && "function" == typeof window.performance.now && "withCredentials" in new window.XMLHttpRequest;
-        }
-        function f10(t, e, n) {
-            if (n && t) {
-                var r = w(t);
-                return e && (e = String(e)), n[r] = e, n;
-            }
-        }
-        var h8 = [
-            "fetchStart",
-            "domainLookupStart",
-            "domainLookupEnd",
-            "connectStart",
-            "connectEnd",
-            "secureConnectionStart",
-            "requestStart",
-            "responseStart",
-            "responseEnd",
-            "domLoading",
-            "domInteractive",
-            "domContentLoadedEventStart",
-            "domContentLoadedEventEnd",
-            "domComplete",
-            "loadEventStart",
-            "loadEventEnd"
-        ];
-        function p(t) {
-            return t && t.split("?")[0];
-        }
-        function v2(t) {
-            return null !== t && "object" == typeof t;
-        }
-        function g(t, e, n) {
-            for(var r = 0, i = e.length; r < i; ++r){
-                var o = e[r];
-                if (v2(o) || "function" == typeof o) for(var s = Object.keys(o), a = 0, c = s.length; a < c; a++){
-                    var u = s[a], d = o[u];
-                    n && v2(d) ? (v2(t[u]) || (t[u] = Array.isArray(d) ? [] : {}), g(t[u], [
-                        d
-                    ], !1)) : t[u] = d;
-                }
-            }
-            return t;
-        }
-        function m(t) {
-            return g(t, i6.call(arguments, 1), !1);
-        }
-        function y(t) {
-            return g(t, i6.call(arguments, 1), !0);
-        }
-        function _(t) {
-            return void 0 === t;
-        }
-        function S() {}
-        function w(t) {
-            return t.replace(/[.*"]/g, "_");
-        }
-        function T() {
-            var n9, r5, i7, t19 = (n9 = window.performance.timing, r5 = n9.fetchStart, i7 = {}, h8.forEach(function(t) {
-                var e = n9[t];
-                e && r5 <= e && (i7[t] = e - r5);
-            }), i7), e19 = function() {
-                var t = {}, e = window.performance;
-                if (e.getEntriesByType) {
-                    var n = e.getEntriesByType("paint");
-                    if (0 < n.length) for(var r = e.timing, i = r.fetchStart - r.navigationStart, o = 0; o < n.length; o++){
-                        var s = n[o], a = 0 <= i ? s.startTime - i : s.startTime;
-                        t[s.name] = a;
-                    }
-                }
-                return t;
-            }(), o6 = {
-                timeToFirstByte: t19.responseStart,
-                domInteractive: t19.domInteractive,
-                domComplete: t19.domComplete
-            };
-            return e19["first-contentful-paint"] && (o6.firstContentfulPaint = e19["first-contentful-paint"]), {
-                navigationTiming: t19,
-                agent: o6
-            };
-        }
-        var b = {
-            fetchInProgress: !1
-        };
-        function x(t) {
-            return "__apm_symbol__" + t;
-        }
-        function L(t, e, n) {
-            for(var r = t; r && !r.hasOwnProperty(e);)r = Object.getPrototypeOf(r);
-            !r && t[e] && (r = t);
-            var i, o, s, a, c = x(e);
-            if (r && !(i = r[c])) {
-                i = r[c] = r[e];
-                var u = r && Object.getOwnPropertyDescriptor(r, e);
-                if (!(a = u) || !1 !== a.writable && ("function" != typeof a.get || void 0 !== a.set)) {
-                    var d = n(i, c, e);
-                    r[e] = function() {
-                        return d(this, arguments);
-                    }, o = r[e], s = i, o[x("OriginalDelegate")] = s;
-                }
-            }
-            return i;
-        }
-        var C = x("xhrIgnore"), E = x("xhrSync"), I = x("xhrURL"), k = x("xhrMethod"), O = "schedule", R = "invoke", A = "clear", P = "addEventListener", F = "removeEventListener", M = [
-            "link",
-            "css",
-            "script",
-            "img",
-            "xmlhttprequest",
-            "fetch",
-            "beacon",
-            "iframe"
-        ], j = 300000, q = "page-load", N = "Unknown", H = 60, Q = 1024, D = "transaction:end", B = "config:change", z = "xmlhttprequest", U = "fetch", V = "history", X = "error", J = x("xhrTask"), Y = x("xhrListener"), $ = x("xhrScheduled");
-        function Z(s) {
-            var t20 = XMLHttpRequest.prototype, a = t20[P], c = t20[F];
-            if (!a) {
-                var e = window.XMLHttpRequestEventTarget;
-                if (e) {
-                    var n = e.prototype;
-                    a = n[P], c = n[F];
-                }
-            }
-            var u = "readystatechange";
-            function d(t) {
-                t.state = R, t.ignore || s(R, t);
-            }
-            var r6 = L(t20, "open", function() {
-                return function(t, e) {
-                    return t[k] = e[0], t[I] = e[1], t[E] = !1 === e[2], r6.apply(t, e);
-                };
-            }), f = L(t20, "send", function() {
-                return function(t21, e20) {
-                    var n10 = {
-                        source: z,
-                        state: "",
-                        type: "macroTask",
-                        ignore: t21[C],
-                        data: {
-                            target: t21,
-                            method: t21[k],
-                            sync: t21[E],
-                            url: t21[I],
-                            args: e20,
-                            aborted: !1
-                        }
-                    }, r7 = function(t) {
-                        XMLHttpRequest[$] = !1, t.state = O, t.ignore || s(O, t);
-                        var e = t.data, n = e.target, r = n[Y];
-                        a || (a = n[P], c = n[F]), r && c.call(n, u, r);
-                        var i = n[Y] = function() {
-                            n.readyState === n.DONE && !e.aborted && XMLHttpRequest[$] && t.state === O && d(t);
-                        };
-                        a.call(n, u, i), n[J] || (n[J] = t);
-                        var o = f.apply(n, e.args);
-                        return XMLHttpRequest[$] = !0, o;
-                    }(n10);
-                    return t21[E] && d(n10), r7;
-                };
-            }), i8 = L(t20, "abort", function() {
-                return function(t, e) {
-                    var n, r = t[J];
-                    if (r && "string" == typeof r.type) {
-                        if (r.data && r.data.aborted) return;
-                        (n = r).state = A, s(A, n), n.data.aborted = !0;
-                    }
-                    return i8.apply(t, e);
-                };
-            });
-        }
-        var G = n8(0);
-        function K(a) {
-            if (window.fetch && window.Request) {
-                var c = window.fetch;
-                window.fetch = function(t22, e21) {
-                    var i, n11, o = this, r8 = arguments;
-                    if ("string" == typeof t22) i = new Request(t22, e21), n11 = t22;
-                    else {
-                        if (!t22) return c.apply(o, r8);
-                        n11 = (i = t22).url;
-                    }
-                    var s = {
-                        source: U,
-                        state: "",
-                        type: "macroTask",
-                        data: {
-                            target: i,
-                            method: i.method,
-                            sync: !1,
-                            url: n11,
-                            args: r8,
-                            aborted: !1
-                        }
-                    };
-                    return new G.Promise(function(e, n) {
-                        var t24, r;
-                        b.fetchInProgress = !0, (t24 = s).state = O, a(O, t24);
-                        try {
-                            r = c.apply(o, [
-                                i
-                            ]);
-                        } catch (t23) {
-                            return n(t23), s.data.error = t23, u(s), void (b.fetchInProgress = !1);
-                        }
-                        r.then(function(t) {
-                            e(t), G.Promise.resolve().then(function() {
-                                s.data.response = t, u(s);
-                            });
-                        }, function(t) {
-                            n(t), G.Promise.resolve().then(function() {
-                                s.data.error = t, u(s);
-                            });
-                        }), b.fetchInProgress = !1;
-                    });
-                };
-            }
-            function u(t) {
-                t.state = R, a(R, t);
-            }
-        }
-        var W = function() {
-            function t25() {
-                this.observers = {};
-            }
-            var e22 = t25.prototype;
-            return e22.observe = function(e, n) {
-                var r = this;
-                if ("function" == typeof n) return this.observers[e] || (this.observers[e] = []), this.observers[e].push(n), function() {
-                    var t = r.observers[e].indexOf(n);
-                    -1 < t && r.observers[e].splice(t, 1);
-                };
-            }, e22.sendOnly = function(t26, e) {
-                var n = this.observers[t26];
-                n && n.forEach(function(t) {
-                    try {
-                        t.apply(void 0, e);
-                    } catch (t27) {
-                        console.log(t27, t27.stack);
-                    }
-                });
-            }, e22.send = function(t, e) {
-                this.sendOnly(t + ":before", e), this.sendOnly(t, e), this.sendOnly(t + ":after", e);
-            }, t25;
-        }(), tt = new W, et = !1;
-        function nt() {
-            return et || (et = !0, Z(function(t, e) {
-                tt.send(z, [
-                    t,
-                    e
-                ]);
-            }), K(function(t, e) {
-                tt.send(U, [
-                    t,
-                    e
-                ]);
-            }), function(r) {
-                if (window.history) {
-                    var i = history.pushState;
-                    "function" == typeof i && (history.pushState = function(t, e, n) {
-                        r(R, {
-                            source: V,
-                            data: {
-                                state: t,
-                                title: e,
-                                url: n
-                            }
-                        }), i.apply(this, arguments);
-                    });
-                }
-            }(function(t, e) {
-                tt.send(V, [
-                    t,
-                    e
-                ]);
-            })), tt;
-        }
-        var rt = !1, it = !1;
-        var ot = [
-            [
-                "#",
-                "hash"
-            ],
-            [
-                "?",
-                "query"
-            ],
-            [
-                "/",
-                "path"
-            ],
-            [
-                "@",
-                "auth",
-                1
-            ],
-            [
-                NaN,
-                "host",
-                void 0,
-                1
-            ]
-        ], st = /^([a-z][a-z0-9.+-]*:)?(\/\/)?([\S\s]*)/i, at = function() {
-            function t28(t) {
-                var e, n = this.extractProtocol(t || ""), r = n.protocol, i = n.address, o = n.slashes, s = !r && !o, a = this.getLocation(), c = ot.slice();
-                i = i.replace("\\", "/");
-                for(var u = 0; u < c.length; u++){
-                    var d = c[u], f = d[0], h = d[1];
-                    if ("string" == typeof f) {
-                        if (~(e = i.indexOf(f))) {
-                            var v = d[2];
-                            if (v) {
-                                var l = i.lastIndexOf(f);
-                                e = Math.max(e, l), this[h] = i.slice(0, e), i = i.slice(e + v);
-                            } else this[h] = i.slice(e), i = i.slice(0, e);
-                        }
-                    } else this[h] = i;
-                    this[h] = this[h] || s && d[3] && a[h] || "", d[3] && (this[h] = this[h].toLowerCase());
-                }
-                this.relative = s, this.protocol = r || a.protocol || "", this.origin = this.protocol && this.host && "file:" !== this.protocol ? this.protocol + "//" + this.host : "null", this.href = this.toString();
-            }
-            var e23 = t28.prototype;
-            return e23.toString = function() {
-                var t = this.protocol;
-                if (t += "//", this.auth) {
-                    var e = "[REDACTED]", n = this.auth.split(":");
-                    t += (n[0] ? e : "") + (n[1] ? ":" + e : "") + "@";
-                }
-                return t += this.host, t += this.path, t += this.query, t += this.hash;
-            }, e23.getLocation = function() {
-                var t = {};
-                return "undefined" != typeof window && (t = window), t.location;
-            }, e23.extractProtocol = function(t) {
-                var e = st.exec(t);
-                return {
-                    protocol: e[1] ? e[1].toLowerCase() : "",
-                    slashes: !!e[2],
-                    address: e[3]
-                };
-            }, t28;
-        }(), ct = {
-            service: {
-                name: [
-                    Q,
-                    !0
-                ],
-                version: !0,
-                agent: {
-                    version: [
-                        Q,
-                        !0
-                    ]
-                },
-                environment: !0
-            }
-        }, ut = {
-            "*": !0,
-            headers: {
-                "*": !0
-            }
-        }, dt = {
-            user: {
-                id: !0,
-                email: !0,
-                username: !0
-            },
-            tags: {
-                "*": !0
-            },
-            http: {
-                response: ut
-            },
-            response: ut
-        }, ft = {
-            name: [
-                Q,
-                !0
-            ],
-            type: [
-                Q,
-                !0
-            ],
-            id: [
-                Q,
-                !0
-            ],
-            trace_id: [
-                Q,
-                !0
-            ],
-            parent_id: [
-                Q,
-                !0
-            ],
-            transaction_id: [
-                Q,
-                !0
-            ],
-            subtype: !0,
-            action: !0,
-            context: dt
-        }, ht = {
-            name: !0,
-            parent_id: !0,
-            type: [
-                Q,
-                !0
-            ],
-            id: [
-                Q,
-                !0
-            ],
-            trace_id: [
-                Q,
-                !0
-            ],
-            span_count: {
-                started: [
-                    Q,
-                    !0
-                ]
-            },
-            context: dt
-        };
-        function vt(t) {
-            return null == t || "" === t || void 0 === t;
-        }
-        function lt(t, e, n) {
-            var r, i, o, s, a = (r = t[e], i = n[0], o = n[1], void 0 === i && (i = Q), void 0 === o && (o = !1), void 0 === s && (s = "N/A"), o && vt(r) && (r = s), "string" == typeof r ? r.substring(0, i) : r);
-            vt(a) ? delete t[e] : t[e] = a;
-        }
-        function pt(r, i, o) {
-            void 0 === r && (r = {}), void 0 === o && (o = i);
-            for(var s = Object.keys(r), a = [], t29 = function(t30) {
-                var e = s[t30], n = !0 === r[e] ? a : r[e];
-                Array.isArray(n) ? "*" === e ? Object.keys(o).forEach(function(t) {
-                    return lt(o, t, n);
-                }) : lt(o, e, n) : pt(n, i, o[e]);
-            }, e24 = 0; e24 < s.length; e24++)t29(e24);
-            return i;
-        }
-        var gt = function() {
-            function t31(t, e, n, r) {
-                this._apmServer = t, this._configService = e, this._logginService = n, this._transactionService = r;
-            }
-            var e25 = t31.prototype;
-            return e25.init = function(t32) {
-                var n = this;
-                void 0 === t32 && (t32 = {}), this._configService.events.observe(D + ":after", function(t) {
-                    var e = n.createTransactionPayload(t);
-                    e && n._apmServer.addTransaction(e);
-                }), t32[V] && tt.observe(V, this.getHistorySub()), t32[z] && tt.observe(z, this.getXHRSub()), t32[U] && tt.observe(U, this.getFetchSub());
-            }, e25.getHistorySub = function() {
-                var n = this._transactionService;
-                return function(t, e) {
-                    e.source === V && t === R && n.startTransaction(e.data.title, "route-change", {
-                        canReuse: !0
-                    });
-                };
-            }, e25.getXHRSub = function() {
-                var n = this;
-                return function(t, e) {
-                    e.source !== z || b.fetchInProgress || n.processAPICalls(t, e);
-                };
-            }, e25.getFetchSub = function() {
-                var n = this;
-                return function(t, e) {
-                    e.source === U && n.processAPICalls(t, e);
-                };
-            }, e25.processAPICalls = function(t, e) {
-                var n = this._configService, r = this._transactionService, i = n.get("ignoreSpansForRoutes");
-                if (t === O && e.data) {
-                    var o = new at(e.data.url);
-                    if (i && i.test && i.test(e.data.url)) return;
-                    var s = e.data.method + " " + (o.relative ? o.path : p(o.href)), a = r.startSpan(s, "external.http"), c = r.addTask();
-                    if (!a) return;
-                    var u = n.get("distributedTracing"), d = n.get("distributedTracingOrigins"), f = new at(window.location.href), h = l4(o.origin, f.origin) || l4(o.origin, d), v = e.data.target;
-                    u && h && v && this.injectDtHeader(a, v), a.addContext({
-                        http: {
-                            method: e.data.method,
-                            url: o.href
-                        }
-                    }), a.sync = e.data.sync, e.data.span = a, e.id = c;
-                }
-                t === R && e.data && e.data.span && (void 0 !== e.data.target.status ? e.data.span.addContext({
-                    http: {
-                        status_code: e.data.target.status
-                    }
-                }) : e.data.response && e.data.span.addContext({
-                    http: {
-                        status_code: e.data.response.status
-                    }
-                }), e.data.span.end()), t === R && e.id && r.removeTask(e.id);
-            }, e25.injectDtHeader = function(t, e) {
-                var n, r = this._configService, i = r.get("distributedTracingHeaderName"), o = r.get("distributedTracingHeaderValueCallback")(t), s = /^[\da-f]{2}-[\da-f]{32}-[\da-f]{16}-[\da-f]{2}$/.test(n = o) && "00000000000000000000000000000000" !== n.slice(3, 35) && "0000000000000000" !== n.slice(36, 52);
-                i && o && s && ("function" == typeof e.setRequestHeader ? e.setRequestHeader(i, o) : e.headers && "function" == typeof e.headers.append ? e.headers.append(i, o) : e[i] = o);
-            }, e25.extractDtHeader = function(t33) {
-                var e26 = this._configService.get("distributedTracingHeaderName");
-                if (t33) return function(t) {
-                    var e = /^([\da-f]{2})-([\da-f]{32})-([\da-f]{16})-([\da-f]{2})$/.exec(t);
-                    if (e) {
-                        var n = "00" !== e[4];
-                        return {
-                            traceId: e[2],
-                            id: e[3],
-                            sampled: n
-                        };
-                    }
-                }(t33[e26]);
-            }, e25.setTransactionContext = function(t) {
-                var e = this._configService.get("context");
-                e && t.addContext(e);
-            }, e25.filterTransaction = function(t) {
-                var e = this._configService.get("transactionDurationThreshold"), n = t.duration();
-                if (!n) return !1;
-                if (e < n) return !1;
-                if (0 === t.spans.length) return !1;
-                t.sampled || t.resetSpans();
-                var r = this._configService.get("browserResponsivenessInterval");
-                if (this._configService.get("checkBrowserResponsiveness") && !t.isHardNavigation) {
-                    var i = this._configService.get("browserResponsivenessBuffer");
-                    if (!this.checkBrowserResponsiveness(t, r, i)) return !1;
-                }
-                return !0;
-            }, e25.adjustTransactionTime = function(t34) {
-                var e27 = t34.spans, n12 = function(t) {
-                    for(var e = t[0], n = 1; n < t.length; n++){
-                        var r = t[n];
-                        e._start > r._start && (e = r);
-                    }
-                    return e;
-                }(e27);
-                n12 && n12._start < t34._start && (t34._start = n12._start);
-                var r9 = function(t) {
-                    for(var e = null, n = 0; n < t.length; n++){
-                        var r = t[n];
-                        -1 === String(r.type).indexOf("external") && (!e || e._end < r._end) && (e = r);
-                    }
-                    return e;
-                }(e27);
-                r9 && r9._end > t34._end && (t34._end = r9._end);
-                for(var i = t34._end, o = 0; o < e27.length; o++){
-                    var s = e27[o];
-                    s._end > i && (s._end = i, s.type += ".truncated"), s._start > i && (s._start = i);
-                }
-            }, e25.prepareTransaction = function(e28) {
-                if (e28.spans.sort(function(t, e) {
-                    return t._start - e._start;
-                }), this._configService.get("groupSimilarSpans")) {
-                    var t35 = this._configService.get("similarSpanThreshold");
-                    e28.spans = this.groupSmallContinuouslySimilarSpans(e28, t35);
-                }
-                e28.spans = e28.spans.filter(function(t) {
-                    return 0 < t.duration() && t._start >= e28._start && t._end <= e28._end;
-                }), this.setTransactionContext(e28);
-            }, e25.createTransactionDataModel = function(n) {
-                var t36 = this._configService.get("context"), r = n._start, e29 = n.spans.map(function(t) {
-                    var e = {
-                        id: t.id,
-                        transaction_id: n.id,
-                        parent_id: t.parentId || n.id,
-                        trace_id: n.traceId,
-                        name: t.name,
-                        type: t.type,
-                        subType: t.subType,
-                        action: t.action,
-                        sync: t.sync,
-                        start: t._start - r,
-                        duration: t.duration(),
-                        context: t.context
-                    };
-                    return pt(ft, e);
-                }), i = y({}, t36, n.context), o = {
-                    id: n.id,
-                    trace_id: n.traceId,
-                    name: n.name,
-                    type: n.type,
-                    duration: n.duration(),
-                    spans: e29,
-                    context: i,
-                    marks: n.marks,
-                    span_count: {
-                        started: e29.length
-                    },
-                    sampled: n.sampled
-                };
-                return pt(ht, o);
-            }, e25.createTransactionPayload = function(t) {
-                if (this.adjustTransactionTime(t), this.prepareTransaction(t), this.filterTransaction(t)) return this.createTransactionDataModel(t);
-            }, e25.convertTransactionsToServerModel = function(t37) {
-                var e = this;
-                return t37.map(function(t) {
-                    return e.createTransactionDataModel(t);
-                });
-            }, e25.groupSmallContinuouslySimilarSpans = function(o, s) {
-                var a = o.duration(), c = [], u = 1;
-                return o.spans.forEach(function(t, e) {
-                    if (0 === c.length) c.push(t);
-                    else {
-                        var n = c[c.length - 1], r = n.type === t.type && n.subType === t.subType && n.action === t.action && n.name === t.name && t.duration() / a < s && (t._start - n._end) / a < s, i = o.spans.length === e + 1;
-                        r && (u++, n._end = t._end), 1 < u && (!r || i) && (n.name = u + "x " + n.name, u = 1), r || c.push(t);
-                    }
-                }), c;
-            }, e25.checkBrowserResponsiveness = function(t, e, n) {
-                var r = t.browserResponsivenessCounter;
-                if (void 0 === e || void 0 === r) return !0;
-                var i = t.duration();
-                return Math.floor(i / e) <= r + n;
-            }, t31;
-        }(), mt = function() {
-            function t38(t, e, n) {
-                void 0 === n && (n = {}), t || (t = N), e || (e = "custom"), this.options = n, this.name = t, this.type = e, this.id = this.options.id || u2(16), this.traceId = this.options.traceId, this.sampled = this.options.sampled, this.timestamp = this.options.timestamp || Date.now(), this.ended = !1, this._start = window.performance.now(), this._end = void 0, this.onEnd = this.options.onEnd;
-            }
-            var e30 = t38.prototype;
-            return e30.ensureContext = function() {
-                this.context || (this.context = {});
-            }, e30.addTags = function(t) {
-                console.warn("addTags deprecated, please use addLabels"), this.addLabels(t);
-            }, e30.addLabels = function(e) {
-                this.ensureContext();
-                var n = this.context;
-                n.tags || (n.tags = {}), Object.keys(e).forEach(function(t) {
-                    return f10(t, e[t], n.tags);
-                });
-            }, e30.addContext = function(t) {
-                t && (this.ensureContext(), y(this.context, t));
-            }, e30.end = function() {
-                this.ended || (this.ended = !0, this._end = window.performance.now(), this.callOnEnd());
-            }, e30.callOnEnd = function() {
-                "function" == typeof this.onEnd && this.onEnd(this);
-            }, e30.duration = function() {
-                if (_(this._end) || _(this._start)) return null;
-                var t = this._end - this._start;
-                return parseFloat(t);
-            }, t38;
-        }();
-        var yt = function(o) {
-            var t39, e31;
-            function n13(t, e, n) {
-                var r;
-                if ((r = o.call(this, t, e, n) || this).parentId = r.options.parentId, r.subType = void 0, r.action = void 0, -1 !== r.type.indexOf(".")) {
-                    var i = r.type.split(".", 3);
-                    r.type = i[0], r.subType = i[1], r.action = i[2];
-                }
-                return r.sync = r.options.sync, r;
-            }
-            return e31 = o, (t39 = n13).prototype = Object.create(e31.prototype), (t39.prototype.constructor = t39).__proto__ = e31, n13;
-        }(mt);
-        var _t = function(i9) {
-            var t40, e32;
-            function n14(t, e, n) {
-                var r;
-                return (r = i9.call(this, t, e, n) || this).traceId = u2(), r.marks = void 0, r.spans = [], r._activeSpans = {}, r.nextAutoTaskId = 1, r._scheduledTasks = [], r.isHardNavigation = !1, r.sampled = Math.random() <= r.options.transactionSampleRate, r;
-            }
-            e32 = i9, (t40 = n14).prototype = Object.create(e32.prototype), (t40.prototype.constructor = t40).__proto__ = e32;
-            var r10 = n14.prototype;
-            return r10.addMarks = function(t) {
-                this.marks = y(this.marks || {}, t);
-            }, r10.mark = function(t) {
-                var e = w(t), n = window.performance.now() - this._start, r = {};
-                r[e] = n, this.addMarks({
-                    custom: r
-                });
-            }, r10.canReuse = function(t) {
-                return void 0 === t && (t = 5000), !!this.options.canReuse && !this.ended && performance.now() - this._start < t;
-            }, r10.redefine = function(t, e, n) {
-                t && (this.name = t), e && (this.type = e), n && (this.options = m(this.options, n));
-            }, r10.startSpan = function(t41, e, n) {
-                var r = this;
-                if (!this.ended) {
-                    var i = m({}, n);
-                    i.onEnd = function(t) {
-                        r._onSpanEnd(t);
-                    }, i.traceId = this.traceId, i.sampled = this.sampled, i.parentId || (i.parentId = this.id);
-                    var o = new yt(t41, e, i);
-                    return this._activeSpans[o.id] = o;
-                }
-            }, r10.isFinished = function() {
-                return 0 === this._scheduledTasks.length;
-            }, r10.detectFinish = function() {
-                this.isFinished() && this.end();
-            }, r10.end = function() {
-                if (!this.ended) {
-                    for(var t in this.ended = !0, this._end = window.performance.now(), this._activeSpans){
-                        var e = this._activeSpans[t];
-                        e.type = e.type + ".truncated", e.end();
-                    }
-                    var n = {
-                        page: {
-                            referer: document.referrer,
-                            url: window.location.href
-                        }
-                    };
-                    this.addContext(n), this.callOnEnd();
-                }
-            }, r10.addTask = function(t) {
-                if (void 0 === t && (t = "task" + this.nextAutoTaskId++), -1 == this._scheduledTasks.indexOf(t)) return this._scheduledTasks.push(t), t;
-            }, r10.removeTask = function(t) {
-                var e = this._scheduledTasks.indexOf(t);
-                -1 < e && this._scheduledTasks.splice(e, 1), this.detectFinish();
-            }, r10.resetSpans = function() {
-                this.spans = [];
-            }, r10._onSpanEnd = function(t) {
-                this.spans.push(t), delete this._activeSpans[t.id];
-            }, n14;
-        }(mt), St = [
-            [
-                "domainLookupStart",
-                "domainLookupEnd",
-                "Domain lookup"
-            ],
-            [
-                "connectStart",
-                "connectEnd",
-                "Making a connection to the server"
-            ],
-            [
-                "requestStart",
-                "responseEnd",
-                "Requesting and receiving the document"
-            ],
-            [
-                "domLoading",
-                "domInteractive",
-                "Parsing the document, executing sync. scripts"
-            ],
-            [
-                "domContentLoadedEventStart",
-                "domContentLoadedEventEnd",
-                'Fire "DOMContentLoaded" event'
-            ],
-            [
-                "loadEventStart",
-                "loadEventEnd",
-                'Fire "load" event'
-            ]
-        ];
-        function wt(t, e, n, r) {
-            return "number" == typeof t && "number" == typeof e && n <= t && t < e && e - n <= r && e - t < j && t - n < j && e - n < j;
-        }
-        function Tt(t42) {
-            var e33 = {
-                transfer_size: t42.transferSize,
-                encoded_body_size: t42.encodedBodySize,
-                decoded_body_size: t42.decodedBodySize
-            }, n15 = function(t) {
-                void 0 === t && (t = []);
-                for(var e = [], n = 0; n < t.length; n++){
-                    var r = t[n], i = r.name, o = r.duration, s = r.description, a = i;
-                    s && (a += ";desc=" + s), o && (a += ";dur=" + o), e.push(a);
-                }
-                return e.join(", ");
-            }(t42.serverTiming);
-            return n15 && (e33.headers = {
-                "server-timing": n15
-            }), e33;
-        }
-        function bt(t) {
-            var e = t.name, n = t.initiatorType, r = t.startTime, i = t.responseEnd, o = "resource";
-            n && (o += "." + n);
-            var s = p(e), a = new yt(s, o);
-            return a.addContext({
-                http: {
-                    url: e,
-                    response: Tt(t)
-                }
-            }), a._start = r, a.end(), a._end = i, a;
-        }
-        function xt(e34) {
-            var t43 = window.performance;
-            if (e34.isHardNavigation && t43 && t43.timing) {
-                var n16 = t43.timing;
-                if (e34.marks && e34.marks.custom) {
-                    var r = e34.marks.custom;
-                    Object.keys(r).forEach(function(t) {
-                        r[t] += e34._start;
-                    });
-                }
-                e34._start = 0;
-                var i10 = e34._end;
-                if ((function(t, e, n) {
-                    for(var r = [], i = 0; i < St.length; i++){
-                        var o = t[St[i][0]], s = t[St[i][1]];
-                        if (wt(o, s, e, n)) {
-                            var a = new yt(St[i][2], "hard-navigation.browser-timing");
-                            "requestStart" === St[i][0] && (a.pageResponse = !0), a._start = o - e, a.ended = !0, a._end = s - e, r.push(a);
-                        }
-                    }
-                    return r;
-                })(n16, n16.fetchStart, i10).forEach(function(t) {
-                    t.traceId = e34.traceId, t.sampled = e34.sampled, t.pageResponse && e34.options.pageLoadSpanId && (t.id = e34.options.pageLoadSpanId), e34.spans.push(t);
-                }), "function" == typeof t43.getEntriesByType) {
-                    for(var o7 = t43.getEntriesByType("resource"), s4 = [], a25 = 0; a25 < e34.spans; a25++){
-                        var c = e34.spans[a25];
-                        "external" === c.type && "http" === c.subType || s4.push(c.name.split(" ")[1]);
-                    }
-                    (function(t, e, n) {
-                        for(var r = [], i = 0; i < t.length; i++){
-                            var o = t[i], s = o.initiatorType, a = o.name, c = o.startTime, u = o.responseEnd;
-                            if ("xmlhttprequest" !== s && "fetch" !== s && a) {
-                                if (-1 !== M.indexOf(s)) {
-                                    if (!wt(c, u, 0, n)) continue;
-                                    r.push(bt(t[i]));
-                                } else {
-                                    if (null != s) continue;
-                                    for(var d = !1, f = 0; f < e.length; f++){
-                                        var h = a.lastIndexOf(e[f]);
-                                        if (-1 < h && h === a.length - e[f].length) {
-                                            d = !0;
-                                            break;
-                                        }
-                                    }
-                                    !d && wt(c, u, 0, n) && r.push(bt(t[i]));
-                                }
-                            }
-                        }
-                        return r;
-                    })(o7, s4, i10).forEach(function(t) {
-                        return e34.spans.push(t);
-                    }), (function(t, e) {
-                        for(var n = [], r = 0; r < t.length; r++){
-                            var i = t[r], o = i.name, s = i.startTime, a = i.duration, c = s + a;
-                            if (!(a <= H) && wt(s, c, 0, e)) {
-                                var u = new yt(o, "app");
-                                u._start = s, u.end(), u._end = c, n.push(u);
-                            }
-                        }
-                        return n;
-                    })(t43.getEntriesByType("measure"), i10).forEach(function(t) {
-                        return e34.spans.push(t);
-                    });
-                    var u3 = t43.getEntriesByType("navigation");
-                    u3 && 0 < u3.length && (u3 = u3[0], e34.addContext({
-                        response: Tt(u3)
-                    }));
-                }
-            }
-        }
-        var Lt = function() {
-            function t44(t, e) {
-                this._config = e, this._logger = t, this.currentTransaction = void 0, this._alreadyCapturedPageLoad = !1;
-            }
-            var e35 = t44.prototype;
-            return e35.ensureCurrentTransaction = function(t) {
-                t || (t = this.createPerfOptions());
-                var e = this.getCurrentTransaction();
-                return e || (t.canReuse = !0, this.createTransaction(void 0, void 0, t));
-            }, e35.getCurrentTransaction = function() {
-                if (this.currentTransaction && !this.currentTransaction.ended) return this.currentTransaction;
-            }, e35.setCurrentTransaction = function(t) {
-                this.currentTransaction = t;
-            }, e35.createTransaction = function(t, e, n) {
-                var r = new _t(t, e, n);
-                return this.setCurrentTransaction(r), n.checkBrowserResponsiveness && this.startCounter(r), r;
-            }, e35.startCounter = function(t) {
-                t.browserResponsivenessCounter = 0;
-                var e = this._config.get("browserResponsivenessInterval");
-                if (void 0 !== e) var n = setInterval(function() {
-                    t.ended ? window.clearInterval(n) : t.browserResponsivenessCounter++;
-                }, e);
-            }, e35.capturePageLoadMetrics = function(t) {
-                if (this._config.get("capturePageLoad") && !this._alreadyCapturedPageLoad && t.isHardNavigation) return xt(t), t.addMarks(T()), self._alreadyCapturedPageLoad = !0;
-            }, e35.createPerfOptions = function(t) {
-                var e = this._config.config;
-                return m({
-                    pageLoadTraceId: e.pageLoadTraceId,
-                    pageLoadSampled: e.pageLoadSampled,
-                    pageLoadSpanId: e.pageLoadSpanId,
-                    pageLoadTransactionName: e.pageLoadTransactionName,
-                    transactionSampleRate: e.transactionSampleRate,
-                    checkBrowserResponsiveness: e.checkBrowserResponsiveness
-                }, t);
-            }, e35.startTransaction = function(t, e, n) {
-                var r = this, i = this.createPerfOptions(n), o = this.getCurrentTransaction();
-                return o ? o.canReuse() && i.canReuse ? o.redefine(t, void 0, i) : (o.end(), o = this.createTransaction(t, e, i)) : o = this.createTransaction(t, e, i), e === q && (o.isHardNavigation = !0, i.pageLoadTraceId && (o.traceId = i.pageLoadTraceId), i.pageLoadSampled && (o.sampled = i.pageLoadSampled), o.name === N && i.pageLoadTransactionName && (o.name = i.pageLoadTransactionName)), this._config.events.send("transaction:start", [
-                    o
-                ]), o.onEnd = function() {
-                    return G.Promise.resolve().then(function() {
-                        r.shouldIgnoreTransaction(o.name) || o.type === q || r.add(o);
-                    }, function(t) {});
-                }, o;
-            }, e35.shouldIgnoreTransaction = function(t) {
-                var e = this._config.get("ignoreTransactions");
-                if (e && e.length) for(var n = 0; n < e.length; n++){
-                    var r = e[n];
-                    if ("function" == typeof r.test) {
-                        if (r.test(t)) return !0;
-                    } else if (r === t) return !0;
-                }
-                return !1;
-            }, e35.startSpan = function(t, e, n) {
-                var r = this.ensureCurrentTransaction();
-                if (r) return r.startSpan(t, e, n);
-            }, e35.add = function(t) {
-                this._config.events.send(D, [
-                    t
-                ]);
-            }, e35.addTask = function(t) {
-                var e = this.ensureCurrentTransaction();
-                if (e) t = e.addTask(t);
-                return t;
-            }, e35.removeTask = function(t) {
-                var e = this.getCurrentTransaction();
-                e && e.removeTask(t);
-            }, e35.detectFinish = function() {
-                var t = this.getCurrentTransaction();
-                t && t.detectFinish();
-            }, t44;
-        }(), Ct = function(i) {
-            i.registerServiceCreator("TransactionService", function() {
-                var t = i.getService("ConfigService"), e = i.getService("LoggingService");
-                return new Lt(e, t);
-            }), i.registerServiceCreator("PerformanceMonitoring", function() {
-                var t = i.getService("ConfigService"), e = i.getService("LoggingService"), n = i.getService("ApmServer"), r = i.getService("TransactionService");
-                return new gt(n, t, e, r);
-            });
-        }, Et = function() {
-            function t45(t, e, n) {
-                e || (e = {}), this.onFlush = t, this.routeDurationThreshold = e.routeDurationThreshold || 500, this.queueLimit = e.queueLimit || -1, this.slowestTxnsQueueLimit = e.slowestTxnsQueueLimit || 10, this.flushInterval = e.flushInterval || 0, this.timeoutId = void 0, this.transactions = {}, this.slowestTxns = [], this.totalTrans = 0, this.urlMaxLength = n.get("urlMaxLength");
-            }
-            var e36 = t45.prototype;
-            return e36._setTimer = function() {
-                var t = this;
-                this.timeoutId = setTimeout(function() {
-                    t.flush();
-                }, this.flushInterval);
-            }, e36.flush = function() {
-                var t46 = Object.keys(this.transactions).map(function(t47) {
-                    var r = this.transactions[t47], e38 = {
-                        n: t47,
-                        d: [
-                            r.duration.count,
-                            r.duration.total,
-                            r.duration.min,
-                            r.duration.max
-                        ]
-                    };
-                    return e38.spans = Object.keys(r.spans).map(function(t) {
-                        var e = r.spans[t], n = {};
-                        return n.n = t, n.t = e.type, n.d = [
-                            e.duration.count,
-                            e.duration.total,
-                            e.duration.min,
-                            e.duration.max
-                        ], e.url && e.method && (n.u = e.url, n.m = e.method), n;
-                    }), e38;
-                }, this), n18 = [];
-                this.slowestTxns.forEach((function(t48) {
-                    var e39 = t48.context && t48.context.page && t48.context.page.url;
-                    if (e39) {
-                        var r = {
-                            n: e39.slice(0, this.urlMaxLength),
-                            d: t48.duration || 0,
-                            spans: []
-                        };
-                        t48.spans = t48.spans || [], t48.spans.forEach((function(t) {
-                            var e = {
-                                n: t.name,
-                                d: t.duration,
-                                s: t.start,
-                                t: t.type
-                            };
-                            if ("external" === t.type) {
-                                var n = t.context && t.context.http || {};
-                                if (window.atatus && window.atatus._isAllowedUrl && !window.atatus._isAllowedUrl(n.url || "")) return;
-                                e.m = n.method, e.st = n.status_code, e.u = n.url.slice(0, this.urlMaxLength), e.t = "ajax";
-                            }
-                            r.spans.push(e);
-                        }).bind(this)), n18.push(r);
-                    }
-                }).bind(this));
-                var e37 = {
-                    data: t46,
-                    slowestRoutes: n18
-                };
-                this.onFlush(e37), this._clear();
-            }, e36._clear = function() {
-                void 0 !== this.timeoutId && (clearTimeout(this.timeoutId), this.timeoutId = void 0), this.transactions = {}, this.slowestTxns = [], this.totalTrans = 0;
-            }, e36.addSlowestTxn = function(t) {
-                var e = this.slowestTxns.length;
-                if (e < this.slowestTxnsQueueLimit) this.slowestTxns.push(t);
-                else {
-                    var n = Math.floor(Math.random() * (e + 2));
-                    n < this.slowestTxnsQueueLimit && (this.slowestTxns[n] = t);
-                }
-            }, e36.add = function(t49) {
-                var e40 = (t49.context && t49.context.page && t49.context.page.url).split("?")[0];
-                if (e40 && (t49.duration = t49.duration || 0, t49.spans = t49.spans || [], t49.spans.length || !(4000 < t49.duration))) {
-                    var i = this.transactions[e40] || {
-                        duration: {
-                            total: 0,
-                            min: t49.duration,
-                            max: t49.duration,
-                            count: 0
-                        },
-                        spans: {}
-                    };
-                    (this.transactions[e40] = i).duration.total += t49.duration, i.duration.max = t49.duration >= i.duration.max ? t49.duration : i.duration.max, i.duration.min = t49.duration < i.duration.min ? t49.duration : i.duration.min, i.duration.count++, this.totalTrans++, t49.spans.forEach(function(t) {
-                        var e = t.name;
-                        if (e) {
-                            var n = t.context && t.context.http && t.context.http.url || "";
-                            if (!window.atatus || !window.atatus._isAllowedUrl || window.atatus._isAllowedUrl(n)) {
-                                t.duration = t.duration || 0;
-                                var r = i.spans[e] || {
-                                    duration: {
-                                        total: 0,
-                                        min: t.duration,
-                                        max: t.duration,
-                                        count: 0
-                                    }
-                                };
-                                "external" === t.type ? (r.method = t.context && t.context.http && t.context.http.method, r.url = n.split("?")[0], r.type = "ajax") : r.type = t.type || "", r.duration.total += t.duration, r.duration.max = t.duration >= r.duration.max ? t.duration : r.duration.max, r.duration.min = t.duration < r.duration.min ? t.duration : r.duration.min, r.duration.count++, i.spans[e] = r;
-                            }
-                        }
-                    }, this), t49.duration >= this.routeDurationThreshold && this.addSlowestTxn(t49), -1 !== this.queueLimit && this.totalTrans >= this.queueLimit ? this.flush() : void 0 === this.timeoutId && this._setTimer();
-                }
-            }, t45;
-        }(), It = function() {
-            function t50(t, e) {
-                e || (e = {}), this.onFlush = t, this.items = [], this.queueLimit = e.queueLimit || -1, this.flushInterval = e.flushInterval || 0, this.timeoutId = void 0;
-            }
-            var e41 = t50.prototype;
-            return e41._setTimer = function() {
-                var t = this;
-                this.timeoutId = setTimeout(function() {
-                    t.flush();
-                }, this.flushInterval);
-            }, e41.flush = function() {
-                this.onFlush(this.items), this._clear();
-            }, e41._clear = function() {
-                void 0 !== this.timeoutId && (clearTimeout(this.timeoutId), this.timeoutId = void 0), this.items = [];
-            }, e41.add = function(t) {
-                this.items.push(t), -1 !== this.queueLimit && this.items.length >= this.queueLimit ? this.flush() : void 0 === this.timeoutId && this._setTimer();
-            }, t50;
-        }();
-        var kt = function(e, n, t51) {
-            var r, i = t51.context || this, o = t51.limit, s = t51.interval, a = t51.countFn || function() {}, c = 0;
-            return function() {
-                var t = "function" == typeof a && a.apply(i, arguments);
-                return "number" != typeof t && (t = 1), c += t, void 0 === r && (r = setTimeout(function() {
-                    r = void (c = 0);
-                }, s)), o < c ? "function" == typeof n ? n.apply(i, arguments) : void 0 : e.apply(i, arguments);
-            };
-        }, Ot = function() {
-            function t52() {}
-            return t52.stringify = function(t) {
-                return JSON.stringify(t) + "\n";
-            }, t52;
-        }(), Rt = function() {
-            function t53(t, e) {
-                this._configService = t, this._loggingService = e, this.errorQueue = void 0, this.transactionQueue = void 0, this.throttleAddError = void 0, this.throttleAddTransaction = void 0, this.initialized = !1, this.ndjsonSpan = {};
-            }
-            var e42 = t53.prototype;
-            return e42.init = function() {
-                this.initialized || (this.initialized = !0, this.initErrorQueue(), this.initTransactionQueue());
-            }, e42.createMetaData = function() {
-                var t = this._configService, e = {
-                    service: {
-                        name: t.get("serviceName"),
-                        version: t.get("serviceVersion"),
-                        agent: {
-                            name: "js-base",
-                            version: t.version
-                        },
-                        language: {
-                            name: "javascript"
-                        },
-                        environment: t.get("environment")
-                    }
-                };
-                return pt(ct, e);
-            }, e42._postJson = function(t, e) {
-                return this._makeHttpRequest("POST", t, e, {
-                    "Content-Type": "application/x-ndjson"
-                });
-            }, e42._constructError = function(t) {
-                var e = t.url, n = t.status, r = (t.responseText, e + " HTTP status: " + n);
-                return new Error(r);
-            }, e42._makeHttpRequest = function(e43, o, s, a) {
-                return new G.Promise(function(n, r) {
-                    var i = new window.XMLHttpRequest;
-                    if (i[C] = !0, i.open(e43, o, !0), i.timeout = 10000, a) for(var t54 in a)a.hasOwnProperty(t54) && i.setRequestHeader(t54, a[t54]);
-                    i.onreadystatechange = function() {
-                        if (4 === i.readyState) {
-                            var t = i.status, e = i.responseText;
-                            0 === t || 399 < t && t < 600 ? r({
-                                url: o,
-                                status: t,
-                                responseText: e
-                            }) : n(e);
-                        }
-                    }, i.onerror = function() {
-                        var t = i.status, e = i.responseText;
-                        r({
-                            url: o,
-                            status: t,
-                            responseText: e
-                        });
-                    }, i.send(s);
-                });
-            }, e42._createQueue = function(t) {
-                var e = this._configService.get("queueLimit"), n = this._configService.get("flushInterval");
-                return new It(t, {
-                    queueLimit: e,
-                    flushInterval: n
-                });
-            }, e42._createTransactionQueue = function(t) {
-                var e = this._configService.get("queueLimit"), n = this._configService.get("flushInterval");
-                return new Et(t, {
-                    queueLimit: e,
-                    flushInterval: n
-                }, this._configService);
-            }, e42.initErrorQueue = function() {
-                var n = this;
-                this.errorQueue && this.errorQueue.flush(), this.errorQueue = this._createQueue(function(t56) {
-                    var e = n.sendErrors(t56);
-                    e && e.catch(function(t) {
-                        n._loggingService.warn("Failed sending errors!", n._constructError(t));
-                    });
-                });
-                var t55 = this._configService.get("errorThrottleLimit"), e44 = this._configService.get("errorThrottleInterval");
-                this.throttleAddError = kt(this.errorQueue.add.bind(this.errorQueue), function() {
-                    return n._loggingService.warn("Dropped error due to throttling!");
-                }, {
-                    limit: t55,
-                    interval: e44
-                });
-            }, e42.initTransactionQueue = function() {
-                var n = this;
-                this.transactionQueue && this.transactionQueue.flush(), this.transactionQueue = this._createTransactionQueue(function(t58) {
-                    var e = n.sendTransactions(t58);
-                    e && e.catch(function(t) {
-                        n._loggingService.warn("Failed sending transactions!", n._constructError(t));
-                    });
-                });
-                var t57 = this._configService.get("transactionThrottleLimit"), e45 = this._configService.get("transactionThrottleInterval");
-                this.throttleAddTransaction = kt(this.transactionQueue.add.bind(this.transactionQueue), function() {
-                    return n._loggingService.warn("Dropped transaction due to throttling!");
-                }, {
-                    limit: t57,
-                    interval: e45
-                });
-            }, e42.addError = function(t) {
-                this.errorQueue || this.initErrorQueue(), this.throttleAddError(t);
-            }, e42.addTransaction = function(t) {
-                this.transactionQueue || this.initTransactionQueue(), this.throttleAddTransaction(t);
-            }, e42.ndjsonErrors = function(t59) {
-                return t59.map(function(t) {
-                    return Ot.stringify({
-                        error: t
-                    });
-                });
-            }, e42.ndjsonTransactions = function(t60) {
-                var n = this.ndjsonSpan;
-                return t60.map(function(t61) {
-                    var e = "";
-                    return t61.spans && (e = t61.spans.map(function(t) {
-                        return n.span = t, Ot.stringify(n);
-                    }).join(""), delete t61.spans), Ot.stringify({
-                        transaction: t61
-                    }) + e;
-                });
-            }, e42._send = function(t, e) {
-                if (void 0 === t && (t = []), void 0 === e && (e = "transaction"), 0 !== t.length) {
-                    var n = {
-                        service: this.createMetaData().service,
-                        data: t
-                    }, r = this._configService.applyFilters(n);
-                    if (r) {
-                        var i, o = this._configService.getEndpointUrl();
-                        if ("errors" === e) i = this.ndjsonErrors(r.data);
-                        else {
-                            if ("transaction" !== e) return void 0;
-                            i = this.ndjsonTransactions(r.data);
-                        }
-                        i.unshift(Ot.stringify({
-                            metadata: {
-                                service: r.service
-                            }
-                        }));
-                        var s = i.join("");
-                        return this._postJson(o, s);
-                    }
-                    this._loggingService.warn("Dropped payload due to filtering!");
-                }
-            }, e42.sendTransactions = function(t) {
-                window.atatus.sendSPAPerf(t);
-            }, e42.sendErrors = function(t) {}, t53;
-        }();
-        var At = function() {
-            function t62() {
-                this.config = {}, this.defaults = {
-                    serviceName: "",
-                    serviceVersion: "",
-                    environment: "",
-                    serverUrl: "https://br-rx.atatus.com",
-                    serverUrlPrefix: "/browser/track",
-                    active: !0,
-                    instrument: !0,
-                    disableInstrumentations: [
-                        X,
-                        q
-                    ],
-                    debug: !1,
-                    logLevel: "warn",
-                    browserResponsivenessInterval: 500,
-                    browserResponsivenessBuffer: 3,
-                    checkBrowserResponsiveness: !0,
-                    groupSimilarSpans: !0,
-                    similarSpanThreshold: 0.05,
-                    capturePageLoad: !0,
-                    ignoreTransactions: [],
-                    errorThrottleLimit: 20,
-                    errorThrottleInterval: 30000,
-                    transactionThrottleLimit: 20,
-                    transactionThrottleInterval: 30000,
-                    transactionDurationThreshold: 60000,
-                    queueLimit: -1,
-                    flushInterval: 30000,
-                    sendPageLoadTransaction: !0,
-                    distributedTracing: !0,
-                    distributedTracingOrigins: [],
-                    distributedTracingHeaderValueCallback: c13,
-                    distributedTracingHeaderName: "atatus-apm-traceparent",
-                    pageLoadTraceId: "",
-                    pageLoadSpanId: "",
-                    pageLoadSampled: !1,
-                    pageLoadTransactionName: "",
-                    transactionSampleRate: 1,
-                    context: {},
-                    urlMaxLength: 250,
-                    ignoreSpansForRoutes: null
-                }, this.events = new W, this.filters = [], this.version = "";
-            }
-            var e46 = t62.prototype;
-            return e46.init = function() {
-                this.setConfig({});
-            }, e46.isActive = function() {
-                return this.get("active");
-            }, e46.setVersion = function(t) {
-                this.version = t;
-            }, e46.setIgnoreSpansForRoutes = function(t) {
-                this.config.ignoreSpansForRoutes = t;
-            }, e46.addFilter = function(t) {
-                if ("function" != typeof t) throw new Error("Argument to must be function");
-                this.filters.push(t);
-            }, e46.applyFilters = function(t) {
-                for(var e = 0; e < this.filters.length; e++)if (!(t = this.filters[e](t))) return;
-                return t;
-            }, e46.get = function(t63) {
-                return t63.split(".").reduce(function(t, e) {
-                    return t && t[e];
-                }, this.config);
-            }, e46.getEndpointUrl = function() {
-                return this.config.serverUrl + this.config.serverUrlPrefix;
-            }, e46.set = function(t, e) {
-                for(var n = t.split("."), r = n.length - 1, i = this.config, o = 0; o < r + 1; o++){
-                    var s = n[o];
-                    if (s) {
-                        if (o === r) i[s] = e;
-                        else {
-                            var a = i[s] || {};
-                            i[s] = a, i = a;
-                        }
-                    }
-                }
-            }, e46.setUserContext = function(t) {
-                void 0 === t && (t = {});
-                var e = {}, n = t, r = n.id, i = n.username, o = n.email;
-                "number" != typeof r && "string" != typeof r || (e.id = r), "string" == typeof i && (e.username = i), "string" == typeof o && (e.email = o), this.set("context.user", e);
-            }, e46.setCustomContext = function(t) {
-                t && "object" == typeof t && this.set("context.custom", t);
-            }, e46.addLabels = function(e) {
-                var n = this;
-                this.config.context.tags || (this.config.context.tags = {}), Object.keys(e).forEach(function(t) {
-                    return f10(t, e[t], n.config.context.tags);
-                });
-            }, e46.setConfig = function(t) {
-                void 0 === t && (t = {}), this.config = y({}, this.defaults, this.config, t), this.config.urlMaxLength = this.config.urlMaxLength || 250, this.events.send(B, [
-                    this.config
-                ]);
-            }, e46.validate = function(e) {
-                void 0 === e && (e = {});
-                var n = [
-                    "serviceName",
-                    "serverUrl"
-                ], r = {
-                    missing: [],
-                    invalid: []
-                };
-                return Object.keys(e).forEach(function(t) {
-                    -1 === n.indexOf(t) || e[t] || r.missing.push(t);
-                }), e.serviceName && !/^[a-zA-Z0-9 _-]+$/.test(e.serviceName) && r.invalid.push({
-                    key: "serviceName",
-                    value: e.serviceName,
-                    allowed: "a-z, A-Z, 0-9, _, -, <space>"
-                }), r;
-            }, t62;
-        }(), Pt = function() {
-            function t64(t) {
-                t || (t = {}), this.levels = [
-                    "trace",
-                    "debug",
-                    "info",
-                    "warn",
-                    "error"
-                ], this.level = t.level || "info", this.prefix = t.prefix || "", this.resetLogMethods();
-            }
-            var e47 = t64.prototype;
-            return e47.shouldLog = function(t) {
-                return this.levels.indexOf(t) >= this.levels.indexOf(this.level);
-            }, e47.setLevel = function(t) {
-                this.level = t, this.resetLogMethods();
-            }, e47.resetLogMethods = function() {
-                var o = this;
-                this.levels.forEach(function(i) {
-                    o[i] = o.shouldLog(i) ? function() {
-                        var t, e = o.prefix;
-                        switch(i){
-                            case "trace":
-                            case "debug":
-                                t = "info";
-                                break;
-                            default:
-                                t = i;
-                        }
-                        var n = arguments;
-                        e && ("function" == typeof e && (e = e(i)), n[0] = e + n[0]);
-                        if (console) {
-                            var r = console[t] ? console[t] : console.log;
-                            "function" == typeof r && r.apply(console, n);
-                        }
-                    } : S;
-                });
-            }, t64;
-        }(), Ft = function() {
-            function t65() {
-                this._serviceCreators = {}, this._serviceInstances = {}, this.initialized = !1;
-            }
-            var e48 = t65.prototype;
-            return e48.registerCoreServices = function() {
-                var t = this;
-                this.registerServiceCreator("ConfigService", function() {
-                    return new At;
-                }), this.registerServiceCreator("LoggingService", function() {
-                    return new Pt;
-                }), this.registerServiceCreator("ApmServer", function() {
-                    return new Rt(t.getService("ConfigService"), t.getService("LoggingService"));
-                });
-            }, e48.init = function() {
-                if (!this.initialized) {
-                    this.initialized = !0;
-                    var t = this.getService("ConfigService");
-                    t.init();
-                    var e = this.getService("LoggingService");
-                    n19(e, t), t.events.observe(B, function() {
-                        n19(e, t);
-                    }), this.getService("ApmServer").init();
-                }
-                function n19(t, e) {
-                    var n = e.get("debug"), r = e.get("logLevel");
-                    !0 === n && "trace" !== r ? t.setLevel("debug") : t.setLevel(r);
-                }
-            }, e48.registerServiceCreator = function(t, e) {
-                this._serviceCreators[t] = e;
-            }, e48.registerServiceInstance = function(t, e) {
-                this._serviceInstances[t] = e;
-            }, e48.getService = function(t) {
-                if (!this._serviceInstances[t]) {
-                    if ("function" != typeof this._serviceCreators[t]) throw new Error("Can not get service, No creator for: " + t);
-                    this._serviceInstances[t] = this._serviceCreators[t](this);
-                }
-                return this._serviceInstances[t];
-            }, t65;
-        }();
-        var Mt = function() {
-            function t66(t, e) {
-                this._disable = e, this.serviceFactory = t, this._initialized = !1;
-            }
-            var e49 = t66.prototype;
-            return e49.init = function(t67) {
-                if (this.isEnabled() && !this._initialized) {
-                    this._initialized = !0;
-                    var e = this.serviceFactory.getService("ConfigService");
-                    e.setVersion("4.0.2"), this.config(t67);
-                    var n = this.serviceFactory.getService("LoggingService");
-                    if (!e.isActive()) return n.info("Atatus agent is inactive"), this;
-                    this.serviceFactory.init();
-                    var r = (i = e.get("instrument"), o = e.get("disableInstrumentations"), (s = {})[z] = !1, s[U] = !1, s[V] = !1, s[q] = !1, s[X] = !1, a = s, i && Object.keys(a).forEach(function(t) {
-                        -1 === o.indexOf(t) && (a[t] = !0);
-                    }), a);
-                    if (this.serviceFactory.getService("PerformanceMonitoring").init(r), r[X]) this.serviceFactory.getService("ErrorLogging").registerGlobalEventListener();
-                    r[q] && e.get("sendPageLoadTransaction") && this._sendPageLoadMetrics();
-                }
-                var i, o, s, a;
-                return this;
-            }, e49._sendPageLoadMetrics = function() {
-                var t = this.serviceFactory.getService("TransactionService").startTransaction(void 0, q, {
-                    canReuse: !0
-                });
-                t && t.addTask(q);
-                var e = function() {
-                    setTimeout(function() {
-                        t && t.removeTask(q);
-                    });
-                };
-                "complete" === document.readyState ? e() : window.addEventListener("load", e);
-            }, e49.isEnabled = function() {
-                return !this._disable;
-            }, e49.observe = function(t, e) {
-                this.serviceFactory.getService("ConfigService").events.observe(t, e);
-            }, e49.config = function(t68) {
-                var e50 = this.serviceFactory.getService("ConfigService"), n20 = e50.validate(t68), r11 = n20.missing, o = n20.invalid;
-                if (0 === r11.length && 0 === o.length) e50.setConfig(t68);
-                else {
-                    var i12 = this.serviceFactory.getService("LoggingService"), s = "RUM Agent isn't correctly configured: ";
-                    0 < r11.length && (s += "Missing config - " + r11.join(", "), 0 < o.length && (s += ", ")), o.forEach(function(t, e) {
-                        var n = t.key, r = t.value, i = t.allowed;
-                        s += n + ' "' + r + '" contains invalid characters! (allowed: ' + i + ")" + (e !== o.length - 1 ? ", " : "");
-                    }), i12.error(s), e50.setConfig({
-                        active: !1
-                    });
-                }
-            }, e49.setIgnoreSpansForRoutes = function(t) {
-                this.serviceFactory.getService("ConfigService").setIgnoreSpansForRoutes(t);
-            }, e49.setUserContext = function(t) {
-                this.serviceFactory.getService("ConfigService").setUserContext(t);
-            }, e49.setCustomContext = function(t) {
-                this.serviceFactory.getService("ConfigService").setCustomContext(t);
-            }, e49.addTags = function(t) {
-                this.serviceFactory.getService("LoggingService").warn("addTags deprecated, please use addLabels"), this.addLabels(t);
-            }, e49.addLabels = function(t) {
-                this.serviceFactory.getService("ConfigService").addLabels(t);
-            }, e49.setInitialPageLoadName = function(t) {
-                this.isEnabled() && this.serviceFactory.getService("ConfigService").setConfig({
-                    pageLoadTransactionName: t
-                });
-            }, e49.startTransaction = function(t, e, n) {
-                if (this.isEnabled()) return this.serviceFactory.getService("TransactionService").startTransaction(t, e, n);
-            }, e49.startSpan = function(t, e) {
-                if (this.isEnabled()) return this.serviceFactory.getService("TransactionService").startSpan(t, e);
-            }, e49.getCurrentTransaction = function() {
-                if (this.isEnabled()) return this.serviceFactory.getService("TransactionService").getCurrentTransaction();
-            }, e49.getTransactionService = function() {
-                if (this.isEnabled()) return this.serviceFactory.getService("TransactionService");
-            }, e49.addFilter = function(t) {
-                this.serviceFactory.getService("ConfigService").addFilter(t);
-            }, t66;
-        }();
-        n8.d(e18, "init", function() {
-            return Qt;
-        }), n8.d(e18, "apmBase", function() {
-            return Ht;
-        }), n8.d(e18, "apm", function() {
-            return Ht;
-        }), n8.d(e18, "ApmBase", function() {
-            return Mt;
-        });
-        var jt, qt = (rt || (rt = !0, d18() ? (nt(), it = !0) : "undefined" != typeof window && console.log("APM: Platform is not supported!")), it), Nt = ((jt = new Ft).registerCoreServices(), Ct(jt), jt), Ht = new Mt(Nt, !qt);
-        "undefined" != typeof window && window.atatus && (window.atatus.spa = Ht, window.atatus.VERSION && (window.atatus.VERSION += "-spa"));
-        var Qt = Ht.init.bind(Ht);
-        e18.default = Qt;
-    }
-]);
-
-},{"process":"3rqvf"}]},["kn9T2","1SYPb","d8Dch"], "d8Dch", "parcelRequireaec4")
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","axios":"jo6P5","prop-types":"7wKI2","react-bootstrap/Form":"iBZ80","react-bootstrap/Button":"aPzUt","react-bootstrap/Col":"2L2I6","react-bootstrap":"3AD9A","react-router-dom":"cHIiW","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"lJZlQ":[function() {},{}]},["kn9T2","1wDOc","d8Dch"], "d8Dch", "parcelRequireaec4")
 
 //# sourceMappingURL=index.b4b6dfad.js.map

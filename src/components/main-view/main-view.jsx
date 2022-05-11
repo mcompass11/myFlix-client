@@ -1,29 +1,34 @@
 import React from 'react';
 import axios from 'axios';
 
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import { connect } from 'react-redux';
 
 import { Link } from "react-router-dom";
 
 import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 
+import { setMovies } from '../../actions/actions';
+
+import MovieList from '../movies-list/movies-list';
+
 import { LoginView } from '../login-view/login-view';
 import { RegistrationView } from '../registration-view/registration-view';
-import { MovieCard } from '../movie-card/movie-card';
+//import { MovieCard } from '../movie-card/movie-card';
 import { MovieView } from '../movie-view/movie-view';
 import { GenreView } from '../genre-view/genre-view';
 import { DirectorView } from '../director-view/director-view';
 import { ProfileView } from '../profile-view/profile-view';
 import { NavView } from '../navbar';
 import { Button } from 'react-bootstrap';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+
 
 export class MainView extends React.Component { //exposes the component, making available for rest of components
 
   constructor() {
     super();
     this.state = {
-      movies: [],
       user: null,
     };
   }
@@ -66,9 +71,7 @@ export class MainView extends React.Component { //exposes the component, making 
     })
       .then(response => {
         //Assign the result to the state
-        this.setState({
-          movies: response.data
-        });
+        this.props.setMovies(response.data);
       })
       .catch(function (error) {
         console.log(error);
@@ -87,8 +90,8 @@ export class MainView extends React.Component { //exposes the component, making 
 
 
   render() {
-    const { movies, user } = this.state;
-    //console.log(user);
+    const { movies } = this.props;
+    const { user } = this.state;
 
     return (
       <Router>
@@ -100,6 +103,7 @@ export class MainView extends React.Component { //exposes the component, making 
           </Link>
 
         </Col>
+        <NavView />
 
         <Row className="main-view justify-content-md-center">
           <Route exact path="/" render={() => {
@@ -107,11 +111,7 @@ export class MainView extends React.Component { //exposes the component, making 
               <LoginView onLoggedIn={user => this.onLoggedIn(user)} />
             </Col>
             if (movies.length === 0) return <div className="main-view" />;
-            return movies.map(m => (
-              <Col md={3} key={m._id}>
-                <MovieCard movie={m} user={user} />
-              </Col>
-            ))
+            return <MovieList movies={movies} />;
           }} />
           <Route path="/register" render={() => {
             if (user) return <Redirect to="/" />
@@ -163,7 +163,7 @@ export class MainView extends React.Component { //exposes the component, making 
   }
 }
 
-export default MainView;
-
-
-// onLoggedIn={user => this.onLoggedIn(user)} movies={movies} user={user} move to profileview
+let mapStateToProps = state => {
+  return { movies: state.movies }
+}
+export default connect(mapStateToProps, { setMovies })(MainView);
