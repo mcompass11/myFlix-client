@@ -96,9 +96,9 @@ export class ProfileView extends Component {
           Password: response.data.Password,
           Birthday: response.data.Birthday,
         });
-        localStorage.setItem('user', this.state.Username);
+        //localStorage.setItem('user', this.state.Username);
         alert('User profile update success!');
-        window.open(`/users/${Username}`, '_self');
+        window.open('/profile', '_self');
       });
   }; //updates user profile
 
@@ -144,7 +144,7 @@ export class ProfileView extends Component {
 
 
   render() {
-    const { movies } = this.props;
+    const { movies, users } = this.props;
     const { Username, Email, Birthday, Password, FavoriteMovies } = this.state;
 
     const favoriteMovies = movies.filter((m) => FavoriteMovies.includes(m._id)) || [];

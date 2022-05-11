@@ -34855,6 +34855,11 @@ function NavView({ user  }) {
         localStorage.clear();
         window.open('/', '_self');
     };
+    const isAuth = ()=>{
+        if (typeof window == 'undefined') return false;
+        if (localStorage.getItem('token')) return localStorage.getItem('token');
+        else return false;
+    };
     return /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_reactBootstrap.Navbar, {
         bg: "light",
         expand: "lg",
@@ -34865,14 +34870,14 @@ function NavView({ user  }) {
                     children: "YourFavoriteReels"
                 }, void 0, false, {
                     fileName: "src/components/navbar.jsx",
-                    lineNumber: 19,
+                    lineNumber: 30,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_reactBootstrap.Navbar.Toggle, {
                     "aria-controls": "basic-navbar-nav"
                 }, void 0, false, {
                     fileName: "src/components/navbar.jsx",
-                    lineNumber: 20,
+                    lineNumber: 31,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_reactBootstrap.Navbar.Collapse, {
@@ -34880,13 +34885,13 @@ function NavView({ user  }) {
                     children: /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_reactBootstrap.Nav, {
                         className: "me-auto",
                         children: [
-                            /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_reactBootstrap.Nav.Link, {
+                            isAuth() && /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_reactBootstrap.Nav.Link, {
                                 href: `/users/${user}`,
                                 children: "Profile"
                             }, void 0, false, {
                                 fileName: "src/components/navbar.jsx",
-                                lineNumber: 23,
-                                columnNumber: 13
+                                lineNumber: 35,
+                                columnNumber: 15
                             }, this),
                             /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_reactBootstrap.Nav.Link, {
                                 onClick: ()=>onLoggedOut()
@@ -34895,29 +34900,29 @@ function NavView({ user  }) {
                                 children: "Logout"
                             }, void 0, false, {
                                 fileName: "src/components/navbar.jsx",
-                                lineNumber: 24,
+                                lineNumber: 37,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "src/components/navbar.jsx",
-                        lineNumber: 22,
+                        lineNumber: 33,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "src/components/navbar.jsx",
-                    lineNumber: 21,
+                    lineNumber: 32,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "src/components/navbar.jsx",
-            lineNumber: 18,
+            lineNumber: 29,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "src/components/navbar.jsx",
-        lineNumber: 17,
+        lineNumber: 28,
         columnNumber: 5
     }, this);
 }
@@ -38184,9 +38189,9 @@ class ProfileView extends _react.Component {
                 Password: response.data.Password,
                 Birthday: response.data.Birthday
             });
-            localStorage.setItem('user', this.state.Username);
+            //localStorage.setItem('user', this.state.Username);
             alert('User profile update success!');
-            window.open(`/users/${Username}`, '_self');
+            window.open('/profile', '_self');
         });
     };
     removeFavoriteMovie = (e, movie)=>{
@@ -38223,7 +38228,7 @@ class ProfileView extends _react.Component {
         });
     }
     render() {
-        const { movies  } = this.props;
+        const { movies , users  } = this.props;
         const { Username , Email , Birthday , Password , FavoriteMovies  } = this.state;
         const favoriteMovies = movies.filter((m)=>FavoriteMovies.includes(m._id)
         ) || [];

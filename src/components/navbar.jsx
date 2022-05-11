@@ -13,6 +13,17 @@ export function NavView({ user }) {
     window.open('/', '_self');
   }
 
+  const isAuth = () => {
+    if (typeof window == 'undefined') {
+      return false;
+    }
+    if (localStorage.getItem('token')) {
+      return localStorage.getItem('token');
+    } else {
+      return false;
+    }
+  };
+
   return (
     <Navbar bg="light" expand="lg">
       <Container>
@@ -20,7 +31,9 @@ export function NavView({ user }) {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link href={`/users/${user}`}>Profile</Nav.Link>
+            {isAuth() && (
+              <Nav.Link href={`/users/${user}`}>Profile</Nav.Link>
+            )}
             <Nav.Link onClick={() => onLoggedOut()} href='/'>Logout</Nav.Link>
           </Nav>
         </Navbar.Collapse>
