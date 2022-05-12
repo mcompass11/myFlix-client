@@ -25655,8 +25655,8 @@ exports.devToolsEnhancer = typeof window !== 'undefined' && window.__REDUX_DEVTO
 };
 
 },{"redux":"cDNB3"}],"dc9eP":[function(require,module,exports) {
-var global = arguments[3];
 var process = require("process");
+var global = arguments[3];
 /*! AtatusJs - v4.4.1 - 2022-03-15
 * Copyright (c) 2022 Atatus */ !function(a1) {
     function b1(a, b) {
@@ -34870,7 +34870,7 @@ function NavView({ user  }) {
         children: /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_reactBootstrap.Container, {
             children: [
                 /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_reactBootstrap.Navbar.Brand, {
-                    href: "#home",
+                    href: "/",
                     children: "YourFavoriteReels"
                 }, void 0, false, {
                     fileName: "src/components/navbar.jsx",

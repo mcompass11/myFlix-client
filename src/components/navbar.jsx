@@ -27,7 +27,7 @@ export function NavView({ user }) {
   return (
     <Navbar bg="light" expand="lg">
       <Container>
-        <Navbar.Brand href="#home">YourFavoriteReels</Navbar.Brand>
+        <Navbar.Brand href="/">YourFavoriteReels</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
