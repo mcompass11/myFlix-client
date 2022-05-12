@@ -3,7 +3,6 @@ import axios from 'axios';
 
 import { connect } from 'react-redux';
 
-import { Link } from "react-router-dom";
 
 import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 
@@ -95,6 +94,7 @@ export class MainView extends React.Component { //exposes the component, making 
 
     return (
       <Router>
+        <NavView user={user} />
 
         <Row className="main-view justify-content-md-center">
           <Route exact path="/" render={() => {
@@ -103,7 +103,6 @@ export class MainView extends React.Component { //exposes the component, making 
             </Col>
             if (movies.length === 0) return <div className="main-view" />;
             return <>
-              <NavView user={user} />
               <MovieList movies={movies} />
             </>;
           }} />
@@ -144,10 +143,14 @@ export class MainView extends React.Component { //exposes the component, making 
             </Col>
           }} />
 
-          <Route exact path={`/users/${user}`} render={({ history }) => {
-            if (!user) return <Redirect to="/" />
+          <Route path='/profile' render={({ history }) => {
+            if (!user) {
+              return (<Col>
+                <LoginView onLoggedIn={user => this.onLoggedIn(user)} />
+              </Col>);
+            }
             return <Col md={8} >
-              <ProfileView user={user} movies={movies} onBackClick={() => history.goBack()} />
+              <ProfileView movies={movies} onBackClick={() => history.goBack()} />
             </Col>
           }} />
 

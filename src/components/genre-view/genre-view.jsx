@@ -9,7 +9,6 @@ export class GenreView extends React.Component {
 
     return (
       <>
-        <NavView />
         <Card>
           <Card.Body>
             <Card.Title>{genre.Name}</Card.Title>

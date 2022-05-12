@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { Component } from 'react';
 import axios from 'axios';
 import propTypes from 'prop-types';
 import Form from 'react-bootstrap/Form';
@@ -8,7 +8,6 @@ import { Row } from 'react-bootstrap';
 
 import { Link } from "react-router-dom";
 import { Card } from 'react-bootstrap';
-import { NavView } from '../navbar';
 
 export class ProfileView extends Component {
 
@@ -96,7 +95,7 @@ export class ProfileView extends Component {
           Password: response.data.Password,
           Birthday: response.data.Birthday,
         });
-        //localStorage.setItem('user', this.state.Username);
+        localStorage.setItem('user', this.state.Username);
         alert('User profile update success!');
         window.open('/profile', '_self');
       });
@@ -144,7 +143,7 @@ export class ProfileView extends Component {
 
 
   render() {
-    const { movies, users } = this.props;
+    const { movies } = this.props;
     const { Username, Email, Birthday, Password, FavoriteMovies } = this.state;
 
     const favoriteMovies = movies.filter((m) => FavoriteMovies.includes(m._id)) || [];
@@ -155,7 +154,6 @@ export class ProfileView extends Component {
 
     return (
       <>
-        <NavView />
         <div className="profile-view">
           <h1>Hello, {Username}</h1>
           <h2>Current Info:</h2>
@@ -208,7 +206,7 @@ export class ProfileView extends Component {
             <div className="middle">
               <Button className="m-3 bttn" type='submit' onClick={this.updateUser}>Update</Button>
               <Link to={`/`}>
-                <Button className="m-3 bttn">Go Back</Button>
+                <Button className="m-3 bttn">Go Home</Button>
               </Link>
               <Button className="m-3 bttn" onClick={() => { this.deleteUser(); }}>Delete Account</Button>
             </div>
@@ -263,14 +261,14 @@ ProfileView.propTypes = {
       Birth: propTypes.string.isRequired
     }),
   })),
-  users: propTypes.arrayOf(
-    propTypes.shape({
-      Username: propTypes.string,
-      Password: propTypes.string,
-      Email: propTypes.string,
-      Birthday: propTypes.instanceOf(Date),
-      FavoriteMovies: propTypes.arrayOf(propTypes.string)
-    })
-  ),
+  // users: propTypes.arrayOf(
+  //   propTypes.shape({
+  //     Username: propTypes.string,
+  //     Password: propTypes.string,
+  //     Email: propTypes.string,
+  //     Birthday: propTypes.instanceOf(Date),
+  //     FavoriteMovies: propTypes.arrayOf(propTypes.string)
+  //   })
+  // ),
   onMovieClick: propTypes.func
 };

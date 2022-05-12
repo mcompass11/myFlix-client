@@ -3,7 +3,7 @@ import { Navbar } from "react-bootstrap";
 
 import { Container, Nav } from "react-bootstrap";
 import { LoginView } from "./login-view/login-view";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 
 export function NavView({ user }) {
@@ -32,7 +32,7 @@ export function NavView({ user }) {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             {isAuth() && (
-              <Link to={`/users/${user}`}>Profile</Link>
+              <Nav.Link href='/profile'>Profile</Nav.Link>
             )}
             <Nav.Link onClick={() => onLoggedOut()} href='/'>Logout</Nav.Link>
           </Nav>

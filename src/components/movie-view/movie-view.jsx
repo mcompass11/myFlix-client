@@ -5,7 +5,6 @@ import propTypes from 'prop-types';
 import { Card } from 'react-bootstrap';
 
 import { Link } from "react-router-dom";
-import { NavView } from '../navbar';
 export class MovieView extends React.Component {
   constructor(props) {
     super(props);
@@ -25,7 +24,7 @@ export class MovieView extends React.Component {
     )
       .then((response) => {
         console.log(response);
-        history.back();
+        // history.back();
         alert('Movie has been added.')
       })
       .catch((e) => {
@@ -38,7 +37,6 @@ export class MovieView extends React.Component {
 
     return (
       <>
-        <NavView />
         <Card>
           <Card.Img variant="top" src={movie.ImagePath} />
 
@@ -62,20 +60,20 @@ export class MovieView extends React.Component {
   }
 }
 
-// MovieView.propTypes = {
-//   movie: propTypes.shape({
-//     Title: propTypes.string.isRequired,
-//     Description: propTypes.string.isRequired,
-//     ImagePath: propTypes.string.isRequired,
-//     Genre: propTypes.shape({
-//       Name: propTypes.string.isRequired,
-//       Description: propTypes.string.isRequired
-//     }).isRequired,
-//     Director: propTypes.shape({
-//       Name: propTypes.string.isRequired,
-//       Bio: propTypes.string.isRequired,
-//       Birth: propTypes.string.isRequired
-//     }).isRequired,
-//   }).isRequired,
-//   onMovieClick: propTypes.func
-// };
+MovieView.propTypes = {
+  movie: propTypes.shape({
+    Title: propTypes.string.isRequired,
+    Description: propTypes.string.isRequired,
+    ImagePath: propTypes.string.isRequired,
+    Genre: propTypes.shape({
+      Name: propTypes.string.isRequired,
+      Description: propTypes.string.isRequired
+    }).isRequired,
+    Director: propTypes.shape({
+      Name: propTypes.string.isRequired,
+      Bio: propTypes.string.isRequired,
+      Birth: propTypes.string.isRequired
+    }).isRequired,
+  }).isRequired,
+  onMovieClick: propTypes.func
+};
