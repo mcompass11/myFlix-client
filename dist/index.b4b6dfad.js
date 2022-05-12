@@ -34885,8 +34885,8 @@ function NavView({ user  }) {
                     children: /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_reactBootstrap.Nav, {
                         className: "me-auto",
                         children: [
-                            isAuth() && /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_reactBootstrap.Nav.Link, {
-                                href: `/users/${user}`,
+                            isAuth() && /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_reactRouterDom.Link, {
+                                to: `/users/${user}`,
                                 children: "Profile"
                             }, void 0, false, {
                                 fileName: "src/components/navbar.jsx",

@@ -32,7 +32,7 @@ export function NavView({ user }) {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             {isAuth() && (
-              <Link href={`/users/${user}`}>Profile</Link>
+              <Link to={`/users/${user}`}>Profile</Link>
             )}
             <Nav.Link onClick={() => onLoggedOut()} href='/'>Logout</Nav.Link>
           </Nav>
