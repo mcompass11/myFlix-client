@@ -144,7 +144,7 @@ export class ProfileView extends Component {
 
   render() {
     const { movies } = this.props;
-    const { Username, Email, Birthday, Password, FavoriteMovies } = this.state;
+    const { Username, Email, Birthday, FavoriteMovies } = this.state;
 
     const favoriteMovies = movies.filter((m) => FavoriteMovies.includes(m._id)) || [];
 
@@ -261,14 +261,5 @@ ProfileView.propTypes = {
       Birth: propTypes.string.isRequired
     }),
   })),
-  // users: propTypes.arrayOf(
-  //   propTypes.shape({
-  //     Username: propTypes.string,
-  //     Password: propTypes.string,
-  //     Email: propTypes.string,
-  //     Birthday: propTypes.instanceOf(Date),
-  //     FavoriteMovies: propTypes.arrayOf(propTypes.string)
-  //   })
-  // ),
   onMovieClick: propTypes.func
 };

@@ -24,8 +24,7 @@ export class MovieView extends React.Component {
     )
       .then((response) => {
         console.log(response);
-        // history.back();
-        alert('Movie has been added.')
+        alert(`${movie.Title} has been added.`)
       })
       .catch((e) => {
         console.log(e);
@@ -33,7 +32,7 @@ export class MovieView extends React.Component {
   };
 
   render() {
-    const { movie, onBackClick, MovieID, FavoriteMovies } = this.props;
+    const { movie, onBackClick } = this.props;
 
     return (
       <>
@@ -52,7 +51,9 @@ export class MovieView extends React.Component {
           <Link to={`/genres/${movie.Genre.Name}`}>
             <Button variant="link">Genre</Button>
           </Link>
+
           <Button onClick={() => { this.addToFavorites(movie) }}>Add to my favorites</Button>
+
           <Button onClick={() => { onBackClick() }}>Back</Button>
         </Card>
       </>
